@@ -1,0 +1,27 @@
+<div class="table-container">
+    <div class="table-header">
+        <h3>{{ users.length }} users total</h3>
+        <button class="add-btn">+ Add User</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <span class="role" [class.admin]="user.role === 'admin'">{{ user.role }}</span>
+                </td>
+                <td><i class="fa fa-trash delete"></i></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

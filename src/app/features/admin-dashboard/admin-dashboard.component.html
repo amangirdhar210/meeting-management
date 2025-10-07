@@ -1,0 +1,26 @@
+<app-header></app-header>
+
+<div class="dashboard-container">
+    <div class="stats-container">
+        <app-stats-card title="Total Rooms" [value]="totalRooms"></app-stats-card>
+        <app-stats-card title="Total Users" [value]="totalUsers"></app-stats-card>
+        <app-stats-card title="Available Rooms" [value]="availableRooms"></app-stats-card>
+    </div>
+
+    <div class="toggle-buttons">
+        <button [class.active]="activeTab === 'rooms'" (click)="switchTab('rooms')">
+            <i class="fa-solid fa-door-closed"></i> Room Management
+        </button>
+        <button [class.active]="activeTab === 'users'" (click)="switchTab('users')">
+            <i class="fa-solid fa-user"></i> User Management
+        </button>
+    </div>
+
+    <div class="tab-content">
+        @if (activeTab === 'rooms') {
+        <app-room-mgmt />
+        } @else {
+        <app-user-mgmt />
+        }
+    </div>
+</div>

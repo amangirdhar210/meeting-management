@@ -1,0 +1,42 @@
+<div class="table-container">
+    <div class="table-header">
+        <h3>{{'rooms total'}} </h3>
+        <button class="add-btn" (click)="onAddRoom()">+ Add Room</button>
+    </div>
+    @if (isAddingRoom()) {
+    <div>
+        <add-room-form (cancelAdd)="onCancelAdd()"></add-room-form>
+    </div>
+    }
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Capacity</th>
+                <th>Floor</th>
+                <th>R.Number</th>
+                <th>Amenities</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let room of rooms">
+                <td>{{ room.name }}</td>
+                <td>{{ room.capacity }}</td>
+                <td>{{ room.floor }}</td>
+                <td>{{room.roomNumber}}</td>
+                <td>
+                    <span *ngFor="let amenity of room.amenities" class="amenity">{{ amenity }}</span>
+                </td>
+                <td>
+                    <span class="status" [class.available]="room.status === 'Available'"
+                        [class.inuse]="room.status === 'In Use'">
+                        {{ room.status }}
+                    </span>
+                </td>
+                <td><i class="fa fa-trash delete"></i></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

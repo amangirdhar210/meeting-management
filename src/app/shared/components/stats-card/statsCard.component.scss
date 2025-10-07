@@ -1,0 +1,33 @@
+.stats-card{
+  background: white;
+  border-radius: 12px;
+  padding: 1.15rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  min-width: 220px;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.03);
+  border: 1px solid #f1f3f5;
+}
+
+.card-body{
+  display:flex;
+  flex-direction:column;
+}
+
+.card-title{
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  font-weight:600;
+}
+
+.card-value{
+  font-size: 1.4rem;
+  font-weight:700;
+}
+
+.card-icon i{
+  font-size: 1.15rem;
+  opacity: 0.7;
+}

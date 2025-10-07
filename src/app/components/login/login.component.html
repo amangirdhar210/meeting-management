@@ -1,0 +1,39 @@
+<div class="login-container">
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <h1 class="header">Meeting Room Management</h1>
+
+        <div class="welcome-message">
+            Welcome to <strong>RoomBook</strong>. Sign in to manage your meeting rooms.
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" formControlName="email" placeholder="Enter Email" />
+
+            <div *ngIf="email?.invalid && (email?.touched || email?.dirty)">
+                <small *ngIf="email?.errors?.['required']" class="error-message">
+                    Email is required
+                </small>
+                <small *ngIf="email?.errors?.['email']" class="error-message">
+                    Please enter a valid email
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" formControlName="password" placeholder="Enter your password" />
+
+
+        </div>
+        <div *ngIf="password?.invalid && (password?.touched || password?.dirty)">
+            <small *ngIf="password?.errors?.['required']" class="error-message">
+                Password is required
+            </small>
+            <small *ngIf="password?.errors?.['minlength']" class="error-message">
+                Password must be at least 6 characters
+            </small>
+        </div>
+        <button type="submit" [disabled]="loginForm.invalid">Log In</button>
+    </form>
+</div>
