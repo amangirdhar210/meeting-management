@@ -6,13 +6,14 @@
             <p>Meeting Room Management</p>
         </div>
     </div>
-    <div>
-        <button class="logout-btn" (click)="logout()"> Logout</button>
-    </div>
-    <div class="user-info">
-        <div class="avatar">AU</div>
-        <div>
-            <h4>{{currentUser}}</h4>
+
+    <div class="right-section">
+        <div class="user-info">
+            <div class="avatar">AU</div>
+            <div>
+                <h4>{{ currentUser }}</h4>
+            </div>
         </div>
+        <button class="logout-btn" (click)="logout()">Logout</button>
     </div>
 </header>

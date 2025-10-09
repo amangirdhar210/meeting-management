@@ -1,0 +1,72 @@
+.dashboard-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.stats-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+app-stats-card {
+  flex: 1;
+  min-width: 220px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.toggle-buttons {
+  display: flex;
+  justify-content: center;
+  background-color: #e5e7eb;
+  border-radius: 999px;
+  padding: 6px;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.toggle-buttons button {
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 24px;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #374151;
+  transition: all 0.25s ease;
+}
+
+.toggle-buttons button i {
+  font-size: 16px;
+}
+
+.toggle-buttons button.active {
+  background-color: black;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(211, 220, 242, 0.4);
+}
+
+.toggle-buttons button:hover:not(.active) {
+  background-color: #b1b1b1;
+}
+
+.tab-content {
+  margin-top: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+}

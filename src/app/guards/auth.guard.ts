@@ -15,7 +15,6 @@
 //   }
 // };
 
-// src/app/shared/guards/auth.guard.ts
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { LoginService } from '../shared/services/login.service';

@@ -1,8 +1,13 @@
 <div class="table-container">
     <div class="table-header">
         <h3>{{ users.length }} users total</h3>
-        <button class="add-btn">+ Add User</button>
+        <button class="add-btn" (click)="startAddingUser()">+ Add User</button>
     </div>
+    @if (isAddingUser()) {
+    <div>
+        <app-add-user-form (cancelAdd)="stopAddingUser()"></app-add-user-form>
+    </div>
+    }
 
     <table>
         <thead>
@@ -20,7 +25,7 @@
                 <td>
                     <span class="role" [class.admin]="user.role === 'admin'">{{ user.role }}</span>
                 </td>
-                <td><i class="fa fa-trash delete"></i></td>
+                <td><i class="fa fa-trash delete" (click)="onDeleteUser(user.id)"></i></td>
             </tr>
         </tbody>
     </table>

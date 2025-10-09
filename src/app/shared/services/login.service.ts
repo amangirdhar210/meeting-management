@@ -1,5 +1,10 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs';
+interface loginResponse {
+  token: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -11,11 +16,23 @@ export class LoginService {
   isAdmin = computed(() => this.userRole() === 'admin');
   isUser = computed(() => this.userRole() === 'user');
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) {
     this.restoreSession();
   }
 
   login(credentials: { email: string; password: string }): boolean {
+    const loginObs = this.http
+      .post<loginResponse>(
+        'https://cb46039b-d560-4d4e-8b18-2867f1f6a215.mock.pstmn.io/api/v1/auth/login',
+        credentials
+      )
+      .pipe(tap((val) => (val ? true : false)));
+
+    console.log(
+      loginObs.subscribe({
+        next: (val) => val,
+      })
+    );
     if (
       credentials.email === 'aman@wg.com' &&
       credentials.password === '1234567'

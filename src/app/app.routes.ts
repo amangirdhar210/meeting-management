@@ -21,7 +21,7 @@ export const routes: Routes = [
   {
     path: 'admin-dashboard',
     component: AdminDashboardComponent,
-    canActivate: [authGuard, roleGuard],
+    canActivate: [authGuard, roleGuard(['admin'])],
     children: [
       // {
       //   path: 'user-mgmt',
@@ -36,7 +36,7 @@ export const routes: Routes = [
   {
     path: 'user-dashboard',
     component: UserDashboardComponent,
-    canActivate: [authGuard, roleGuard],
+    canActivate: [authGuard, roleGuard(['user'])],
   },
   {
     path: 'unauthorized',

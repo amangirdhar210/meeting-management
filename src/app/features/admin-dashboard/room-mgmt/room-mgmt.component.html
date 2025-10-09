@@ -35,7 +35,9 @@
                         {{ room.status }}
                     </span>
                 </td>
-                <td><i class="fa fa-trash delete"></i></td>
+                <td>
+                    <i class="fa fa-trash delete" (click)="onDeleteRoom(room.id)"></i>
+                </td>
             </tr>
         </tbody>
     </table>

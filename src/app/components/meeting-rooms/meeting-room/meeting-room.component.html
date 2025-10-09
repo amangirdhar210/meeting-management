@@ -1,1 +1,14 @@
-<p>meeting-room works!</p>
+<div class="room-card">
+    <div class="status" [ngClass]="{
+      available: roomData.status === 'Available',
+      inuse: roomData.status === 'In Use'
+    }">{{ roomData.status }}</div>
+    <img src="meetingo.jpg" alt="room image" />
+    <div class="room-desc">
+        <span><strong>Amenities:</strong> {{ roomData.amenities }}</span>
+        <span><strong>Capacity:</strong> {{ roomData.capacity }}</span>
+        <span><strong>Floor:</strong> {{ roomData.floor }}</span>
+        <span><strong>Name:</strong> {{ roomData.name }}</span>
+        <span><strong>Room Number:</strong> {{ roomData.roomNumber }}</span>
+    </div>
+</div>

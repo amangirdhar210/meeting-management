@@ -1,48 +1,98 @@
 header {
-  background: white;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #111;
+  color: #fff;
+  padding: 12px 24px;
+  border-bottom: 1px solid #333;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.05);
 }
 
 .logo-section {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 12px;
+}
+
+.logo-section i {
+  font-size: 28px;
+  color: #fff;
 }
 
 .logo-section h2 {
   margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.logo-section p {
+  margin: 0;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-radius: 15%;
-  background-color: rgb(255, 246, 231);
+  gap: 8px;
+  background: #1b1b1b;
+  padding: 6px 10px;
+  border-radius: 30px;
+  border: 1px solid #333;
 }
 
 .avatar {
-  background: #000;
-  color: white;
-  width: 35px;
-  height: 35px;
+  background-color: #fff;
+  color: #000;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  text-align: center;
-  line-height: 35px;
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
 }
-.logout-btn{
-  color: white;
-  background-color: rgb(0, 0, 0);
-  border-radius: 15%;
-  position: absolute;
-  padding: 0.75rem 0.5rem 0.75rem 0.5rem ;
-  // padding-left: 0.75rem;
-  // padding-right: 0.75rem ;
+
+.user-info h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f5f5f5;
+}
+
+.logout-btn {
+  background-color: #000;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  background-color: #222;
+  transform: translateY(-1px);
+  border-color: #777;
+}
+
+@media (max-width: 700px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .right-section {
+    align-self: flex-end;
+  }
 }

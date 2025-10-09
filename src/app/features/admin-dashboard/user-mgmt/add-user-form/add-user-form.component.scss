@@ -1,0 +1,145 @@
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.55); 
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: overlayFade 0.3s ease;
+}
+
+@keyframes overlayFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background-color: #fff;
+  border-radius: 16px;
+  width: 420px;
+  max-width: 90%;
+  padding: 30px 28px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+  animation: modalFade 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  z-index: 1000;
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.welcome-message h3 {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111; 
+  margin-bottom: 10px;
+}
+
+.add-user-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.add-user-form label {
+  font-weight: 500;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.add-user-form input,
+.add-user-form select {
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  background: #fff;
+  color: #111;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-user-form input:focus,
+.add-user-form select:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.error {
+  color: #d32f2f;
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+button[type='submit'] {
+  background-color: #000; 
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex: 1;
+  font-size: 1rem;
+  transition: background-color 0.25s ease, transform 0.1s ease;
+}
+
+button[type='submit']:hover {
+  background-color: #333;
+}
+
+button[type='submit']:active {
+  transform: scale(0.97);
+}
+
+button[disabled] {
+  background-color: #c7c7c7;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 10px;
+  font-weight: 500;
+  padding: 10px 0;
+  flex: 1;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.cancel-btn:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .modal {
+    width: 95%;
+    padding: 20px 16px;
+  }
+}

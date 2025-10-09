@@ -34,4 +34,11 @@ export class RoomManagementComponent implements OnInit {
   onCancelAdd() {
     this.isAddingRoom.set(false);
   }
+
+  onDeleteRoom(id: number) {
+    const confirmed = confirm('Are you sure you want to delete this room?');
+    if (confirmed) {
+      this.roomService.deleteRoom(id);
+    }
+  }
 }
