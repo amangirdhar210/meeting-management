@@ -1,27 +1,39 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private users = new BehaviorSubject<User[]>([
-    { id: 1, name: 'Admin User', role: 'admin', email: 'admin@example.com' },
-    { id: 2, name: 'John Doe', role: 'user', email: 'john@example.com' },
-  ]);
+  private users = new BehaviorSubject<User[]>([]);
   users$ = this.users.asObservable();
+  private apiUrl = 'http://localhost:8080/api';
+
+  constructor(private http: HttpClient) {}
+
+  fetchUsers(): Observable<User[]> {
+    return this.http
+      .get<User[]>(`${this.apiUrl}/users`)
+      .pipe(tap((users) => this.users.next(users)));
+  }
+
+  addUser(newUser: Omit<User, 'id'>): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, newUser).pipe(
+      tap(() => {
+        this.fetchUsers().subscribe();
+      })
+    );
+  }
+
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/users/${id}`).pipe(
+      tap(() => {
+        this.fetchUsers().subscribe();
+      })
+    );
+  }
 
   getUsers(): User[] {
     return this.users.getValue();
-  }
-  addUser(newUser: Omit<User, 'id'>): void {
-    const users = this.getUsers();
-    const nextId = users.length ? Math.max(...users.map((u) => u.id)) + 1 : 1;
-    const updatedUsers = [...users, { id: nextId, ...newUser }];
-    this.users.next(updatedUsers);
-  }
-
-  deleteUser(id: number): void {
-    const updatedUsers = this.getUsers().filter((u) => u.id !== id);
-    this.users.next(updatedUsers);
   }
 }

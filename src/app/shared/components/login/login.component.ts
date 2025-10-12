@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
-import { LoginService } from '../../shared/services/login.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.loginService.isLoggedIn()) {
-      const role = this.loginService.userRole();
+      const role = this.loginService.userRole;
       if (role === 'admin') {
         this.router.navigate(['/admin-dashboard']);
       } else if (role === 'user') {
@@ -56,13 +56,16 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    const success = this.loginService.login({
-      email: this.email!.value!,
-      password: this.password!.value!,
-    });
-
-    if (success) {
-      this.loginForm.reset();
-    }
+    this.loginService
+      .login({
+        email: this.email!.value!,
+        password: this.password!.value!,
+      })
+      .subscribe({
+        next: () => {
+          this.loginForm.reset();
+        },
+        error: () => {},
+      });
   }
 }

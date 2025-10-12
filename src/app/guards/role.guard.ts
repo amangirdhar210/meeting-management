@@ -15,7 +15,7 @@ export const roleGuard = (
       return false;
     }
 
-    if (allowedRoles.includes(auth.userRole())) {
+    if (allowedRoles.includes(auth.userRole)) {
       return true;
     } else {
       alert('Access Denied: You are not authorized to view this page.');

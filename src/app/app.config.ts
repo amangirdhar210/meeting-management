@@ -5,19 +5,14 @@ import { provideRouter } from '@angular/router';
 // import Aura from '@primeng/themes/aura';
 
 import { routes } from './app.routes';
-import { customPreset } from './theme';
-import { provideHttpClient } from '@angular/common/http';
+// import { customPreset } from './theme';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
-    // provideAnimationsAsync(),
-    // providePrimeNG({
-    //   theme: {
-    //     preset: customPreset,
-    //   },
-    // }),
+    provideHttpClient(withInterceptors([AuthInterceptor])),
   ],
 };

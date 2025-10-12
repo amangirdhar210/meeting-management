@@ -9,6 +9,7 @@ import {
 
 import { User } from '../../../../shared/models/user.model';
 import { UserService } from '../../../../shared/services/user.service';
+
 @Component({
   selector: 'app-add-user-form',
   imports: [ReactiveFormsModule, NgIf],
@@ -18,6 +19,9 @@ import { UserService } from '../../../../shared/services/user.service';
 export class AddUserFormComponent {
   @Output() cancelAdd = new EventEmitter<void>();
   userService = inject(UserService);
+  loading = false;
+  error: string | null = null;
+
   addUserForm = new FormGroup({
     firstName: new FormControl<string>('', {
       nonNullable: true,
@@ -27,7 +31,7 @@ export class AddUserFormComponent {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(2)],
     }),
-    role: new FormControl<'User' | 'Admin'>('User', {
+    role: new FormControl<'user' | 'admin'>('user', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -47,41 +51,47 @@ export class AddUserFormComponent {
       return;
     }
 
+    this.loading = true;
+    this.error = null;
+
     const formValues = this.addUserForm.getRawValue();
 
-    const newUser: Omit<User, 'id'> = {
+    const newUser: Omit<User, 'id'> & { password: string } = {
       name: `${formValues.firstName} ${formValues.lastName}`,
       role: formValues.role,
       email: formValues.email,
+      password: formValues.password,
     };
 
-    this.userService.addUser(newUser);
-
-    console.log('User added:', newUser);
-
-    this.addUserForm.reset({
-      firstName: '',
-      lastName: '',
-      role: 'User',
-      email: '',
-      password: '',
+    this.userService.addUser(newUser).subscribe({
+      next: () => {
+        this.loading = false;
+        this.addUserForm.reset({
+          firstName: '',
+          lastName: '',
+          role: 'user',
+          email: '',
+          password: '',
+        });
+        this.cancelAdd.emit();
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error =
+          err?.error?.error || 'Failed to add user. Please try again.';
+      },
     });
-    this.cancelAdd.emit();
   }
 
   onCancelAdd() {
     this.addUserForm.reset({
       firstName: '',
       lastName: '',
-      role: 'User',
+      role: 'user',
       email: '',
       password: '',
     });
     this.cancelAdd.emit();
-  }
-
-  ngOnInit() {
-    document.addEventListener('click', (event) => {});
   }
 
   onModalClick(event: any) {

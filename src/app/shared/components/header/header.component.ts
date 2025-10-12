@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
     this.userService.users$.subscribe((users) => {
       this.user = users && users.length ? users[0] : undefined;
     });
-    this.currentUser = this.loginService.userRole();
+    this.currentUser = this.loginService.userRole;
   }
 
   logout() {

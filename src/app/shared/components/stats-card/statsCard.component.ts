@@ -11,5 +11,5 @@ import { CommonModule } from '@angular/common';
 export class StatsCardComponent {
   @Input() title = '';
   @Input() value: string | number = '';
-  @Input() icon?: string; // optional CSS class for an icon or SVG
+  @Input() icon?: string;
 }
