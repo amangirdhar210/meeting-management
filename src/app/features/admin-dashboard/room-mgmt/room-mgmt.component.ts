@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RoomService } from '../../../shared/services/room.service';
 import { Room } from '../../../shared/models/room.model';
@@ -12,16 +12,18 @@ import { Subscription } from 'rxjs';
   templateUrl: './room-mgmt.component.html',
   styleUrl: './room-mgmt.component.scss',
 })
-export class RoomManagementComponent implements OnInit {
+export class RoomManagementComponent implements OnInit, OnDestroy {
   rooms: Room[] = [];
   isAddingRoom = signal<boolean>(false);
-  totalRooms = RoomService.length;
-  constructor(private roomService: RoomService) {}
   subscription!: Subscription;
+
+  constructor(private roomService: RoomService) {}
+
   ngOnInit(): void {
     this.subscription = this.roomService.rooms$.subscribe(
       (data) => (this.rooms = data)
     );
+    this.roomService.fetchRooms().subscribe();
   }
 
   ngOnDestroy(): void {
@@ -38,7 +40,13 @@ export class RoomManagementComponent implements OnInit {
   onDeleteRoom(id: number) {
     const confirmed = confirm('Are you sure you want to delete this room?');
     if (confirmed) {
-      this.roomService.deleteRoom(id);
+      this.roomService.deleteRoom(id).subscribe();
     }
+  }
+
+  onRoomAdded(newRoom: Omit<Room, 'id'>) {
+    this.roomService.addRoom(newRoom).subscribe(() => {
+      this.isAddingRoom.set(false);
+    });
   }
 }

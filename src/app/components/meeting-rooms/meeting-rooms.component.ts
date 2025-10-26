@@ -12,17 +12,21 @@ import { Subscription } from 'rxjs';
   styleUrl: './meeting-rooms.component.scss',
 })
 export class MeetingRoomsComponent implements OnInit, OnDestroy {
-  constructor(private roomService: RoomService) {}
   rooms: Room[] = [];
   private subscription!: Subscription;
 
+  constructor(private roomService: RoomService) {}
+
   ngOnInit(): void {
+    this.roomService.fetchRooms().subscribe();
     this.subscription = this.roomService.rooms$.subscribe(
       (data) => (this.rooms = data)
     );
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

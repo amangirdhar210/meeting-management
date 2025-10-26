@@ -18,15 +18,17 @@ import { Room } from '../../../../shared/models/room.model';
 })
 export class AddRoomFormComponent {
   @Output() cancelAdd = new EventEmitter<void>();
+  @Output() roomAdded = new EventEmitter<Omit<Room, 'id'>>();
   roomService = inject(RoomService);
+
   addRoomForm = new FormGroup({
-    number: new FormControl<number>(0, {
+    name: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(3)],
+    }),
+    roomNumber: new FormControl<number>(0, {
       nonNullable: true,
       validators: [Validators.required, Validators.min(1)],
-    }),
-    title: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required, Validators.minLength(5)],
     }),
     capacity: new FormControl<number>(0, {
       nonNullable: true,
@@ -38,8 +40,13 @@ export class AddRoomFormComponent {
     }),
     amenities: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(5)],
+      validators: [Validators.required],
     }),
+    location: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    description: new FormControl<string>(''),
   });
 
   onAddRoom() {
@@ -51,17 +58,19 @@ export class AddRoomFormComponent {
     const formValues = this.addRoomForm.getRawValue();
 
     const newRoom: Omit<Room, 'id'> = {
-      name: formValues.title,
-      roomNumber: formValues.number,
+      name: formValues.name,
+      roomNumber: formValues.roomNumber,
       capacity: formValues.capacity,
       floor: formValues.floor,
-      amenities: formValues.amenities.split(' '),
+      amenities: formValues.amenities.split(',').map((a) => a.trim()),
       status: 'Available',
+      location: formValues.location,
+      description: formValues.description ?? undefined,
     };
 
-    this.roomService.addRoom(newRoom);
-    this.cancelAdd.emit();
+    this.roomAdded.emit(newRoom);
     this.addRoomForm.reset();
+    this.cancelAdd.emit();
   }
 
   onCancelAdd() {

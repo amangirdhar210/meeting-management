@@ -1,21 +1,23 @@
 <div class="table-container">
     <div class="table-header">
-        <h3>{{'rooms total'}} </h3>
+        <h3>rooms total</h3>
         <button class="add-btn" (click)="onAddRoom()">+ Add Room</button>
     </div>
     @if (isAddingRoom()) {
     <div>
-        <add-room-form (cancelAdd)="onCancelAdd()"></add-room-form>
+        <add-room-form (cancelAdd)="onCancelAdd()" (roomAdded)="onRoomAdded($event)"></add-room-form>
     </div>
     }
     <table>
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Room Number</th>
                 <th>Capacity</th>
                 <th>Floor</th>
-                <th>R.Number</th>
+                <th>Location</th>
                 <th>Amenities</th>
+                <th>Description</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -23,12 +25,14 @@
         <tbody>
             <tr *ngFor="let room of rooms">
                 <td>{{ room.name }}</td>
+                <td>{{ room.roomNumber }}</td>
                 <td>{{ room.capacity }}</td>
                 <td>{{ room.floor }}</td>
-                <td>{{room.roomNumber}}</td>
+                <td>{{ room.location }}</td>
                 <td>
                     <span *ngFor="let amenity of room.amenities" class="amenity">{{ amenity }}</span>
                 </td>
+                <td>{{ room.description }}</td>
                 <td>
                     <span class="status" [class.available]="room.status === 'Available'"
                         [class.inuse]="room.status === 'In Use'">

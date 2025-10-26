@@ -9,6 +9,7 @@ import {
 import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ import { LoginService } from '../../services/login.service';
 export class LoginComponent implements OnInit {
   private router = inject(Router);
   loginService = inject(LoginService);
+  constructor(private messageService: MessageService) {}
 
   loginForm = new FormGroup({
     email: new FormControl<string>('', {
@@ -65,7 +67,13 @@ export class LoginComponent implements OnInit {
         next: () => {
           this.loginForm.reset();
         },
-        error: () => {},
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Message Content',
+          });
+        },
       });
   }
 }

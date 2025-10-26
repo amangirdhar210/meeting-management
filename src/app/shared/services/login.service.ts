@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { MessageService } from 'primeng/api';
 
 interface LoginResponse {
   token: string;
@@ -27,7 +28,11 @@ interface DecodedToken {
 export class LoginService {
   isLoggedIn = signal<boolean>(false);
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private messageService: MessageService
+  ) {
     this.restoreSession();
   }
 
@@ -69,7 +74,6 @@ export class LoginService {
             }
           },
           error: (err) => {
-            alert('Invalid credentials');
             this.logout();
           },
         })

@@ -1,10 +1,10 @@
 import { Component, Input, signal } from '@angular/core';
 import { Room } from '../../../shared/models/room.model';
-import { NgClass } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-meeting-room',
-  imports: [NgClass],
+  imports: [NgClass, NgIf, NgFor],
   templateUrl: './meeting-room.component.html',
   styleUrl: './meeting-room.component.scss',
 })

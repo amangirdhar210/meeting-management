@@ -6,4 +6,6 @@ export interface Room {
   floor: number;
   amenities: string[];
   status: 'Available' | 'In Use';
+  location: string;
+  description?: string;
 }
