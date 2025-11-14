@@ -17,11 +17,14 @@ import {
 import { BookingService } from '../../../shared/services/booking.service';
 import { CreateBookingRequest } from '../../../shared/models/api.model';
 import { Room } from '../../../shared/models/room.model';
+import { DialogModule } from 'primeng/dialog';
+import { DatePickerModule } from 'primeng/datepicker';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-booking-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DialogModule, DatePickerModule, CommonModule],
   templateUrl: './booking-form.component.html',
   styleUrl: './booking-form.component.scss',
 })
@@ -30,25 +33,15 @@ export class BookingFormComponent implements OnInit {
   @Output() cancelBooking = new EventEmitter<void>();
   private bookingService = inject(BookingService);
 
-  minDate: string = '';
-  minTime: string = '';
+  visible = true;
+  minDate: Date = new Date();
 
   bookingForm = new FormGroup(
     {
-      startDate: new FormControl<string>('', {
-        nonNullable: true,
+      startDateTime: new FormControl<Date | null>(null, {
         validators: [Validators.required],
       }),
-      startTime: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      endDate: new FormControl<string>('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      endTime: new FormControl<string>('', {
-        nonNullable: true,
+      endDateTime: new FormControl<Date | null>(null, {
         validators: [Validators.required],
       }),
       purpose: new FormControl<string>('', {
@@ -70,44 +63,27 @@ export class BookingFormComponent implements OnInit {
 
     const oneHourLater = new Date(nextHour.getTime() + 60 * 60 * 1000);
 
-    this.minDate = this.formatDate(now);
-    this.minTime = this.formatTime(now);
-
     this.bookingForm.patchValue({
-      startDate: this.formatDate(nextHour),
-      startTime: this.formatTime(nextHour),
-      endDate: this.formatDate(oneHourLater),
-      endTime: this.formatTime(oneHourLater),
+      startDateTime: nextHour,
+      endDateTime: oneHourLater,
     });
   }
 
-  formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
-
-  formatTime(date: Date): string {
-    return date.toTimeString().slice(0, 5);
-  }
-
   dateTimeValidator(control: AbstractControl): ValidationErrors | null {
-    const startDate = control.get('startDate')?.value;
-    const startTime = control.get('startTime')?.value;
-    const endDate = control.get('endDate')?.value;
-    const endTime = control.get('endTime')?.value;
+    const startDateTime = control.get('startDateTime')?.value;
+    const endDateTime = control.get('endDateTime')?.value;
 
-    if (!startDate || !startTime || !endDate || !endTime) {
+    if (!startDateTime || !endDateTime) {
       return null;
     }
 
-    const start = new Date(`${startDate}T${startTime}`);
-    const end = new Date(`${endDate}T${endTime}`);
     const now = new Date();
 
-    if (start < now) {
+    if (startDateTime < now) {
       return { pastBooking: true };
     }
 
-    if (end <= start) {
+    if (endDateTime <= startDateTime) {
       return { endBeforeStart: true };
     }
 
@@ -132,8 +108,8 @@ export class BookingFormComponent implements OnInit {
     }
 
     const formValues = this.bookingForm.getRawValue();
-    const startDateTime = `${formValues.startDate}T${formValues.startTime}:00Z`;
-    const endDateTime = `${formValues.endDate}T${formValues.endTime}:00Z`;
+    const startDateTime = formValues.startDateTime!.toISOString();
+    const endDateTime = formValues.endDateTime!.toISOString();
 
     const booking: CreateBookingRequest = {
       room_id: this.room.id,
@@ -144,19 +120,21 @@ export class BookingFormComponent implements OnInit {
 
     this.bookingService.createBooking(booking).subscribe({
       next: () => {
-        this.bookingForm.reset();
-        this.cancelBooking.emit();
+        this.visible = false;
+        setTimeout(() => {
+          this.bookingForm.reset();
+          this.cancelBooking.emit();
+        }, 300);
       },
       error: () => {},
     });
   }
 
   onCancel(): void {
-    this.bookingForm.reset();
-    this.cancelBooking.emit();
-  }
-
-  onModalClick(event: Event): void {
-    event.stopPropagation();
+    this.visible = false;
+    setTimeout(() => {
+      this.bookingForm.reset();
+      this.cancelBooking.emit();
+    }, 300);
   }
 }

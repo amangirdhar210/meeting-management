@@ -5,7 +5,7 @@
   margin-bottom: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   position: relative;
-  z-index: 1;
+  z-index: 0;
 }
 
 .search-header {
@@ -30,7 +30,7 @@
 
 .search-bar input {
   width: 100%;
-  padding: 14px 16px 14px 48px;
+  padding: 14px 48px 14px 48px;
   border: 2px solid #e0e0e0;
   border-radius: 10px;
   font-size: 1rem;
@@ -41,6 +41,30 @@
 .search-bar input:focus {
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.clear-search-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.clear-search-btn i {
+  font-size: 1rem;
 }
 
 .filter-toggle {
@@ -92,7 +116,7 @@
 
 .filters-form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-bottom: 12px;
 }
@@ -101,12 +125,14 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .filter-group label {
   font-size: 0.9rem;
   font-weight: 600;
   color: #333;
+  white-space: nowrap;
 }
 
 .filter-group input {
@@ -116,6 +142,8 @@
   font-size: 0.95rem;
   outline: none;
   transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .filter-group input:focus {
@@ -123,19 +151,41 @@
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.capacity-inputs {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.capacity-filter {
+  grid-column: 1 / -1;
+  padding: 10px 0;
 }
 
-.capacity-inputs input {
-  flex: 1;
+.capacity-filter label {
+  margin-bottom: 16px;
+  display: block;
+  font-size: 1rem;
 }
 
-.capacity-inputs span {
-  color: #999;
-  font-size: 0.9rem;
+::ng-deep .capacity-slider {
+  .p-slider {
+    background: #e0e0e0;
+    border: none;
+    height: 6px;
+  }
+
+  .p-slider-handle {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .p-slider-handle:hover {
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+  }
+
+  .p-slider-range {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
 }
 
 .amenities-filter {

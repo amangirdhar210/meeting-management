@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, catchError } from 'rxjs';
+import { BehaviorSubject, Observable, tap, catchError, of } from 'rxjs';
 import { Room } from '../models/room.model';
 import {
   AddRoomRequest,
@@ -9,18 +9,18 @@ import {
   DetailedBooking,
 } from '../models/api.model';
 import { MessageService } from 'primeng/api';
+import { API_ENDPOINTS } from '../constants';
 
 @Injectable({ providedIn: 'root' })
 export class RoomService {
   private http = inject(HttpClient);
   private messageService = inject(MessageService);
   private rooms = new BehaviorSubject<Room[]>([]);
-  private baseUrl = 'http://localhost:8080/api/rooms';
 
   rooms$ = this.rooms.asObservable();
 
   fetchRooms(): Observable<Room[]> {
-    return this.http.get<Room[]>(this.baseUrl).pipe(
+    return this.http.get<Room[]>(API_ENDPOINTS.ROOMS).pipe(
       tap((rooms: Room[]) => this.rooms.next(rooms ?? [])),
       catchError((error) => {
         this.messageService.add({
@@ -34,7 +34,7 @@ export class RoomService {
   }
 
   getRoomById(id: number): Observable<Room> {
-    return this.http.get<Room>(`${this.baseUrl}/${id}`).pipe(
+    return this.http.get<Room>(`${API_ENDPOINTS.ROOMS}/${id}`).pipe(
       catchError((error) => {
         this.messageService.add({
           severity: 'error',
@@ -61,9 +61,16 @@ export class RoomService {
     if (params.endTime) httpParams = httpParams.set('endTime', params.endTime);
 
     return this.http
-      .get<Room[]>(`${this.baseUrl}/search`, { params: httpParams })
+      .get<Room[]>(`${API_ENDPOINTS.ROOMS}/search`, { params: httpParams })
       .pipe(
+        tap((rooms: Room[]) => {
+          this.rooms.next(rooms ?? []);
+        }),
         catchError((error) => {
+          if (error.status === 404) {
+            this.rooms.next([]);
+            return of([]);
+          }
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -76,7 +83,7 @@ export class RoomService {
 
   getRoomSchedule(roomId: number): Observable<DetailedBooking[]> {
     return this.http
-      .get<DetailedBooking[]>(`${this.baseUrl}/${roomId}/schedule`)
+      .get<DetailedBooking[]>(`${API_ENDPOINTS.ROOMS}/${roomId}/schedule`)
       .pipe(
         catchError((error) => {
           this.messageService.add({
@@ -90,7 +97,7 @@ export class RoomService {
   }
 
   addRoom(newRoom: AddRoomRequest): Observable<GenericResponse> {
-    return this.http.post<GenericResponse>(this.baseUrl, newRoom).pipe(
+    return this.http.post<GenericResponse>(API_ENDPOINTS.ROOMS, newRoom).pipe(
       tap(() => {
         this.messageService.add({
           severity: 'success',
@@ -111,24 +118,26 @@ export class RoomService {
   }
 
   deleteRoom(id: number): Observable<GenericResponse> {
-    return this.http.delete<GenericResponse>(`${this.baseUrl}/${id}`).pipe(
-      tap(() => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Room deleted successfully',
-        });
-        this.fetchRooms().subscribe();
-      }),
-      catchError((error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.error?.error || 'Failed to delete room',
-        });
-        throw error;
-      })
-    );
+    return this.http
+      .delete<GenericResponse>(`${API_ENDPOINTS.ROOMS}/${id}`)
+      .pipe(
+        tap(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Room deleted successfully',
+          });
+          this.fetchRooms().subscribe();
+        }),
+        catchError((error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error?.error || 'Failed to delete room',
+          });
+          throw error;
+        })
+      );
   }
 
   getRooms(): Room[] {

@@ -1,22 +1,41 @@
-import { Component, inject, signal, Output, EventEmitter } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  inject,
+  signal,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  FormsModule,
+} from '@angular/forms';
 import { RoomSearchParams } from '../../../shared/models/api.model';
+import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { SliderModule } from 'primeng/slider';
 
 @Component({
   selector: 'app-room-search',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FormsModule, SliderModule],
   templateUrl: './room-search.component.html',
   styleUrl: './room-search.component.scss',
 })
-export class RoomSearchComponent {
+export class RoomSearchComponent implements OnInit, OnDestroy {
   @Output() search = new EventEmitter<RoomSearchParams>();
 
   showFilters = signal<boolean>(false);
+  private destroy$ = new Subject<void>();
+  private searchSubject$ = new Subject<void>();
+
+  capacityRange = signal<number[]>([1, 50]);
+  capacityRangeValue: number[] = [1, 50];
 
   searchForm = new FormGroup({
-    minCapacity: new FormControl<number | null>(null),
-    maxCapacity: new FormControl<number | null>(null),
+    searchText: new FormControl<string>(''),
     floor: new FormControl<number | null>(null),
     amenities: new FormControl<string>(''),
   });
@@ -30,16 +49,41 @@ export class RoomSearchComponent {
     'WiFi',
   ];
 
+  ngOnInit(): void {
+    this.searchSubject$
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.performSearch();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   toggleFilters(): void {
     this.showFilters.set(!this.showFilters());
   }
 
   onSearch(): void {
+    this.searchSubject$.next();
+  }
+
+  performSearch(): void {
     const formValue = this.searchForm.value;
     const params: RoomSearchParams = {};
 
-    if (formValue.minCapacity) params.minCapacity = formValue.minCapacity;
-    if (formValue.maxCapacity) params.maxCapacity = formValue.maxCapacity;
+    if (formValue.searchText && formValue.searchText.trim()) {
+      params.searchText = formValue.searchText.trim();
+    }
+
+    const [min, max] = this.capacityRange();
+    if (min > 1 || max < 50) {
+      params.minCapacity = min;
+      params.maxCapacity = max;
+    }
+
     if (formValue.floor) params.floor = formValue.floor;
     if (formValue.amenities) params.amenities = formValue.amenities;
 
@@ -48,7 +92,23 @@ export class RoomSearchComponent {
 
   clearFilters(): void {
     this.searchForm.reset();
+    this.capacityRange.set([1, 50]);
+    this.capacityRangeValue = [1, 50];
     this.search.emit({});
+  }
+
+  clearSearch(): void {
+    this.searchForm.patchValue({ searchText: '' });
+    this.performSearch();
+  }
+
+  onCapacityChange(event: any): void {
+    const values = event.values || this.capacityRangeValue;
+    if (values && Array.isArray(values) && values.length === 2) {
+      this.capacityRange.set(values);
+      this.capacityRangeValue = [...values];
+      this.performSearch();
+    }
   }
 
   toggleAmenity(amenity: string): void {
@@ -66,7 +126,7 @@ export class RoomSearchComponent {
       this.searchForm.patchValue({ amenities: amenities.join(',') });
     }
 
-    this.onSearch();
+    this.performSearch();
   }
 
   isAmenitySelected(amenity: string): boolean {

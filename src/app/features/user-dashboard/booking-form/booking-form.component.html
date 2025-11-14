@@ -1,94 +1,98 @@
-<div class="modal-overlay" (click)="onCancel()">
-  <div class="modal" (click)="onModalClick($event)">
-    <form
-      [formGroup]="bookingForm"
-      (ngSubmit)="onSubmit()"
-      class="booking-form"
-    >
-      <div class="form-header">
-        <h3>Book {{ room.name }}</h3>
-        <p class="room-info">
-          Room {{ room.roomNumber }} - Capacity: {{ room.capacity }} people
-        </p>
-      </div>
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '600px', maxWidth: '90vw' }"
+  (onHide)="onCancel()"
+  [baseZIndex]="10000"
+  styleClass="booking-dialog"
+>
+  <ng-template pTemplate="header">
+    <div class="dialog-header">
+      <h3>Book {{ room.name }}</h3>
+      <p class="room-info">
+        Room {{ room.roomNumber }} • Capacity: {{ room.capacity }} people
+      </p>
+    </div>
+  </ng-template>
 
-      @if (getFormError()) {
-      <div class="form-error">
-        <i class="pi pi-exclamation-circle"></i>
-        {{ getFormError() }}
-      </div>
+  <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="booking-form">
+    @if (getFormError()) {
+    <div class="form-error">
+      <i class="pi pi-exclamation-circle"></i>
+      {{ getFormError() }}
+    </div>
+    }
+
+    <div class="form-group">
+      <label for="startDateTime">Start Date & Time</label>
+      <p-datepicker
+        inputId="startDateTime"
+        formControlName="startDateTime"
+        [showTime]="true"
+        [showSeconds]="false"
+        [stepMinute]="15"
+        [minDate]="minDate"
+        dateFormat="M dd, yy"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        placeholder="Select start date and time"
+        [appendTo]="'body'"
+        styleClass="booking-datepicker"
+      />
+      @if (bookingForm.controls.startDateTime.invalid &&
+      bookingForm.controls.startDateTime.touched) {
+      <small class="error">Start date & time is required</small>
       }
+    </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="startDate">Start Date</label>
-          <input
-            type="date"
-            id="startDate"
-            formControlName="startDate"
-            [min]="minDate"
-          />
-          @if (bookingForm.controls.startDate.invalid &&
-          bookingForm.controls.startDate.touched) {
-          <small class="error">Start date is required</small>
-          }
-        </div>
+    <div class="form-group">
+      <label for="endDateTime">End Date & Time</label>
+      <p-datepicker
+        inputId="endDateTime"
+        formControlName="endDateTime"
+        [showTime]="true"
+        [showSeconds]="false"
+        [stepMinute]="15"
+        [minDate]="minDate"
+        dateFormat="M dd, yy"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        placeholder="Select end date and time"
+        [appendTo]="'body'"
+        styleClass="booking-datepicker"
+      />
+      @if (bookingForm.controls.endDateTime.invalid &&
+      bookingForm.controls.endDateTime.touched) {
+      <small class="error">End date & time is required</small>
+      }
+    </div>
 
-        <div class="form-group">
-          <label for="startTime">Start Time</label>
-          <input type="time" id="startTime" formControlName="startTime" />
-          @if (bookingForm.controls.startTime.invalid &&
-          bookingForm.controls.startTime.touched) {
-          <small class="error">Start time is required</small>
-          }
-        </div>
-      </div>
+    <div class="form-group">
+      <label for="purpose">Meeting Purpose</label>
+      <textarea
+        id="purpose"
+        formControlName="purpose"
+        rows="3"
+        placeholder="Enter meeting purpose"
+        class="purpose-textarea"
+      ></textarea>
+      @if (bookingForm.controls.purpose.invalid &&
+      bookingForm.controls.purpose.touched) {
+      <small class="error">Purpose is required (minimum 5 characters)</small>
+      }
+    </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="endDate">End Date</label>
-          <input
-            type="date"
-            id="endDate"
-            formControlName="endDate"
-            [min]="minDate"
-          />
-          @if (bookingForm.controls.endDate.invalid &&
-          bookingForm.controls.endDate.touched) {
-          <small class="error">End date is required</small>
-          }
-        </div>
-
-        <div class="form-group">
-          <label for="endTime">End Time</label>
-          <input type="time" id="endTime" formControlName="endTime" />
-          @if (bookingForm.controls.endTime.invalid &&
-          bookingForm.controls.endTime.touched) {
-          <small class="error">End time is required</small>
-          }
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="purpose">Meeting Purpose</label>
-        <textarea
-          id="purpose"
-          formControlName="purpose"
-          rows="3"
-          placeholder="Enter meeting purpose"
-        ></textarea>
-        @if (bookingForm.controls.purpose.invalid &&
-        bookingForm.controls.purpose.touched) {
-        <small class="error">Purpose is required (minimum 5 characters)</small>
-        }
-      </div>
-
-      <div class="button-group">
-        <button type="submit" [disabled]="bookingForm.invalid">Book Now</button>
-        <button type="button" class="cancel-btn" (click)="onCancel()">
-          Cancel
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+    <div class="button-group">
+      <button type="button" class="cancel-btn" (click)="onCancel()">
+        Cancel
+      </button>
+      <button type="submit" class="submit-btn" [disabled]="bookingForm.invalid">
+        Book Now
+      </button>
+    </div>
+  </form>
+</p-dialog>

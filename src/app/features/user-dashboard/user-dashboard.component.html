@@ -22,7 +22,7 @@
 
   @if (!showMyBookings()) {
   <app-room-search (search)="handleSearch($event)" />
-  <app-meeting-rooms />
+  <app-meeting-rooms [roomsList]="rooms()" />
   } @else {
   <app-my-bookings />
   }

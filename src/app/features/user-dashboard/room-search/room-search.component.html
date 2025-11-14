@@ -1,12 +1,18 @@
-<div class="room-search">
+<div class="room-search" [formGroup]="searchForm">
   <div class="search-header">
     <div class="search-bar">
       <i class="fa-solid fa-search"></i>
       <input
         type="text"
+        formControlName="searchText"
         placeholder="Search by room name, capacity, or amenities..."
         (input)="onSearch()"
       />
+      @if (searchForm.value.searchText) {
+      <button type="button" class="clear-search-btn" (click)="clearSearch()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      }
     </div>
     <button
       class="filter-toggle"
@@ -20,26 +26,22 @@
 
   @if (showFilters()) {
   <div class="filters-panel">
-    <form [formGroup]="searchForm" class="filters-form">
-      <div class="filter-group">
-        <label>Capacity Range</label>
-        <div class="capacity-inputs">
-          <input
-            type="number"
-            formControlName="minCapacity"
-            placeholder="Min"
-            min="1"
-            (change)="onSearch()"
-          />
-          <span>to</span>
-          <input
-            type="number"
-            formControlName="maxCapacity"
-            placeholder="Max"
-            min="1"
-            (change)="onSearch()"
-          />
-        </div>
+    <div class="filters-form">
+      <div class="filter-group capacity-filter">
+        <label
+          >Capacity Range: {{ capacityRange()[0] }} -
+          {{ capacityRange()[1] }} people</label
+        >
+        <p-slider
+          [(ngModel)]="capacityRangeValue"
+          [ngModelOptions]="{ standalone: true }"
+          [range]="true"
+          [min]="1"
+          [max]="50"
+          [step]="1"
+          (onChange)="onCapacityChange($event)"
+          styleClass="capacity-slider"
+        />
       </div>
 
       <div class="filter-group">
@@ -77,7 +79,7 @@
           <i class="fa-solid fa-xmark"></i> Clear Filters
         </button>
       </div>
-    </form>
+    </div>
   </div>
   }
 </div>

@@ -1,5 +1,15 @@
+@if (rooms().length === 0) {
+<div class="no-rooms">
+  <i class="pi pi-inbox"></i>
+  <h3>No rooms found</h3>
+  <p>
+    Try adjusting your search filters or clear them to see all available rooms.
+  </p>
+</div>
+} @else {
 <div class="room-list">
   @for (room of rooms(); track room.id) {
   <app-meeting-room [roomData]="room" />
   }
 </div>
+}

@@ -43,45 +43,74 @@ header {
 .user-info {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   background: rgba(255, 255, 255, 0.15);
-  padding: 6px 10px;
+  padding: 6px 16px 6px 6px;
   border-radius: 30px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .avatar {
   background-color: #fff;
   color: #667eea;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
 }
 
-.user-info h4 {
+.user-details h4 {
   margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: #f5f5f5;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.dropdown-icon {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  transition: transform 0.2s ease;
+}
+
+.user-info:hover .dropdown-icon {
+  transform: translateY(2px);
 }
 
 .logout-btn {
   background-color: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: #fff;
-  padding: 8px 18px;
+  padding: 10px 20px;
   border-radius: 30px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
   backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.logout-btn i {
+  font-size: 14px;
 }
 
 .logout-btn:hover {
@@ -89,6 +118,114 @@ header {
   transform: translateY(-2px);
   border-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+::ng-deep .user-overlay {
+  margin-top: 8px;
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+  border: none;
+  overflow: hidden;
+
+  .p-overlaypanel-content {
+    padding: 0;
+  }
+}
+
+.profile-panel {
+  min-width: 300px;
+}
+
+.profile-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: white;
+}
+
+.profile-avatar {
+  background-color: #fff;
+  color: #667eea;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-info h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.role-badge {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  display: inline-block;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-details {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: white;
+}
+
+.detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.detail-item i {
+  font-size: 18px;
+  color: #667eea;
+  width: 24px;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.detail-item div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.detail-item label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-item span {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  word-break: break-word;
 }
 
 @media (max-width: 700px) {

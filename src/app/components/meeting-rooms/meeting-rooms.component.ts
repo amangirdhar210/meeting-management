@@ -1,8 +1,6 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
-import { RoomService } from '../../shared/services/room.service';
+import { Component, Input, signal } from '@angular/core';
 import { Room } from '../../shared/models/room.model';
 import { MeetingRoomComponent } from './meeting-room/meeting-room.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-meeting-rooms',
@@ -10,22 +8,10 @@ import { Subscription } from 'rxjs';
   templateUrl: './meeting-rooms.component.html',
   styleUrl: './meeting-rooms.component.scss',
 })
-export class MeetingRoomsComponent implements OnInit, OnDestroy {
-  private roomService = inject(RoomService);
-  private subscription!: Subscription;
+export class MeetingRoomsComponent {
+  @Input() set roomsList(rooms: Room[]) {
+    this.rooms.set(rooms);
+  }
 
   rooms = signal<Room[]>([]);
-
-  ngOnInit(): void {
-    this.roomService.fetchRooms().subscribe();
-    this.subscription = this.roomService.rooms$.subscribe((data: Room[]) =>
-      this.rooms.set(data)
-    );
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
 }

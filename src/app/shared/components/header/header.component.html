@@ -8,12 +8,53 @@
   </div>
 
   <div class="right-section">
-    <div class="user-info">
+    <div class="user-info" (click)="op.toggle($event)" #userProfile>
       <div class="avatar">{{ initials() }}</div>
-      <div>
-        <h4>{{ currentUser() }}</h4>
+      <div class="user-details">
+        <h4>{{ userName() }}</h4>
       </div>
+      <i class="fa-solid fa-chevron-down dropdown-icon"></i>
     </div>
-    <button class="logout-btn" (click)="logout()">Logout</button>
+    <button class="logout-btn" (click)="logout()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      Logout
+    </button>
   </div>
 </header>
+
+<p-overlayPanel #op styleClass="user-overlay">
+  <ng-template pTemplate="content">
+    <div class="profile-panel">
+      <div class="profile-header">
+        <div class="profile-avatar">{{ initials() }}</div>
+        <div class="profile-info">
+          <h3>{{ userName() }}</h3>
+          <span class="role-badge">{{ userRole() }}</span>
+        </div>
+      </div>
+      <div class="profile-details">
+        <div class="detail-item">
+          <i class="fa-solid fa-envelope"></i>
+          <div>
+            <label>Email</label>
+            <span>{{ userEmail() }}</span>
+          </div>
+        </div>
+        <div class="detail-item">
+          <i class="fa-solid fa-user-shield"></i>
+          <div>
+            <label>Role</label>
+            <span>{{ userRole() }}</span>
+          </div>
+        </div>
+        <div class="detail-item">
+          <i class="fa-solid fa-id-card"></i>
+          <div>
+            <label>Name</label>
+            <span>{{ userName() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-overlayPanel>

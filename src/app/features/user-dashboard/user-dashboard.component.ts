@@ -22,6 +22,7 @@ export class UserDashboardComponent implements OnInit {
   private roomService = inject(RoomService);
   rooms = signal<Room[]>([]);
   showMyBookings = signal<boolean>(false);
+  private allRooms: Room[] = [];
 
   ngOnInit(): void {
     this.loadRooms();
@@ -29,14 +30,54 @@ export class UserDashboardComponent implements OnInit {
 
   loadRooms(): void {
     this.roomService.fetchRooms().subscribe();
-    this.roomService.rooms$.subscribe((data: Room[]) => this.rooms.set(data));
+    this.roomService.rooms$.subscribe((data: Room[]) => {
+      this.allRooms = data;
+      this.rooms.set(data);
+    });
   }
 
   handleSearch(params: RoomSearchParams): void {
     this.showMyBookings.set(false);
-    this.roomService.searchRooms(params).subscribe((rooms: Room[]) => {
-      this.rooms.set(rooms);
-    });
+
+    if (Object.keys(params).length === 0) {
+      this.rooms.set(this.allRooms);
+      return;
+    }
+
+    if (
+      params.minCapacity ||
+      params.maxCapacity ||
+      params.floor ||
+      params.amenities
+    ) {
+      this.roomService.searchRooms(params).subscribe(() => {
+        this.roomService.rooms$.subscribe((data: Room[]) => {
+          this.rooms.set(data);
+        });
+      });
+    } else if (params.searchText) {
+      this.filterRoomsLocally(params.searchText);
+    } else {
+      this.rooms.set(this.allRooms);
+    }
+  }
+
+  filterRoomsLocally(searchText: string): void {
+    const searchLower = searchText.toLowerCase();
+
+    const filtered = this.allRooms.filter(
+      (room) =>
+        room.name.toLowerCase().includes(searchLower) ||
+        room.location.toLowerCase().includes(searchLower) ||
+        room.description?.toLowerCase().includes(searchLower) ||
+        room.roomNumber.toString().includes(searchLower) ||
+        room.capacity.toString().includes(searchLower) ||
+        room.amenities.some((amenity) =>
+          amenity.toLowerCase().includes(searchLower)
+        )
+    );
+
+    this.rooms.set(filtered);
   }
 
   toggleMyBookings(): void {

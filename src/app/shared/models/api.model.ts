@@ -107,6 +107,7 @@ export interface TimeSlot {
 }
 
 export interface RoomSearchParams {
+  searchText?: string;
   minCapacity?: number;
   maxCapacity?: number;
   floor?: number;

@@ -9,6 +9,7 @@ import {
   AvailabilityCheckResponse,
 } from '../models/api.model';
 import { MessageService } from 'primeng/api';
+import { API_ENDPOINTS } from '../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -16,11 +17,10 @@ import { MessageService } from 'primeng/api';
 export class BookingService {
   private http = inject(HttpClient);
   private messageService = inject(MessageService);
-  private baseUrl = 'http://localhost:8080/api';
 
   createBooking(booking: CreateBookingRequest): Observable<GenericResponse> {
     return this.http
-      .post<GenericResponse>(`${this.baseUrl}/bookings`, booking)
+      .post<GenericResponse>(API_ENDPOINTS.BOOKINGS, booking)
       .pipe(
         tap(() => {
           this.messageService.add({
@@ -41,7 +41,7 @@ export class BookingService {
   }
 
   getAllBookings(): Observable<Booking[]> {
-    return this.http.get<Booking[]>(`${this.baseUrl}/bookings`).pipe(
+    return this.http.get<Booking[]>(API_ENDPOINTS.BOOKINGS).pipe(
       catchError((error) => {
         this.messageService.add({
           severity: 'error',
@@ -55,7 +55,7 @@ export class BookingService {
 
   cancelBooking(id: number): Observable<GenericResponse> {
     return this.http
-      .delete<GenericResponse>(`${this.baseUrl}/bookings/${id}`)
+      .delete<GenericResponse>(`${API_ENDPOINTS.BOOKINGS}/${id}`)
       .pipe(
         tap(() => {
           this.messageService.add({
@@ -80,7 +80,7 @@ export class BookingService {
   ): Observable<AvailabilityCheckResponse> {
     return this.http
       .post<AvailabilityCheckResponse>(
-        `${this.baseUrl}/rooms/check-availability`,
+        API_ENDPOINTS.CHECK_AVAILABILITY,
         request
       )
       .pipe(

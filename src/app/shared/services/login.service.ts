@@ -5,6 +5,7 @@ import { Observable, tap, catchError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { MessageService } from 'primeng/api';
 import { LoginRequest, LoginResponse } from '../models/api.model';
+import { API_ENDPOINTS } from '../constants';
 
 interface DecodedToken {
   user_id: number;
@@ -20,7 +21,6 @@ export class LoginService {
   private router = inject(Router);
   private http = inject(HttpClient);
   private messageService = inject(MessageService);
-  private apiUrl = 'http://localhost:8080/api';
 
   isLoggedIn = signal<boolean>(false);
 
@@ -59,33 +59,31 @@ export class LoginService {
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http
-      .post<LoginResponse>(`${this.apiUrl}/login`, credentials)
-      .pipe(
-        tap((res: LoginResponse) => {
-          localStorage.setItem('authToken', res.token);
-          this.isLoggedIn.set(true);
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Login successful',
-          });
-          const decoded = jwtDecode<DecodedToken>(res.token);
-          if (decoded.role === 'admin') {
-            this.router.navigate(['/admin-dashboard']);
-          } else if (decoded.role === 'user') {
-            this.router.navigate(['/user-dashboard']);
-          }
-        }),
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Login failed',
-          });
-          throw error;
-        })
-      );
+    return this.http.post<LoginResponse>(API_ENDPOINTS.LOGIN, credentials).pipe(
+      tap((res: LoginResponse) => {
+        localStorage.setItem('authToken', res.token);
+        this.isLoggedIn.set(true);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Login successful',
+        });
+        const decoded = jwtDecode<DecodedToken>(res.token);
+        if (decoded.role === 'admin') {
+          this.router.navigate(['/admin-dashboard']);
+        } else if (decoded.role === 'user') {
+          this.router.navigate(['/user-dashboard']);
+        }
+      }),
+      catchError((error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error?.error || 'Login failed',
+        });
+        throw error;
+      })
+    );
   }
 
   logout(): void {
