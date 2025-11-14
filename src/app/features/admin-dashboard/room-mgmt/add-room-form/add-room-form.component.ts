@@ -1,5 +1,4 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { NgIf } from '@angular/common';
 import {
   FormControl,
   FormGroup,
@@ -7,35 +6,31 @@ import {
   Validators,
 } from '@angular/forms';
 import { RoomService } from '../../../../shared/services/room.service';
-import { Room } from '../../../../shared/models/room.model';
+import { AddRoomRequest } from '../../../../shared/models/api.model';
 
 @Component({
   selector: 'add-room-form',
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule],
   standalone: true,
   templateUrl: './add-room-form.component.html',
   styleUrl: './add-room-form.component.scss',
 })
 export class AddRoomFormComponent {
   @Output() cancelAdd = new EventEmitter<void>();
-  @Output() roomAdded = new EventEmitter<Omit<Room, 'id'>>();
-  roomService = inject(RoomService);
+  private roomService = inject(RoomService);
 
   addRoomForm = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(3)],
     }),
-    roomNumber: new FormControl<number>(0, {
-      nonNullable: true,
+    roomNumber: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(1)],
     }),
-    capacity: new FormControl<number>(0, {
-      nonNullable: true,
+    capacity: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(1)],
     }),
-    floor: new FormControl<number>(0, {
-      nonNullable: true,
+    floor: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(1)],
     }),
     amenities: new FormControl<string>('', {
@@ -46,10 +41,10 @@ export class AddRoomFormComponent {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    description: new FormControl<string>(''),
+    description: new FormControl<string>('', { nonNullable: true }),
   });
 
-  onAddRoom() {
+  onAddRoom(): void {
     if (this.addRoomForm.invalid) {
       this.addRoomForm.markAllAsTouched();
       return;
@@ -57,23 +52,27 @@ export class AddRoomFormComponent {
 
     const formValues = this.addRoomForm.getRawValue();
 
-    const newRoom: Omit<Room, 'id'> = {
+    const newRoom: AddRoomRequest = {
       name: formValues.name,
-      roomNumber: formValues.roomNumber,
-      capacity: formValues.capacity,
-      floor: formValues.floor,
-      amenities: formValues.amenities.split(',').map((a) => a.trim()),
+      roomNumber: formValues.roomNumber!,
+      capacity: formValues.capacity!,
+      floor: formValues.floor!,
+      amenities: formValues.amenities.split(',').map((a: string) => a.trim()),
       status: 'Available',
       location: formValues.location,
-      description: formValues.description ?? undefined,
+      description: formValues.description || undefined,
     };
 
-    this.roomAdded.emit(newRoom);
-    this.addRoomForm.reset();
-    this.cancelAdd.emit();
+    this.roomService.addRoom(newRoom).subscribe({
+      next: () => {
+        this.addRoomForm.reset();
+        this.cancelAdd.emit();
+      },
+      error: () => {},
+    });
   }
 
-  onCancelAdd() {
+  onCancelAdd(): void {
     this.addRoomForm.reset();
     this.cancelAdd.emit();
   }

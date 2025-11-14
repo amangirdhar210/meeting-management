@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { RoomService } from '../../shared/services/room.service';
 import { Room } from '../../shared/models/room.model';
 import { MeetingRoomComponent } from './meeting-room/meeting-room.component';
-import { NgFor } from '@angular/common';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,15 +11,15 @@ import { Subscription } from 'rxjs';
   styleUrl: './meeting-rooms.component.scss',
 })
 export class MeetingRoomsComponent implements OnInit, OnDestroy {
-  rooms: Room[] = [];
+  private roomService = inject(RoomService);
   private subscription!: Subscription;
 
-  constructor(private roomService: RoomService) {}
+  rooms = signal<Room[]>([]);
 
   ngOnInit(): void {
     this.roomService.fetchRooms().subscribe();
-    this.subscription = this.roomService.rooms$.subscribe(
-      (data) => (this.rooms = data)
+    this.subscription = this.roomService.rooms$.subscribe((data: Room[]) =>
+      this.rooms.set(data)
     );
   }
 

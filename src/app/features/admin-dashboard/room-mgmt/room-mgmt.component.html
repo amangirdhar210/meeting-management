@@ -1,48 +1,60 @@
+<p-confirmDialog />
+
 <div class="table-container">
-    <div class="table-header">
-        <h3>rooms total</h3>
-        <button class="add-btn" (click)="onAddRoom()">+ Add Room</button>
-    </div>
-    @if (isAddingRoom()) {
-    <div>
-        <add-room-form (cancelAdd)="onCancelAdd()" (roomAdded)="onRoomAdded($event)"></add-room-form>
-    </div>
-    }
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Room Number</th>
-                <th>Capacity</th>
-                <th>Floor</th>
-                <th>Location</th>
-                <th>Amenities</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let room of rooms">
-                <td>{{ room.name }}</td>
-                <td>{{ room.roomNumber }}</td>
-                <td>{{ room.capacity }}</td>
-                <td>{{ room.floor }}</td>
-                <td>{{ room.location }}</td>
-                <td>
-                    <span *ngFor="let amenity of room.amenities" class="amenity">{{ amenity }}</span>
-                </td>
-                <td>{{ room.description }}</td>
-                <td>
-                    <span class="status" [class.available]="room.status === 'Available'"
-                        [class.inuse]="room.status === 'In Use'">
-                        {{ room.status }}
-                    </span>
-                </td>
-                <td>
-                    <i class="fa fa-trash delete" (click)="onDeleteRoom(room.id)"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  <div class="table-header">
+    <h3>{{ rooms().length }} rooms total</h3>
+    <button class="add-btn" (click)="onAddRoom()">+ Add Room</button>
+  </div>
+
+  @if (isAddingRoom()) {
+  <add-room-form (cancelAdd)="onCancelAdd()" />
+  }
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Room Number</th>
+        <th>Capacity</th>
+        <th>Floor</th>
+        <th>Location</th>
+        <th>Amenities</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (room of rooms(); track room.id) {
+      <tr>
+        <td>{{ room.name }}</td>
+        <td>{{ room.roomNumber }}</td>
+        <td>{{ room.capacity }}</td>
+        <td>{{ room.floor }}</td>
+        <td>{{ room.location }}</td>
+        <td>
+          @for (amenity of room.amenities; track amenity) {
+          <span class="amenity">{{ amenity }}</span>
+          }
+        </td>
+        <td>{{ room.description }}</td>
+        <td>
+          <span
+            class="status"
+            [class.available]="room.status === 'Available'"
+            [class.inuse]="room.status === 'In Use'"
+          >
+            {{ room.status }}
+          </span>
+        </td>
+        <td>
+          <i
+            class="fa fa-trash delete"
+            (click)="onDeleteRoom(room.id, room.name)"
+          ></i>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
 </div>

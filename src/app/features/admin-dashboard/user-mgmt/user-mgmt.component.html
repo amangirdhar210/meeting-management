@@ -1,32 +1,42 @@
-<div class="table-container">
-    <div class="table-header">
-        <h3>{{ users.length }} users total</h3>
-        <button class="add-btn" (click)="startAddingUser()">+ Add User</button>
-    </div>
-    @if (isAddingUser()) {
-    <div>
-        <app-add-user-form (cancelAdd)="stopAddingUser()"></app-add-user-form>
-    </div>
-    }
+<p-confirmDialog />
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let user of users">
-                <td>{{ user.name }}</td>
-                <td>{{ user.email }}</td>
-                <td>
-                    <span class="role" [class.admin]="user.role === 'admin'">{{ user.role }}</span>
-                </td>
-                <td><i class="fa fa-trash delete" (click)="onDeleteUser(user.id)"></i></td>
-            </tr>
-        </tbody>
-    </table>
+<div class="table-container">
+  <div class="table-header">
+    <h3>{{ users().length }} users total</h3>
+    <button class="add-btn" (click)="startAddingUser()">+ Add User</button>
+  </div>
+
+  @if (isAddingUser()) {
+  <app-add-user-form (cancelAdd)="stopAddingUser()" />
+  }
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.id) {
+      <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+          <span class="role" [class.admin]="user.role === 'admin'">{{
+            user.role
+          }}</span>
+        </td>
+        <td>
+          <i
+            class="fa fa-trash delete"
+            (click)="onDeleteUser(user.id, user.name)"
+          ></i>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
 </div>

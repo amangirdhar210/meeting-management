@@ -1,68 +1,97 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-
-export interface Booking {
-  id?: number;
-  userID?: number;
-  roomID: number;
-  startTime: string;
-  endTime: string;
-  purpose: string;
-}
-
-export interface GenericResponse {
-  message: string;
-}
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap, catchError } from 'rxjs';
+import {
+  Booking,
+  CreateBookingRequest,
+  GenericResponse,
+  AvailabilityCheckRequest,
+  AvailabilityCheckResponse,
+} from '../models/api.model';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BookingService {
-  private baseUrl = 'http://localhost:8080/api/bookings';
+  private http = inject(HttpClient);
+  private messageService = inject(MessageService);
+  private baseUrl = 'http://localhost:8080/api';
 
-  constructor(private http: HttpClient) {}
-
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    });
-  }
-
-  createBooking(booking: Booking): Observable<GenericResponse> {
+  createBooking(booking: CreateBookingRequest): Observable<GenericResponse> {
     return this.http
-      .post<GenericResponse>(this.baseUrl, booking, {
-        headers: this.getAuthHeaders(),
-      })
-      .pipe(catchError(this.handleError));
+      .post<GenericResponse>(`${this.baseUrl}/bookings`, booking)
+      .pipe(
+        tap(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Booking created successfully',
+          });
+        }),
+        catchError((error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error?.error || 'Failed to create booking',
+          });
+          throw error;
+        })
+      );
   }
 
   getAllBookings(): Observable<Booking[]> {
-    return this.http
-      .get<Booking[]>(this.baseUrl, {
-        headers: this.getAuthHeaders(),
+    return this.http.get<Booking[]>(`${this.baseUrl}/bookings`).pipe(
+      catchError((error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.error?.error || 'Failed to fetch bookings',
+        });
+        throw error;
       })
-      .pipe(catchError(this.handleError));
+    );
   }
 
   cancelBooking(id: number): Observable<GenericResponse> {
     return this.http
-      .delete<GenericResponse>(`${this.baseUrl}/${id}`, {
-        headers: this.getAuthHeaders(),
-      })
-      .pipe(catchError(this.handleError));
+      .delete<GenericResponse>(`${this.baseUrl}/bookings/${id}`)
+      .pipe(
+        tap(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Booking cancelled successfully',
+          });
+        }),
+        catchError((error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error?.error || 'Failed to cancel booking',
+          });
+          throw error;
+        })
+      );
   }
 
-  private handleError(error: any) {
-    let message = 'An unknown error occurred';
-    if (error.error && error.error.error) {
-      message = error.error.error;
-    } else if (error.message) {
-      message = error.message;
-    }
-    return throwError(() => new Error(message));
+  checkAvailability(
+    request: AvailabilityCheckRequest
+  ): Observable<AvailabilityCheckResponse> {
+    return this.http
+      .post<AvailabilityCheckResponse>(
+        `${this.baseUrl}/rooms/check-availability`,
+        request
+      )
+      .pipe(
+        catchError((error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error?.error || 'Failed to check availability',
+          });
+          throw error;
+        })
+      );
   }
 }

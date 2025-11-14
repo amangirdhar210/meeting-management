@@ -1,19 +1,10 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, catchError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { MessageService } from 'primeng/api';
-
-interface LoginResponse {
-  token: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-    role: 'admin' | 'user';
-  };
-}
+import { LoginRequest, LoginResponse } from '../models/api.model';
 
 interface DecodedToken {
   user_id: number;
@@ -26,13 +17,14 @@ interface DecodedToken {
   providedIn: 'root',
 })
 export class LoginService {
+  private router = inject(Router);
+  private http = inject(HttpClient);
+  private messageService = inject(MessageService);
+  private apiUrl = 'http://localhost:8080/api';
+
   isLoggedIn = signal<boolean>(false);
 
-  constructor(
-    private router: Router,
-    private http: HttpClient,
-    private messageService: MessageService
-  ) {
+  constructor() {
     this.restoreSession();
   }
 
@@ -55,27 +47,44 @@ export class LoginService {
     return this.userRole === 'user';
   }
 
-  login(credentials: {
-    email: string;
-    password: string;
-  }): Observable<LoginResponse> {
+  get userId(): number | null {
+    const token = localStorage.getItem('authToken');
+    if (!token) return null;
+    try {
+      const decoded = jwtDecode<DecodedToken>(token);
+      return decoded.user_id;
+    } catch {
+      return null;
+    }
+  }
+
+  login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>('http://localhost:8080/api/login', credentials)
+      .post<LoginResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
-        tap({
-          next: (res) => {
-            localStorage.setItem('authToken', res.token);
-            this.isLoggedIn.set(true);
-            const decoded = jwtDecode<DecodedToken>(res.token);
-            if (decoded.role === 'admin') {
-              this.router.navigate(['/admin-dashboard']);
-            } else if (decoded.role === 'user') {
-              this.router.navigate(['/user-dashboard']);
-            }
-          },
-          error: (err) => {
-            this.logout();
-          },
+        tap((res: LoginResponse) => {
+          localStorage.setItem('authToken', res.token);
+          this.isLoggedIn.set(true);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Login successful',
+          });
+          const decoded = jwtDecode<DecodedToken>(res.token);
+          if (decoded.role === 'admin') {
+            this.router.navigate(['/admin-dashboard']);
+          } else if (decoded.role === 'user') {
+            this.router.navigate(['/user-dashboard']);
+          }
+        }),
+        catchError((error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error?.error || 'Login failed',
+          });
+          this.logout();
+          throw error;
         })
       );
   }
@@ -83,13 +92,27 @@ export class LoginService {
   logout(): void {
     this.isLoggedIn.set(false);
     localStorage.removeItem('authToken');
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Info',
+      detail: 'Logged out successfully',
+    });
     this.router.navigate(['/login']);
   }
 
-  private restoreSession() {
+  private restoreSession(): void {
     const token = localStorage.getItem('authToken');
     if (token) {
-      this.isLoggedIn.set(true);
+      try {
+        const decoded = jwtDecode<DecodedToken>(token);
+        if (decoded.exp * 1000 > Date.now()) {
+          this.isLoggedIn.set(true);
+        } else {
+          this.logout();
+        }
+      } catch {
+        this.logout();
+      }
     }
   }
 }

@@ -2,26 +2,22 @@ import { Component, OnInit, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
-import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
   private router = inject(Router);
-  loginService = inject(LoginService);
-  constructor(private messageService: MessageService) {}
+  private loginService = inject(LoginService);
 
   loginForm = new FormGroup({
     email: new FormControl<string>('', {
@@ -45,35 +41,25 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  get email() {
-    return this.loginForm.get('email');
-  }
-  get password() {
-    return this.loginForm.get('password');
+  get email(): FormControl<string> {
+    return this.loginForm.get('email') as FormControl<string>;
   }
 
-  onSubmit() {
+  get password(): FormControl<string> {
+    return this.loginForm.get('password') as FormControl<string>;
+  }
+
+  onSubmit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
 
-    this.loginService
-      .login({
-        email: this.email!.value!,
-        password: this.password!.value!,
-      })
-      .subscribe({
-        next: () => {
-          this.loginForm.reset();
-        },
-        error: () => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Message Content',
-          });
-        },
-      });
+    this.loginService.login(this.loginForm.getRawValue()).subscribe({
+      next: () => {
+        this.loginForm.reset();
+      },
+      error: () => {},
+    });
   }
 }

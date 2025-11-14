@@ -1,9 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { RoomManagementComponent } from './room-mgmt/room-mgmt.component';
 import { UserMgmtComponent } from './user-mgmt/user-mgmt.component';
 import { HeaderComponent } from '../../shared/components/header/header.component';
-// import { StatsCardComponent } from '../../shared/components/stats-card/stats-card.component';
 import { StatsCardComponent } from '../../shared/components/stats-card/statsCard.component';
 import { RoomService } from '../../shared/services/room.service';
 import { UserService } from '../../shared/services/user.service';
@@ -16,7 +14,6 @@ import { Room } from '../../shared/models/room.model';
   imports: [
     RoomManagementComponent,
     UserMgmtComponent,
-    CommonModule,
     HeaderComponent,
     StatsCardComponent,
   ],
@@ -27,26 +24,25 @@ export class AdminDashboardComponent implements OnInit {
   private roomService = inject(RoomService);
   private userService = inject(UserService);
 
-  totalRooms = 0;
-  availableRooms = 0;
-  totalUsers = 0;
+  rooms = signal<Room[]>([]);
+  users = signal<User[]>([]);
+  activeTab = signal<'rooms' | 'users'>('rooms');
 
-  activeTab: 'rooms' | 'users' = 'rooms';
+  totalRooms = computed(() => this.rooms().length);
+  availableRooms = computed(
+    () => this.rooms().filter((r: Room) => r.status === 'Available').length
+  );
+  totalUsers = computed(() => this.users().length);
 
   ngOnInit(): void {
-    this.roomService.rooms$.subscribe((rooms: Room[]) => {
-      this.totalRooms = rooms.length;
-      this.availableRooms = rooms.filter(
-        (r) => r.status === 'Available'
-      ).length;
-    });
+    this.roomService.fetchRooms().subscribe();
+    this.userService.fetchUsers().subscribe();
 
-    this.userService.users$.subscribe((users: User[]) => {
-      this.totalUsers = users.length;
-    });
+    this.roomService.rooms$.subscribe((rooms: Room[]) => this.rooms.set(rooms));
+    this.userService.users$.subscribe((users: User[]) => this.users.set(users));
   }
 
-  switchTab(tab: 'rooms' | 'users') {
-    this.activeTab = tab;
+  switchTab(tab: 'rooms' | 'users'): void {
+    this.activeTab.set(tab);
   }
 }

@@ -10,7 +10,6 @@ export const roleGuard = (
     const router = inject(Router);
 
     if (!auth.isLoggedIn()) {
-      alert('Please log in first!');
       router.navigate(['/login']);
       return false;
     }
@@ -18,7 +17,6 @@ export const roleGuard = (
     if (allowedRoles.includes(auth.userRole)) {
       return true;
     } else {
-      alert('Access Denied: You are not authorized to view this page.');
       router.navigate(['/unauthorized']);
       return false;
     }

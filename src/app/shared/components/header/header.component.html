@@ -1,19 +1,19 @@
 <header>
-    <div class="logo-section">
-        <i class="fa-solid fa-book"></i>
-        <div>
-            <h2>RoomBook</h2>
-            <p>Meeting Room Management</p>
-        </div>
+  <div class="logo-section">
+    <i class="fa-solid fa-book"></i>
+    <div>
+      <h2>RoomBook</h2>
+      <p>Meeting Room Management</p>
     </div>
+  </div>
 
-    <div class="right-section">
-        <div class="user-info">
-            <div class="avatar">{{initials}}</div>
-            <div>
-                <h4>{{ currentUser }}</h4>
-            </div>
-        </div>
-        <button class="logout-btn" (click)="logout()">Logout</button>
+  <div class="right-section">
+    <div class="user-info">
+      <div class="avatar">{{ initials() }}</div>
+      <div>
+        <h4>{{ currentUser() }}</h4>
+      </div>
     </div>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
 </header>

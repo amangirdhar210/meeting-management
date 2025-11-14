@@ -1,5 +1,5 @@
 <div class="room-list">
-    @for (room of rooms; track room.id) {
-    <app-meeting-room [roomData]="room"></app-meeting-room>
-    }
+  @for (room of rooms(); track room.id) {
+  <app-meeting-room [roomData]="room" />
+  }
 </div>
