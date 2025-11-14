@@ -1,11 +1,10 @@
-
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.55); 
+  background: rgba(0, 0, 0, 0.55);
   z-index: 999;
   display: flex;
   justify-content: center;
@@ -14,8 +13,12 @@
 }
 
 @keyframes overlayFade {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
@@ -47,7 +50,7 @@
   text-align: center;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #111; 
+  color: #111;
   margin-bottom: 10px;
 }
 
@@ -77,8 +80,8 @@
 
 .add-user-form input:focus,
 .add-user-form select:focus {
-  border-color: #000;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .error {
@@ -94,47 +97,52 @@
   margin-top: 10px;
 }
 
-button[type='submit'] {
-  background-color: #000; 
+button[type="submit"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
   font-weight: 600;
-  padding: 10px 0;
+  padding: 12px 0;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   flex: 1;
   font-size: 1rem;
-  transition: background-color 0.25s ease, transform 0.1s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-button[type='submit']:hover {
-  background-color: #333;
+button[type="submit"]:hover:not([disabled]) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-button[type='submit']:active {
-  transform: scale(0.97);
+button[type="submit"]:active {
+  transform: translateY(0);
 }
 
 button[disabled] {
-  background-color: #c7c7c7;
+  background: #d0d0d0;
   cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.6;
 }
 
 .cancel-btn {
   background-color: #fff;
-  color: #000;
-  border: 1px solid #000;
+  color: #667eea;
+  border: 2px solid #667eea;
   border-radius: 10px;
-  font-weight: 500;
+  font-weight: 600;
   padding: 10px 0;
   flex: 1;
   cursor: pointer;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 .cancel-btn:hover {
-  background-color: #000;
+  background-color: #667eea;
   color: #fff;
+  transform: translateY(-1px);
 }
 
 @media (max-width: 480px) {

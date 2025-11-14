@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { RoomManagementComponent } from './room-mgmt/room-mgmt.component';
 import { UserMgmtComponent } from './user-mgmt/user-mgmt.component';
+import { AllBookingsComponent } from './all-bookings/all-bookings.component';
 import { HeaderComponent } from '../../shared/components/header/header.component';
 import { StatsCardComponent } from '../../shared/components/stats-card/statsCard.component';
 import { RoomService } from '../../shared/services/room.service';
@@ -14,6 +15,7 @@ import { Room } from '../../shared/models/room.model';
   imports: [
     RoomManagementComponent,
     UserMgmtComponent,
+    AllBookingsComponent,
     HeaderComponent,
     StatsCardComponent,
   ],
@@ -26,7 +28,7 @@ export class AdminDashboardComponent implements OnInit {
 
   rooms = signal<Room[]>([]);
   users = signal<User[]>([]);
-  activeTab = signal<'rooms' | 'users'>('rooms');
+  activeTab = signal<'rooms' | 'users' | 'bookings'>('rooms');
 
   totalRooms = computed(() => this.rooms().length);
   availableRooms = computed(
@@ -42,7 +44,7 @@ export class AdminDashboardComponent implements OnInit {
     this.userService.users$.subscribe((users: User[]) => this.users.set(users));
   }
 
-  switchTab(tab: 'rooms' | 'users'): void {
+  switchTab(tab: 'rooms' | 'users' | 'bookings'): void {
     this.activeTab.set(tab);
   }
 }

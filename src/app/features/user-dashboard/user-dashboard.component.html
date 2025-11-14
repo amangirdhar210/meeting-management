@@ -1,1 +1,29 @@
-<app-header /> <app-meeting-rooms />
+<app-header />
+
+<div class="dashboard-container">
+  <div class="dashboard-actions">
+    <button
+      class="view-toggle-btn"
+      [class.active]="!showMyBookings()"
+      (click)="showMyBookings.set(false)"
+    >
+      <i class="pi pi-home"></i>
+      Available Rooms
+    </button>
+    <button
+      class="view-toggle-btn"
+      [class.active]="showMyBookings()"
+      (click)="toggleMyBookings()"
+    >
+      <i class="pi pi-calendar"></i>
+      My Bookings
+    </button>
+  </div>
+
+  @if (!showMyBookings()) {
+  <app-room-search (search)="handleSearch($event)" />
+  <app-meeting-rooms />
+  } @else {
+  <app-my-bookings />
+  }
+</div>

@@ -83,7 +83,6 @@ export class LoginService {
             summary: 'Error',
             detail: error.error?.error || 'Login failed',
           });
-          this.logout();
           throw error;
         })
       );

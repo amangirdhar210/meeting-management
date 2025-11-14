@@ -1,0 +1,81 @@
+<p-confirmDialog />
+
+<div class="my-bookings">
+  <div class="bookings-header">
+    <h2>My Bookings</h2>
+    <span class="bookings-count">{{ bookings().length }} total</span>
+  </div>
+
+  @if (loading()) {
+  <div class="loading">Loading bookings...</div>
+  } @else if (bookings().length === 0) {
+  <div class="empty-state">
+    <i class="fa-solid fa-calendar-xmark"></i>
+    <h3>No Bookings Yet</h3>
+    <p>Book a room to get started!</p>
+  </div>
+  } @else {
+  <div class="bookings-grid">
+    @for (booking of bookings(); track booking.id) {
+    <div
+      class="booking-card"
+      [class.past]="isPast(booking.end_time)"
+      [class.upcoming]="isUpcoming(booking.start_time)"
+    >
+      <div class="booking-status">
+        @if (isPast(booking.end_time)) {
+        <span class="status-badge completed">Completed</span>
+        } @else if (isUpcoming(booking.start_time)) {
+        <span class="status-badge upcoming">Upcoming</span>
+        } @else {
+        <span class="status-badge active">Active</span>
+        }
+      </div>
+
+      <div class="booking-details">
+        <h3>{{ booking.purpose }}</h3>
+
+        <div class="booking-info">
+          <div class="info-item">
+            <i class="fa-solid fa-door-open"></i>
+            <span>Room {{ booking.room_id }}</span>
+          </div>
+
+          <div class="info-item">
+            <i class="fa-solid fa-clock"></i>
+            <span
+              >{{
+                getDuration(booking.start_time, booking.end_time)
+              }}
+              mins</span
+            >
+          </div>
+        </div>
+
+        <div class="booking-times">
+          <div class="time-item">
+            <label>Start:</label>
+            <span>{{ formatDate(booking.start_time) }}</span>
+          </div>
+          <div class="time-item">
+            <label>End:</label>
+            <span>{{ formatDate(booking.end_time) }}</span>
+          </div>
+        </div>
+      </div>
+
+      @if (isUpcoming(booking.start_time)) {
+      <div class="booking-actions">
+        <button
+          class="cancel-btn"
+          (click)="cancelBooking(booking.id, booking.purpose)"
+        >
+          <i class="fa-solid fa-xmark"></i> Cancel
+        </button>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  }
+</div>

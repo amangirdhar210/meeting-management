@@ -1,7 +1,7 @@
 .table-container {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
 }
 
@@ -17,18 +17,24 @@
 }
 
 .add-btn {
-  background: #000;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
+  padding: 12px 24px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 500;
-  transition: 0.2s ease;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .add-btn:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 table {
@@ -51,15 +57,19 @@ td {
 
 .role {
   text-transform: capitalize;
-  padding: 0.3rem 0.6rem;
-  border-radius: 10px;
+  padding: 6px 12px;
+  border-radius: 16px;
   font-size: 0.85rem;
-  background-color: #e5e5e5;
+  font-weight: 600;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1.5px solid #2e7d32;
 }
 
 .role.admin {
-  background-color: #000;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  border-color: transparent;
 }
 
 .delete {

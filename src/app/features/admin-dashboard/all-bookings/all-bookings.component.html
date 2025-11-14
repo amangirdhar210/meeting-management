@@ -1,0 +1,90 @@
+<p-confirmDialog />
+
+<div class="bookings-header">
+  <h2>
+    <i class="pi pi-calendar"></i>
+    All Bookings
+  </h2>
+  <p class="subtitle">View and manage all meeting room bookings</p>
+</div>
+
+@if (loading()) {
+<div class="loading">
+  <i class="pi pi-spinner pi-spin"></i>
+  <p>Loading bookings...</p>
+</div>
+} @else if (bookings().length === 0) {
+<div class="no-bookings">
+  <i class="pi pi-calendar-times"></i>
+  <p>No bookings found</p>
+</div>
+} @else {
+<div class="bookings-table-container">
+  <table class="bookings-table">
+    <thead>
+      <tr>
+        <th>Booking ID</th>
+        <th>User ID</th>
+        <th>Room ID</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Duration</th>
+        <th>Purpose</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (booking of bookings(); track booking.id) {
+      <tr>
+        <td>
+          <span class="booking-id">#{{ booking.id }}</span>
+        </td>
+        <td>{{ booking.user_id }}</td>
+        <td>{{ booking.room_id }}</td>
+        <td>{{ formatDate(booking.start_time) }}</td>
+        <td>{{ formatDate(booking.end_time) }}</td>
+        <td>
+          <span class="duration">{{
+            getDuration(booking.start_time, booking.end_time)
+          }}</span>
+          min
+        </td>
+        <td>
+          <span class="purpose">{{ booking.purpose }}</span>
+        </td>
+        <td>
+          <span
+            class="status-badge"
+            [class.completed]="
+              getStatus(booking.start_time, booking.end_time) === 'completed'
+            "
+            [class.active]="
+              getStatus(booking.start_time, booking.end_time) === 'active'
+            "
+            [class.upcoming]="
+              getStatus(booking.start_time, booking.end_time) === 'upcoming'
+            "
+          >
+            {{ getStatus(booking.start_time, booking.end_time) }}
+          </span>
+        </td>
+        <td>
+          @if (isUpcoming(booking.start_time)) {
+          <button
+            class="cancel-btn"
+            (click)="cancelBooking(booking.id, booking.purpose)"
+          >
+            <i class="pi pi-times"></i>
+            Cancel
+          </button>
+          } @else {
+          <span class="no-action">-</span>
+          }
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+}

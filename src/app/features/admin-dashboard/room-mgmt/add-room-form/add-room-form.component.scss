@@ -70,8 +70,8 @@
 }
 
 .add-room-form input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .error {
@@ -87,43 +87,49 @@
 }
 
 button[type="submit"] {
-  background-color: #4f46e5;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   font-weight: 600;
-  padding: 10px 0;
+  padding: 12px 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   flex: 1;
   font-size: 1rem;
-  transition: background-color 0.25s ease, transform 0.1s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-button[type="submit"]:hover {
-  background-color: #4338ca;
+button[type="submit"]:hover:not([disabled]) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 button[type="submit"]:active {
-  transform: scale(0.98);
+  transform: translateY(0);
 }
 
 button[disabled] {
-  background-color: #c7c7c7;
+  background: #d0d0d0;
   cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.6;
 }
 
 .cancel-btn {
-  background-color: #e0e0e0;
-  color: #333;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
+  background-color: #fff;
+  color: #667eea;
+  border: 2px solid #667eea;
+  border-radius: 10px;
+  font-weight: 600;
   padding: 10px 0;
   cursor: pointer;
   flex: 1;
-  transition: background-color 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 .cancel-btn:hover {
-  background-color: #ccc;
+  background-color: #667eea;
+  color: #fff;
+  transform: translateY(-1px);
 }

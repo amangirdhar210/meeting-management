@@ -1,0 +1,83 @@
+<div class="room-search">
+  <div class="search-header">
+    <div class="search-bar">
+      <i class="fa-solid fa-search"></i>
+      <input
+        type="text"
+        placeholder="Search by room name, capacity, or amenities..."
+        (input)="onSearch()"
+      />
+    </div>
+    <button
+      class="filter-toggle"
+      (click)="toggleFilters()"
+      [class.active]="showFilters()"
+    >
+      <i class="fa-solid fa-sliders"></i>
+      Filters
+    </button>
+  </div>
+
+  @if (showFilters()) {
+  <div class="filters-panel">
+    <form [formGroup]="searchForm" class="filters-form">
+      <div class="filter-group">
+        <label>Capacity Range</label>
+        <div class="capacity-inputs">
+          <input
+            type="number"
+            formControlName="minCapacity"
+            placeholder="Min"
+            min="1"
+            (change)="onSearch()"
+          />
+          <span>to</span>
+          <input
+            type="number"
+            formControlName="maxCapacity"
+            placeholder="Max"
+            min="1"
+            (change)="onSearch()"
+          />
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Floor</label>
+        <input
+          type="number"
+          formControlName="floor"
+          placeholder="Any floor"
+          min="1"
+          (change)="onSearch()"
+        />
+      </div>
+
+      <div class="filter-group amenities-filter">
+        <label>Amenities</label>
+        <div class="amenities-chips">
+          @for (amenity of commonAmenities; track amenity) {
+          <button
+            type="button"
+            class="amenity-chip"
+            [class.selected]="isAmenitySelected(amenity)"
+            (click)="toggleAmenity(amenity)"
+          >
+            @if (isAmenitySelected(amenity)) {
+            <i class="fa-solid fa-check"></i>
+            }
+            {{ amenity }}
+          </button>
+          }
+        </div>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="clear-btn" (click)="clearFilters()">
+          <i class="fa-solid fa-xmark"></i> Clear Filters
+        </button>
+      </div>
+    </form>
+  </div>
+  }
+</div>

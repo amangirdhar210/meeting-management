@@ -12,21 +12,29 @@
       [class.active]="activeTab() === 'rooms'"
       (click)="switchTab('rooms')"
     >
-      <i class="fa-solid fa-door-closed"></i> Room Management
+      <i class="fa-solid fa-door-closed"></i> Rooms
     </button>
     <button
       [class.active]="activeTab() === 'users'"
       (click)="switchTab('users')"
     >
-      <i class="fa-solid fa-user"></i> User Management
+      <i class="fa-solid fa-user"></i> Users
+    </button>
+    <button
+      [class.active]="activeTab() === 'bookings'"
+      (click)="switchTab('bookings')"
+    >
+      <i class="pi pi-calendar"></i> All Bookings
     </button>
   </div>
 
   <div class="tab-content">
     @if (activeTab() === 'rooms') {
     <app-room-mgmt />
-    } @else {
+    } @else if (activeTab() === 'users') {
     <app-user-mgmt />
+    } @else {
+    <app-all-bookings />
     }
   </div>
 </div>

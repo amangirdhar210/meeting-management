@@ -1,0 +1,181 @@
+.bookings-header {
+  margin-bottom: 24px;
+}
+
+.bookings-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bookings-header h2 i {
+  color: #667eea;
+  font-size: 1.4rem;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.loading,
+.no-bookings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.loading i,
+.no-bookings i {
+  font-size: 3rem;
+  color: #667eea;
+  margin-bottom: 16px;
+}
+
+.loading p,
+.no-bookings p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.bookings-table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.bookings-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.bookings-table thead th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bookings-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.bookings-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.bookings-table tbody td {
+  padding: 16px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.booking-id {
+  font-weight: 600;
+  color: #667eea;
+  font-family: monospace;
+}
+
+.duration {
+  font-weight: 600;
+  color: #333;
+}
+
+.purpose {
+  display: block;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.completed {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1.5px solid #2e7d32;
+}
+
+.status-badge.active {
+  background: #fff3e0;
+  color: #e65100;
+  border: 1.5px solid #e65100;
+}
+
+.status-badge.upcoming {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1.5px solid #1565c0;
+}
+
+.cancel-btn {
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid #dc3545;
+  border-radius: 8px;
+  color: #dc3545;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background: #dc3545;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.cancel-btn i {
+  font-size: 0.8rem;
+}
+
+.no-action {
+  color: #999;
+  font-style: italic;
+}
+
+@media (max-width: 1024px) {
+  .bookings-table {
+    font-size: 0.85rem;
+  }
+
+  .bookings-table thead th,
+  .bookings-table tbody td {
+    padding: 12px 8px;
+  }
+
+  .purpose {
+    max-width: 150px;
+  }
+}
