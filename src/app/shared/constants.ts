@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  BASE_URL: 'http://54.235.23.71:8080/api',
+  BASE_URL: 'http://localhost:8080/api',
 } as const;
 
 export const API_ENDPOINTS = {

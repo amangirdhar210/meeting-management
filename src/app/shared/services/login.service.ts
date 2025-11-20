@@ -5,6 +5,7 @@ import { Observable, tap, catchError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { MessageService } from 'primeng/api';
 import { LoginRequest, LoginResponse } from '../models/api.model';
+import { User } from '../models/user.model';
 import { API_ENDPOINTS } from '../constants';
 
 interface DecodedToken {
@@ -23,6 +24,7 @@ export class LoginService {
   private messageService = inject(MessageService);
 
   isLoggedIn = signal<boolean>(false);
+  currentUser = signal<User | null>(null);
 
   constructor() {
     this.restoreSession();
@@ -62,6 +64,8 @@ export class LoginService {
     return this.http.post<LoginResponse>(API_ENDPOINTS.LOGIN, credentials).pipe(
       tap((res: LoginResponse) => {
         localStorage.setItem('authToken', res.token);
+        localStorage.setItem('currentUser', JSON.stringify(res.user));
+        this.currentUser.set(res.user);
         this.isLoggedIn.set(true);
         this.messageService.add({
           severity: 'success',
@@ -88,7 +92,9 @@ export class LoginService {
 
   logout(): void {
     this.isLoggedIn.set(false);
+    this.currentUser.set(null);
     localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
     this.messageService.add({
       severity: 'info',
       summary: 'Info',
@@ -99,11 +105,15 @@ export class LoginService {
 
   private restoreSession(): void {
     const token = localStorage.getItem('authToken');
+    const userStr = localStorage.getItem('currentUser');
     if (token) {
       try {
         const decoded = jwtDecode<DecodedToken>(token);
         if (decoded.exp * 1000 > Date.now()) {
           this.isLoggedIn.set(true);
+          if (userStr) {
+            this.currentUser.set(JSON.parse(userStr));
+          }
         } else {
           this.logout();
         }
