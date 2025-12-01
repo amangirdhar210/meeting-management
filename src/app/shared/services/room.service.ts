@@ -7,6 +7,7 @@ import {
   GenericResponse,
   RoomSearchParams,
   DetailedBooking,
+  RoomScheduleByDate,
 } from '../models/api.model';
 import { MessageService } from 'primeng/api';
 import { API_ENDPOINTS } from '../constants';
@@ -90,6 +91,27 @@ export class RoomService {
             severity: 'error',
             summary: 'Error',
             detail: error.error?.error || 'Failed to fetch room schedule',
+          });
+          throw error;
+        })
+      );
+  }
+
+  getRoomScheduleByDate(
+    roomId: number,
+    date: string
+  ): Observable<RoomScheduleByDate> {
+    return this.http
+      .get<RoomScheduleByDate>(
+        `${API_ENDPOINTS.ROOMS}/${roomId}/schedule/date?date=${date}`
+      )
+      .pipe(
+        catchError((error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail:
+              error.error?.error || 'Failed to fetch room schedule by date',
           });
           throw error;
         })

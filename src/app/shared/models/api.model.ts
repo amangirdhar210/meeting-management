@@ -123,3 +123,21 @@ export interface GenericResponse {
 export interface ErrorResponse {
   error: string;
 }
+
+// Room Schedule by Date
+export interface RoomScheduleByDate {
+  roomId: number;
+  roomName: string;
+  roomNumber: number;
+  date: string;
+  bookings: ScheduleBooking[];
+}
+
+export interface ScheduleBooking {
+  startTime: string;
+  endTime: string;
+  isBooked: boolean;
+  bookingId: number;
+  userName: string;
+  purpose: string;
+}

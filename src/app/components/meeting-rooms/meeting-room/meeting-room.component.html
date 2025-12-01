@@ -11,13 +11,21 @@
     <img src="meetingo.jpg" alt="Room Image" />
   </div>
 
-  <button
-    class="book-btn"
-    (click)="startBooking()"
-    [disabled]="roomData.status === 'In Use'"
-  >
-    @if (roomData.status === 'Available') { Book Now } @else { Not Available }
-  </button>
+  <div class="action-buttons">
+    <button
+      class="book-btn"
+      (click)="startBooking()"
+      [disabled]="roomData.status === 'In Use'"
+    >
+      @if (roomData.status === 'Available') {
+      <i class="fa-solid fa-calendar-check"></i> Book Now } @else {
+      <i class="fa-solid fa-ban"></i> Not Available }
+    </button>
+
+    <button class="schedule-btn" (click)="viewSchedule()">
+      <i class="fa-solid fa-calendar-days"></i> View Schedule
+    </button>
+  </div>
 
   <div class="room-content">
     <h3 class="room-name">{{ roomData.name }}</h3>
@@ -48,4 +56,10 @@
 
 @if (isBooking()) {
 <app-booking-form [room]="roomData" (cancelBooking)="cancelBooking()" />
+} @if (isViewingSchedule()) {
+<app-room-schedule-modal
+  [roomId]="roomData.id"
+  [roomName]="roomData.name"
+  (closeModal)="closeSchedule()"
+/>
 }

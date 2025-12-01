@@ -20,18 +20,36 @@
   border-color: #667eea;
 }
 
-.book-btn {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* ACTION BUTTONS */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  padding: 0 12px 12px 12px;
+}
+
+.book-btn,
+.schedule-btn {
+  flex: 1;
+  padding: 12px 16px;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  i {
+    font-size: 14px;
+  }
+}
+
+.book-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .book-btn:hover:not(:disabled) {
@@ -43,6 +61,19 @@
   background: #444;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.schedule-btn {
+  background: linear-gradient(135deg, #2dd4bf 0%, #06b6d4 100%);
+}
+
+.schedule-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(45, 212, 191, 0.4);
+}
+
+.schedule-btn:active {
+  transform: translateY(0);
 }
 
 /* IMAGE SECTION */

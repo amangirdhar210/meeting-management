@@ -1,0 +1,149 @@
+<div class="modal-overlay" (click)="close()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <h2>{{ roomName }} - Schedule</h2>
+        <div class="header-info">
+          <span class="room-number">Room #{{ schedule()?.roomNumber }}</span>
+          @if (isToday()) {
+          <span
+            class="current-status"
+            [class.available]="getCurrentStatus() === 'Available'"
+            [class.in-use]="getCurrentStatus() === 'In Use'"
+          >
+            <i class="fa-solid fa-circle"></i>
+            {{ getCurrentStatus() }}
+          </span>
+          }
+        </div>
+      </div>
+      <button class="close-btn" (click)="close()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Date Picker -->
+    <div class="date-picker-section">
+      <label for="schedule-date">
+        <i class="fa-solid fa-calendar-days"></i>
+        Select Date:
+      </label>
+      <input
+        type="date"
+        id="schedule-date"
+        [value]="selectedDate()"
+        (change)="onDateChange($event)"
+        class="date-input"
+      />
+    </div>
+
+    <!-- Schedule Content -->
+    <div class="modal-body">
+      @if (loading()) {
+      <div class="loading-state">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <p>Loading schedule...</p>
+      </div>
+      } @else if (schedule()) {
+      <div class="schedule-container">
+        <!-- Headers (Sticky) -->
+        <div class="schedule-headers">
+          <div class="time-header">Time</div>
+          <div class="schedule-header">
+            <span>{{ selectedDate() }}</span>
+            @if (schedule()?.bookings && schedule()!.bookings.length > 0) {
+            <span class="booking-count">
+              {{ schedule()!.bookings.length }}
+              booking{{ schedule()!.bookings.length !== 1 ? "s" : "" }}
+            </span>
+            } @else {
+            <span class="no-bookings">No bookings</span>
+            }
+          </div>
+        </div>
+
+        <!-- Scrollable Body (Synchronized) -->
+        <div class="schedule-body">
+          <!-- Time Column -->
+          <div class="time-column">
+            <div class="time-content">
+              @for (slot of timeSlots(); track slot.hour) {
+              <div class="time-slot">
+                <span class="time-label">{{ slot.label }}</span>
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- Schedule Column -->
+          <div class="schedule-column">
+            <div class="schedule-content">
+              <div class="schedule-grid">
+                @for (slot of timeSlots(); track slot.hour) {
+                <div class="schedule-slot">
+                  @for (booking of slot.bookings; track booking.bookingId) { @if
+                  (getBookingPosition(booking, slot.hour); as position) { @if
+                  (position.display) {
+                  <div
+                    class="booking-bar"
+                    [style.top]="position.top"
+                    [style.height]="position.height"
+                    [title]="
+                      booking.userName +
+                      ' - ' +
+                      booking.purpose +
+                      ' (' +
+                      formatTime(booking.startTime) +
+                      ' - ' +
+                      formatTime(booking.endTime) +
+                      ')'
+                    "
+                  >
+                    <div class="booking-content">
+                      <strong>{{ booking.userName }}</strong>
+                      <span class="booking-time">
+                        {{ formatTime(booking.startTime) }} -
+                        {{ formatTime(booking.endTime) }}
+                      </span>
+                      <span class="booking-purpose">{{ booking.purpose }}</span>
+                    </div>
+                  </div>
+                  } } }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Details Legend -->
+      @if (schedule()?.bookings && schedule()!.bookings.length > 0) {
+      <div class="bookings-list">
+        <h3>Booking Details</h3>
+        <div class="bookings-list-content">
+          @for (booking of schedule()!.bookings; track booking.bookingId) {
+          <div class="booking-item">
+            <div class="booking-item-time">
+              <i class="fa-solid fa-clock"></i>
+              {{ formatTime(booking.startTime) }} -
+              {{ formatTime(booking.endTime) }}
+            </div>
+            <div class="booking-item-details">
+              <strong>{{ booking.userName }}</strong>
+              <span>{{ booking.purpose }}</span>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      } } @else {
+      <div class="empty-state">
+        <i class="fa-solid fa-calendar-xmark"></i>
+        <p>No schedule data available</p>
+      </div>
+      }
+    </div>
+  </div>
+</div>
