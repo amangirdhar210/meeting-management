@@ -18,6 +18,7 @@ import { LoginService } from '../../services/login.service';
 export class LoginComponent implements OnInit {
   private router = inject(Router);
   private loginService = inject(LoginService);
+  isSubmitting = false;
 
   loginForm = new FormGroup({
     email: new FormControl<string>('', {
@@ -50,16 +51,20 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.loginForm.invalid) {
+    if (this.loginForm.invalid || this.isSubmitting) {
       this.loginForm.markAllAsTouched();
       return;
     }
 
+    this.isSubmitting = true;
     this.loginService.login(this.loginForm.getRawValue()).subscribe({
       next: () => {
+        this.isSubmitting = false;
         this.loginForm.reset();
       },
-      error: () => {},
+      error: () => {
+        this.isSubmitting = false;
+      },
     });
   }
 }

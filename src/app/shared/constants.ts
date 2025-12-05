@@ -1,12 +1,14 @@
+const BASE_URL = 'https://6f6nqpgo3g.execute-api.us-east-1.amazonaws.com/Dev';
+
 export const API_CONFIG = {
-  BASE_URL: 'http://localhost:8080/api',
+  BASE_URL: BASE_URL,
 } as const;
 
 export const API_ENDPOINTS = {
-  LOGIN: `${API_CONFIG.BASE_URL}/login`,
-  REGISTER: `${API_CONFIG.BASE_URL}/register`,
-  USERS: `${API_CONFIG.BASE_URL}/users`,
-  ROOMS: `${API_CONFIG.BASE_URL}/rooms`,
-  BOOKINGS: `${API_CONFIG.BASE_URL}/bookings`,
-  CHECK_AVAILABILITY: `${API_CONFIG.BASE_URL}/rooms/check-availability`,
+  LOGIN: `${BASE_URL}/login`,
+  REGISTER: `${BASE_URL}/api/users/register`,
+  USERS: `${BASE_URL}/api/users`,
+  ROOMS: `${BASE_URL}/api/rooms`,
+  BOOKINGS: `${BASE_URL}/api/bookings`,
+  CHECK_AVAILABILITY: `${BASE_URL}/api/rooms/check-availability`,
 } as const;

@@ -52,7 +52,7 @@ export class MyBookingsComponent implements OnInit {
     });
   }
 
-  cancelBooking(id: number, purpose: string): void {
+  cancelBooking(id: string, purpose: string): void {
     this.confirmationService.confirm({
       message: `Are you sure you want to cancel this booking: "${purpose}"?`,
       header: 'Cancel Booking',
@@ -68,16 +68,16 @@ export class MyBookingsComponent implements OnInit {
     });
   }
 
-  isUpcoming(startTime: string): boolean {
-    return new Date(startTime) > new Date();
+  isUpcoming(startTime: number): boolean {
+    return startTime * 1000 > Date.now();
   }
 
-  isPast(endTime: string): boolean {
-    return new Date(endTime) < new Date();
+  isPast(endTime: number): boolean {
+    return endTime * 1000 < Date.now();
   }
 
-  formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleString('en-US', {
+  formatDate(timestamp: number): string {
+    return new Date(timestamp * 1000).toLocaleString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -86,9 +86,7 @@ export class MyBookingsComponent implements OnInit {
     });
   }
 
-  getDuration(startTime: string, endTime: string): number {
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-    return Math.round((end.getTime() - start.getTime()) / (1000 * 60));
+  getDuration(startTime: number, endTime: number): number {
+    return Math.round((endTime - startTime) / 60);
   }
 }

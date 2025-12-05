@@ -26,6 +26,7 @@
   border-radius: 16px;
   width: 420px;
   max-width: 90%;
+  max-height: 85vh;
   padding: 30px 28px;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
   animation: modalFade 0.25s ease;
@@ -33,6 +34,7 @@
   flex-direction: column;
   gap: 18px;
   z-index: 1000;
+  overflow-y: auto;
 }
 
 @keyframes modalFade {
@@ -125,6 +127,10 @@ button[disabled] {
   cursor: not-allowed;
   box-shadow: none;
   opacity: 0.6;
+}
+
+button[type="submit"] i {
+  margin-right: 6px;
 }
 
 .cancel-btn {

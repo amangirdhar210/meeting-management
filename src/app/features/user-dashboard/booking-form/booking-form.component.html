@@ -87,11 +87,21 @@
     </div>
 
     <div class="button-group">
-      <button type="button" class="cancel-btn" (click)="onCancel()">
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="onCancel()"
+        [disabled]="isSubmitting"
+      >
         Cancel
       </button>
-      <button type="submit" class="submit-btn" [disabled]="bookingForm.invalid">
-        Book Now
+      <button
+        type="submit"
+        class="submit-btn"
+        [disabled]="bookingForm.invalid || isSubmitting"
+      >
+        @if (isSubmitting) {
+        <i class="pi pi-spinner pi-spin"></i> Booking... } @else { Book Now }
       </button>
     </div>
   </form>

@@ -41,7 +41,7 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
     this.isAddingUser.set(false);
   }
 
-  onDeleteUser(id: number, name: string): void {
+  onDeleteUser(id: string, name: string): void {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete ${name}?`,
       header: 'Delete Confirmation',

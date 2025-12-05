@@ -16,11 +16,13 @@
   background: #ffffff;
   width: 420px;
   max-width: 90%;
+  max-height: 85vh;
   border-radius: 14px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
   padding: 30px 28px;
   z-index: 10000;
   animation: fadeIn 0.25s ease;
+  overflow-y: auto;
 }
 
 @keyframes fadeIn {
@@ -114,6 +116,10 @@ button[disabled] {
   cursor: not-allowed;
   box-shadow: none;
   opacity: 0.6;
+}
+
+button[type="submit"] i {
+  margin-right: 6px;
 }
 
 .cancel-btn {

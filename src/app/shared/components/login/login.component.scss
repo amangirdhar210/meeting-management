@@ -142,3 +142,7 @@ button[type="submit"]:disabled {
   box-shadow: none;
   opacity: 0.6;
 }
+
+button[type="submit"] i {
+  margin-right: 6px;
+}

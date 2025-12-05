@@ -101,11 +101,17 @@
         <button
           type="submit"
           class="btn btn-add"
-          [disabled]="addUserForm.invalid"
+          [disabled]="addUserForm.invalid || isSubmitting"
         >
-          Add User
+          @if (isSubmitting) {
+          <i class="pi pi-spinner pi-spin"></i> Adding... } @else { Add User }
         </button>
-        <button type="button" class="cancel-btn" (click)="onCancelAdd()">
+        <button
+          type="button"
+          class="cancel-btn"
+          (click)="onCancelAdd()"
+          [disabled]="isSubmitting"
+        >
           Cancel
         </button>
       </div>

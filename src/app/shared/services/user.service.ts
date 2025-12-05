@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, catchError } from 'rxjs';
+import { BehaviorSubject, Observable, tap, catchError, of, EMPTY } from 'rxjs';
 import { User } from '../models/user.model';
 import { GenericResponse, RegisterUserRequest } from '../models/api.model';
 import { MessageService } from 'primeng/api';
@@ -23,7 +23,7 @@ export class UserService {
           summary: 'Error',
           detail: error.error?.error || 'Failed to fetch users',
         });
-        throw error;
+        return of([]);
       })
     );
   }
@@ -46,12 +46,12 @@ export class UserService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to add user',
           });
-          throw error;
+          return EMPTY;
         })
       );
   }
 
-  deleteUser(id: number): Observable<GenericResponse> {
+  deleteUser(id: string): Observable<GenericResponse> {
     return this.http
       .delete<GenericResponse>(`${API_ENDPOINTS.USERS}/${id}`)
       .pipe(
@@ -69,7 +69,7 @@ export class UserService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to delete user',
           });
-          throw error;
+          return EMPTY;
         })
       );
   }

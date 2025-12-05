@@ -1,7 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError } from 'rxjs';
+import { Observable, tap, catchError, EMPTY } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { MessageService } from 'primeng/api';
 import { LoginRequest, LoginResponse } from '../models/api.model';
@@ -9,7 +9,7 @@ import { User } from '../models/user.model';
 import { API_ENDPOINTS } from '../constants';
 
 interface DecodedToken {
-  user_id: number;
+  user_id: string;
   role: 'admin' | 'user';
   exp: number;
   iat: number;
@@ -49,7 +49,7 @@ export class LoginService {
     return this.userRole === 'user';
   }
 
-  get userId(): number | null {
+  get userId(): string | null {
     const token = localStorage.getItem('authToken');
     if (!token) return null;
     try {
@@ -85,7 +85,7 @@ export class LoginService {
           summary: 'Error',
           detail: error.error?.error || 'Login failed',
         });
-        throw error;
+        return EMPTY;
       })
     );
   }

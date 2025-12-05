@@ -49,6 +49,9 @@
       }
     </div>
 
-    <button type="submit" [disabled]="loginForm.invalid">Log In</button>
+    <button type="submit" [disabled]="loginForm.invalid || isSubmitting">
+      @if (isSubmitting) {
+      <i class="pi pi-spinner pi-spin"></i> Logging in... } @else { Log In }
+    </button>
   </form>
 </div>

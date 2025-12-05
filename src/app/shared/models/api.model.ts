@@ -1,12 +1,14 @@
 export interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: 'admin' | 'user';
+  created_at: number;
+  updated_at: number;
 }
 
 export interface Room {
-  id: number;
+  id: string;
   name: string;
   roomNumber: number;
   capacity: number;
@@ -18,25 +20,25 @@ export interface Room {
 }
 
 export interface Booking {
-  id: number;
-  user_id: number;
-  room_id: number;
-  start_time: string;
-  end_time: string;
+  id: string;
+  user_id: string;
+  room_id: string;
+  start_time: number;
+  end_time: number;
   purpose: string;
   status?: string;
 }
 
 export interface DetailedBooking {
-  id: number;
-  user_id: number;
+  id: string;
+  user_id: string;
   userName: string;
   userEmail: string;
-  room_id: number;
+  room_id: string;
   roomName: string;
   roomNumber: number;
-  start_time: string;
-  end_time: string;
+  start_time: number;
+  end_time: number;
   duration: number;
   purpose: string;
   status: string;
@@ -71,38 +73,39 @@ export interface AddRoomRequest {
 }
 
 export interface CreateBookingRequest {
-  room_id: number;
+  room_id: string;
   start_time: string;
   end_time: string;
   purpose: string;
+  user_id?: string;
 }
 
 export interface AvailabilityCheckRequest {
-  roomId: number;
+  roomId: string;
   startTime: string;
   endTime: string;
 }
 
 export interface AvailabilityCheckResponse {
   available: boolean;
-  roomId: number;
+  roomId: string;
   roomName: string;
-  requestedStart: string;
-  requestedEnd: string;
+  requestedStart: number;
+  requestedEnd: number;
   conflictingSlots: ConflictingBooking[];
   suggestedSlots: TimeSlot[];
 }
 
 export interface ConflictingBooking {
-  bookingId: number;
-  startTime: string;
-  endTime: string;
+  bookingId: string;
+  startTime: number;
+  endTime: number;
   purpose: string;
 }
 
 export interface TimeSlot {
-  startTime: string;
-  endTime: string;
+  startTime: number;
+  endTime: number;
   duration: number;
 }
 
@@ -124,9 +127,8 @@ export interface ErrorResponse {
   error: string;
 }
 
-// Room Schedule by Date
 export interface RoomScheduleByDate {
-  roomId: number;
+  roomId: string;
   roomName: string;
   roomNumber: number;
   date: string;
@@ -137,7 +139,7 @@ export interface ScheduleBooking {
   startTime: string;
   endTime: string;
   isBooked: boolean;
-  bookingId: number;
+  bookingId: string;
   userName: string;
   purpose: string;
 }

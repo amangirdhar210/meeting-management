@@ -29,8 +29,7 @@ export class UserDashboardComponent implements OnInit {
   }
 
   loadRooms(): void {
-    this.roomService.fetchRooms().subscribe();
-    this.roomService.rooms$.subscribe((data: Room[]) => {
+    this.roomService.fetchRooms().subscribe((data: Room[]) => {
       this.allRooms = data;
       this.rooms.set(data);
     });
@@ -44,38 +43,55 @@ export class UserDashboardComponent implements OnInit {
       return;
     }
 
-    if (
-      params.minCapacity ||
-      params.maxCapacity ||
-      params.floor ||
-      params.amenities
-    ) {
-      this.roomService.searchRooms(params).subscribe(() => {
-        this.roomService.rooms$.subscribe((data: Room[]) => {
-          this.rooms.set(data);
-        });
+    const needsApiCall =
+      params.minCapacity || params.maxCapacity || params.floor;
+
+    if (needsApiCall) {
+      const apiParams: RoomSearchParams = {};
+      if (params.minCapacity) apiParams.minCapacity = params.minCapacity;
+      if (params.maxCapacity) apiParams.maxCapacity = params.maxCapacity;
+      if (params.floor) apiParams.floor = params.floor;
+
+      this.roomService.searchRooms(apiParams).subscribe((data: Room[]) => {
+        this.applyClientSideFilters(data, params);
       });
-    } else if (params.searchText) {
-      this.filterRoomsLocally(params.searchText);
     } else {
-      this.rooms.set(this.allRooms);
+      this.applyClientSideFilters(this.allRooms, params);
     }
   }
 
-  filterRoomsLocally(searchText: string): void {
-    const searchLower = searchText.toLowerCase();
+  applyClientSideFilters(rooms: Room[], params: RoomSearchParams): void {
+    let filtered = [...rooms];
 
-    const filtered = this.allRooms.filter(
-      (room) =>
-        room.name.toLowerCase().includes(searchLower) ||
-        room.location.toLowerCase().includes(searchLower) ||
-        room.description?.toLowerCase().includes(searchLower) ||
-        room.roomNumber.toString().includes(searchLower) ||
-        room.capacity.toString().includes(searchLower) ||
-        room.amenities.some((amenity) =>
-          amenity.toLowerCase().includes(searchLower)
+    if (params.searchText) {
+      const searchLower = params.searchText.toLowerCase();
+      filtered = filtered.filter(
+        (room) =>
+          room.name.toLowerCase().includes(searchLower) ||
+          room.location.toLowerCase().includes(searchLower) ||
+          room.description?.toLowerCase().includes(searchLower) ||
+          room.roomNumber.toString().includes(searchLower) ||
+          room.capacity.toString().includes(searchLower) ||
+          room.amenities.some((amenity) =>
+            amenity.toLowerCase().includes(searchLower)
+          )
+      );
+    }
+
+    if (params.amenities) {
+      const requiredAmenities = params.amenities
+        .split(',')
+        .map((a) => a.trim().toLowerCase())
+        .filter((a) => a);
+
+      filtered = filtered.filter((room) =>
+        requiredAmenities.every((reqAmenity) =>
+          room.amenities.some((roomAmenity) =>
+            roomAmenity.toLowerCase().includes(reqAmenity)
+          )
         )
-    );
+      );
+    }
 
     this.rooms.set(filtered);
   }

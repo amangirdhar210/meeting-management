@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, catchError, of } from 'rxjs';
+import { BehaviorSubject, Observable, tap, catchError, of, EMPTY } from 'rxjs';
 import { Room } from '../models/room.model';
 import {
   AddRoomRequest,
@@ -29,12 +29,12 @@ export class RoomService {
           summary: 'Error',
           detail: error.error?.error || 'Failed to fetch rooms',
         });
-        throw error;
+        return of([]);
       })
     );
   }
 
-  getRoomById(id: number): Observable<Room> {
+  getRoomById(id: string): Observable<Room> {
     return this.http.get<Room>(`${API_ENDPOINTS.ROOMS}/${id}`).pipe(
       catchError((error) => {
         this.messageService.add({
@@ -42,7 +42,7 @@ export class RoomService {
           summary: 'Error',
           detail: error.error?.error || 'Failed to fetch room details',
         });
-        throw error;
+        return EMPTY;
       })
     );
   }
@@ -77,12 +77,12 @@ export class RoomService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to search rooms',
           });
-          throw error;
+          return of([]);
         })
       );
   }
 
-  getRoomSchedule(roomId: number): Observable<DetailedBooking[]> {
+  getRoomSchedule(roomId: string): Observable<DetailedBooking[]> {
     return this.http
       .get<DetailedBooking[]>(`${API_ENDPOINTS.ROOMS}/${roomId}/schedule`)
       .pipe(
@@ -92,13 +92,13 @@ export class RoomService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to fetch room schedule',
           });
-          throw error;
+          return of([]);
         })
       );
   }
 
   getRoomScheduleByDate(
-    roomId: number,
+    roomId: string,
     date: string
   ): Observable<RoomScheduleByDate> {
     return this.http
@@ -113,7 +113,7 @@ export class RoomService {
             detail:
               error.error?.error || 'Failed to fetch room schedule by date',
           });
-          throw error;
+          return EMPTY;
         })
       );
   }
@@ -134,12 +134,12 @@ export class RoomService {
           summary: 'Error',
           detail: error.error?.error || 'Failed to add room',
         });
-        throw error;
+        return EMPTY;
       })
     );
   }
 
-  deleteRoom(id: number): Observable<GenericResponse> {
+  deleteRoom(id: string): Observable<GenericResponse> {
     return this.http
       .delete<GenericResponse>(`${API_ENDPOINTS.ROOMS}/${id}`)
       .pipe(
@@ -157,7 +157,7 @@ export class RoomService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to delete room',
           });
-          throw error;
+          return EMPTY;
         })
       );
   }

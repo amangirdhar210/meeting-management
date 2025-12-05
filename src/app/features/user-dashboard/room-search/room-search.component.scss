@@ -1,8 +1,8 @@
 .room-search {
   background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 24px;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   position: relative;
   z-index: 0;
@@ -30,10 +30,10 @@
 
 .search-bar input {
   width: 100%;
-  padding: 14px 48px 14px 48px;
+  padding: 11px 42px 11px 42px;
   border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
   outline: none;
   transition: all 0.2s ease;
 }
@@ -68,17 +68,17 @@
 }
 
 .filter-toggle {
-  padding: 14px 24px;
+  padding: 11px 18px;
   background: white;
   border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 0.95rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #666;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   transition: all 0.2s ease;
   white-space: nowrap;
 }
@@ -95,8 +95,8 @@
 }
 
 .filters-panel {
-  margin-top: 20px;
-  padding-top: 20px;
+  margin-top: 14px;
+  padding-top: 14px;
   border-top: 2px solid #f0f0f0;
   animation: slideDown 0.3s ease;
   clear: both;
@@ -117,29 +117,29 @@
 .filters-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 12px;
+  gap: 14px;
+  margin-bottom: 8px;
 }
 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   min-width: 0;
 }
 
 .filter-group label {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #333;
   white-space: nowrap;
 }
 
 .filter-group input {
-  padding: 10px 14px;
+  padding: 8px 12px;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
   outline: none;
   transition: all 0.2s ease;
   width: 100%;
@@ -153,27 +153,27 @@
 
 .capacity-filter {
   grid-column: 1 / -1;
-  padding: 10px 0;
+  padding: 6px 0;
 }
 
 .capacity-filter label {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   display: block;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 ::ng-deep .capacity-slider {
   .p-slider {
     background: #e0e0e0;
     border: none;
-    height: 6px;
+    height: 5px;
   }
 
   .p-slider-handle {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: 3px solid white;
+    border: 2px solid white;
     box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
     transition: all 0.2s ease;
   }
@@ -195,22 +195,22 @@
 .amenities-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 7px;
 }
 
 .amenity-chip {
-  padding: 8px 16px;
+  padding: 6px 12px;
   background: white;
   border: 2px solid #e0e0e0;
-  border-radius: 20px;
-  font-size: 0.85rem;
+  border-radius: 16px;
+  font-size: 0.8rem;
   font-weight: 500;
   color: #666;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .amenity-chip:hover {
@@ -235,17 +235,17 @@
 }
 
 .clear-btn {
-  padding: 10px 20px;
+  padding: 8px 16px;
   background: white;
   border: 2px solid #dc3545;
-  border-radius: 8px;
+  border-radius: 6px;
   color: #dc3545;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   transition: all 0.2s ease;
 }
 

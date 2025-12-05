@@ -17,6 +17,7 @@ import { RegisterUserRequest } from '../../../../shared/models/api.model';
 export class AddUserFormComponent {
   @Output() cancelAdd = new EventEmitter<void>();
   private userService = inject(UserService);
+  isSubmitting = false;
 
   addUserForm = new FormGroup({
     firstName: new FormControl<string>('', {
@@ -42,11 +43,12 @@ export class AddUserFormComponent {
   });
 
   onAddUser(): void {
-    if (this.addUserForm.invalid) {
+    if (this.addUserForm.invalid || this.isSubmitting) {
       this.addUserForm.markAllAsTouched();
       return;
     }
 
+    this.isSubmitting = true;
     const formValues = this.addUserForm.getRawValue();
 
     const newUser: RegisterUserRequest = {
@@ -58,10 +60,13 @@ export class AddUserFormComponent {
 
     this.userService.addUser(newUser).subscribe({
       next: () => {
+        this.isSubmitting = false;
         this.addUserForm.reset({ role: 'user' });
         this.cancelAdd.emit();
       },
-      error: () => {},
+      error: () => {
+        this.isSubmitting = false;
+      },
     });
   }
 

@@ -18,6 +18,7 @@ import { AddRoomRequest } from '../../../../shared/models/api.model';
 export class AddRoomFormComponent {
   @Output() cancelAdd = new EventEmitter<void>();
   private roomService = inject(RoomService);
+  isSubmitting = false;
 
   addRoomForm = new FormGroup({
     name: new FormControl<string>('', {
@@ -45,11 +46,12 @@ export class AddRoomFormComponent {
   });
 
   onAddRoom(): void {
-    if (this.addRoomForm.invalid) {
+    if (this.addRoomForm.invalid || this.isSubmitting) {
       this.addRoomForm.markAllAsTouched();
       return;
     }
 
+    this.isSubmitting = true;
     const formValues = this.addRoomForm.getRawValue();
 
     const newRoom: AddRoomRequest = {
@@ -65,10 +67,13 @@ export class AddRoomFormComponent {
 
     this.roomService.addRoom(newRoom).subscribe({
       next: () => {
+        this.isSubmitting = false;
         this.addRoomForm.reset();
         this.cancelAdd.emit();
       },
-      error: () => {},
+      error: () => {
+        this.isSubmitting = false;
+      },
     });
   }
 

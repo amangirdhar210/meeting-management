@@ -35,6 +35,7 @@ export class BookingFormComponent implements OnInit {
 
   visible = true;
   minDate: Date = new Date();
+  isSubmitting = false;
 
   bookingForm = new FormGroup(
     {
@@ -102,11 +103,12 @@ export class BookingFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.bookingForm.invalid) {
+    if (this.bookingForm.invalid || this.isSubmitting) {
       this.bookingForm.markAllAsTouched();
       return;
     }
 
+    this.isSubmitting = true;
     const formValues = this.bookingForm.getRawValue();
     const startDateTime = formValues.startDateTime!.toISOString();
     const endDateTime = formValues.endDateTime!.toISOString();
@@ -120,13 +122,16 @@ export class BookingFormComponent implements OnInit {
 
     this.bookingService.createBooking(booking).subscribe({
       next: () => {
+        this.isSubmitting = false;
         this.visible = false;
         setTimeout(() => {
           this.bookingForm.reset();
           this.cancelBooking.emit();
         }, 300);
       },
-      error: () => {},
+      error: () => {
+        this.isSubmitting = false;
+      },
     });
   }
 

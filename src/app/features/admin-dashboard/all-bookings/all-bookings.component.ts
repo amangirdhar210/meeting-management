@@ -37,9 +37,9 @@ export class AllBookingsComponent implements OnInit {
     });
   }
 
-  cancelBooking(id: number, purpose: string): void {
+  cancelBooking(id: string, purpose: string): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to cancel booking: "${purpose}"?`,
+      message: `Are you sure you want to cancel this booking: "${purpose}"?`,
       header: 'Cancel Booking',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
@@ -53,27 +53,27 @@ export class AllBookingsComponent implements OnInit {
     });
   }
 
-  isUpcoming(startTime: string): boolean {
-    return new Date(startTime) > new Date();
+  isUpcoming(startTime: number): boolean {
+    return startTime * 1000 > Date.now();
   }
 
-  isPast(endTime: string): boolean {
-    return new Date(endTime) < new Date();
+  isPast(endTime: number): boolean {
+    return endTime * 1000 < Date.now();
   }
 
-  isActive(startTime: string, endTime: string): boolean {
-    const now = new Date();
-    return new Date(startTime) <= now && new Date(endTime) > now;
+  isActive(startTime: number, endTime: number): boolean {
+    const now = Date.now();
+    return startTime * 1000 <= now && endTime * 1000 > now;
   }
 
-  getStatus(startTime: string, endTime: string): string {
+  getStatus(startTime: number, endTime: number): string {
     if (this.isPast(endTime)) return 'completed';
     if (this.isActive(startTime, endTime)) return 'active';
     return 'upcoming';
   }
 
-  formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleString('en-US', {
+  formatDate(timestamp: number): string {
+    return new Date(timestamp * 1000).toLocaleString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
@@ -82,9 +82,7 @@ export class AllBookingsComponent implements OnInit {
     });
   }
 
-  getDuration(startTime: string, endTime: string): number {
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-    return Math.round((end.getTime() - start.getTime()) / (1000 * 60));
+  getDuration(startTime: number, endTime: number): number {
+    return Math.round((endTime - startTime) / 60);
   }
 }

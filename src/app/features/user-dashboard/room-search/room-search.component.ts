@@ -30,6 +30,7 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
   showFilters = signal<boolean>(false);
   private destroy$ = new Subject<void>();
   private searchSubject$ = new Subject<void>();
+  private capacityChangeSubject$ = new Subject<number[]>();
 
   capacityRange = signal<number[]>([1, 50]);
   capacityRangeValue: number[] = [1, 50];
@@ -53,6 +54,13 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
     this.searchSubject$
       .pipe(debounceTime(300), takeUntil(this.destroy$))
       .subscribe(() => {
+        this.performSearch();
+      });
+
+    this.capacityChangeSubject$
+      .pipe(debounceTime(500), takeUntil(this.destroy$))
+      .subscribe((values) => {
+        this.capacityRange.set(values);
         this.performSearch();
       });
   }
@@ -105,9 +113,8 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
   onCapacityChange(event: any): void {
     const values = event.values || this.capacityRangeValue;
     if (values && Array.isArray(values) && values.length === 2) {
-      this.capacityRange.set(values);
       this.capacityRangeValue = [...values];
-      this.performSearch();
+      this.capacityChangeSubject$.next(values);
     }
   }
 

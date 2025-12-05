@@ -28,7 +28,7 @@ interface TimeSlot {
   styleUrl: './room-schedule-modal.component.scss',
 })
 export class RoomScheduleModalComponent implements OnInit {
-  @Input({ required: true }) roomId!: number;
+  @Input({ required: true }) roomId!: string;
   @Input({ required: true }) roomName!: string;
   @Output() closeModal = new EventEmitter<void>();
 
