@@ -115,11 +115,20 @@ export class LoginService {
             this.currentUser.set(JSON.parse(userStr));
           }
         } else {
-          this.logout();
+          // Token expired - clear silently
+          this.clearSession();
         }
       } catch {
-        this.logout();
+        // Invalid token - clear silently
+        this.clearSession();
       }
     }
+  }
+
+  private clearSession(): void {
+    this.isLoggedIn.set(false);
+    this.currentUser.set(null);
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
   }
 }

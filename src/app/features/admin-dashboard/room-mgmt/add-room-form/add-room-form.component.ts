@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -15,10 +22,18 @@ import { AddRoomRequest } from '../../../../shared/models/api.model';
   templateUrl: './add-room-form.component.html',
   styleUrl: './add-room-form.component.scss',
 })
-export class AddRoomFormComponent {
+export class AddRoomFormComponent implements OnInit, OnDestroy {
   @Output() cancelAdd = new EventEmitter<void>();
   private roomService = inject(RoomService);
   isSubmitting = false;
+
+  ngOnInit(): void {
+    document.body.style.overflow = 'hidden';
+  }
+
+  ngOnDestroy(): void {
+    document.body.style.overflow = '';
+  }
 
   addRoomForm = new FormGroup({
     name: new FormControl<string>('', {

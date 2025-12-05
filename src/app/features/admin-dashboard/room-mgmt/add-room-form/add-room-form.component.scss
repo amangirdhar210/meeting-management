@@ -14,15 +14,13 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: #ffffff;
-  width: 420px;
+  width: 700px;
   max-width: 90%;
-  max-height: 85vh;
   border-radius: 14px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-  padding: 30px 28px;
+  padding: 30px 35px;
   z-index: 1051;
   animation: fadeIn 0.25s ease;
-  overflow-y: auto;
 }
 
 @keyframes fadeIn {
@@ -50,9 +48,19 @@
   font-weight: 600;
 }
 
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
 .add-room-form {
   display: flex;
   flex-direction: column;
+}
+
+.add-room-form.full-width {
+  grid-column: 1 / -1;
 }
 
 .add-room-form label {
