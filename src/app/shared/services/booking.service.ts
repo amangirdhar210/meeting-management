@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, EMPTY } from 'rxjs';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import {
   Booking,
   CreateBookingRequest,
@@ -35,7 +35,7 @@ export class BookingService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to create booking',
           });
-          return EMPTY;
+          return throwError(() => error);
         })
       );
   }
@@ -48,7 +48,7 @@ export class BookingService {
           summary: 'Error',
           detail: error.error?.error || 'Failed to fetch bookings',
         });
-        return EMPTY;
+        return throwError(() => error);
       })
     );
   }
@@ -70,7 +70,7 @@ export class BookingService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to cancel booking',
           });
-          return EMPTY;
+          return throwError(() => error);
         })
       );
   }
@@ -90,7 +90,7 @@ export class BookingService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to check availability',
           });
-          return EMPTY;
+          return throwError(() => error);
         })
       );
   }

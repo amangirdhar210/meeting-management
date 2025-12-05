@@ -1,6 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, catchError, of, EMPTY } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  tap,
+  catchError,
+  of,
+  throwError,
+} from 'rxjs';
 import { Room } from '../models/room.model';
 import {
   AddRoomRequest,
@@ -42,7 +49,7 @@ export class RoomService {
           summary: 'Error',
           detail: error.error?.error || 'Failed to fetch room details',
         });
-        return EMPTY;
+        return throwError(() => error);
       })
     );
   }
@@ -113,7 +120,7 @@ export class RoomService {
             detail:
               error.error?.error || 'Failed to fetch room schedule by date',
           });
-          return EMPTY;
+          return throwError(() => error);
         })
       );
   }
@@ -134,7 +141,7 @@ export class RoomService {
           summary: 'Error',
           detail: error.error?.error || 'Failed to add room',
         });
-        return EMPTY;
+        return throwError(() => error);
       })
     );
   }
@@ -157,7 +164,7 @@ export class RoomService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to delete room',
           });
-          return EMPTY;
+          return throwError(() => error);
         })
       );
   }

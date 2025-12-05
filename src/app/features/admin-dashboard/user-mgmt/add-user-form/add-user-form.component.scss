@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.55);
-  z-index: 999;
+  z-index: 1050;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,7 +33,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  z-index: 1000;
+  z-index: 1051;
   overflow-y: auto;
 }
 

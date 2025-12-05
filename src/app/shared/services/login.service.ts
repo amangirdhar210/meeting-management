@@ -1,7 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, catchError, EMPTY } from 'rxjs';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { MessageService } from 'primeng/api';
 import { LoginRequest, LoginResponse } from '../models/api.model';
@@ -85,7 +85,7 @@ export class LoginService {
           summary: 'Error',
           detail: error.error?.error || 'Login failed',
         });
-        return EMPTY;
+        return throwError(() => error);
       })
     );
   }

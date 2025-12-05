@@ -1,6 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, catchError, of, EMPTY } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  tap,
+  catchError,
+  of,
+  throwError,
+} from 'rxjs';
 import { User } from '../models/user.model';
 import { GenericResponse, RegisterUserRequest } from '../models/api.model';
 import { MessageService } from 'primeng/api';
@@ -46,7 +53,7 @@ export class UserService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to add user',
           });
-          return EMPTY;
+          return throwError(() => error);
         })
       );
   }
@@ -69,7 +76,7 @@ export class UserService {
             summary: 'Error',
             detail: error.error?.error || 'Failed to delete user',
           });
-          return EMPTY;
+          return throwError(() => error);
         })
       );
   }

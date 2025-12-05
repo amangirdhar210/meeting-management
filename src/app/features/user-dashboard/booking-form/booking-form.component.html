@@ -28,20 +28,15 @@
     }
 
     <div class="form-group">
-      <label for="startDateTime">Start Date & Time</label>
-      <p-datepicker
-        inputId="startDateTime"
+      <label for="startDateTime">
+        <i class="pi pi-calendar"></i>
+        Start Date & Time
+      </label>
+      <input
+        type="datetime-local"
+        id="startDateTime"
         formControlName="startDateTime"
-        [showTime]="true"
-        [showSeconds]="false"
-        [stepMinute]="15"
-        [minDate]="minDate"
-        dateFormat="M dd, yy"
-        [iconDisplay]="'input'"
-        [showIcon]="true"
-        placeholder="Select start date and time"
-        [appendTo]="'body'"
-        styleClass="booking-datepicker"
+        class="datetime-input"
       />
       @if (bookingForm.controls.startDateTime.invalid &&
       bookingForm.controls.startDateTime.touched) {
@@ -50,20 +45,15 @@
     </div>
 
     <div class="form-group">
-      <label for="endDateTime">End Date & Time</label>
-      <p-datepicker
-        inputId="endDateTime"
+      <label for="endDateTime">
+        <i class="pi pi-calendar"></i>
+        End Date & Time
+      </label>
+      <input
+        type="datetime-local"
+        id="endDateTime"
         formControlName="endDateTime"
-        [showTime]="true"
-        [showSeconds]="false"
-        [stepMinute]="15"
-        [minDate]="minDate"
-        dateFormat="M dd, yy"
-        [iconDisplay]="'input'"
-        [showIcon]="true"
-        placeholder="Select end date and time"
-        [appendTo]="'body'"
-        styleClass="booking-datepicker"
+        class="datetime-input"
       />
       @if (bookingForm.controls.endDateTime.invalid &&
       bookingForm.controls.endDateTime.touched) {

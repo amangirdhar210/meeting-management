@@ -18,13 +18,12 @@ import { BookingService } from '../../../shared/services/booking.service';
 import { CreateBookingRequest } from '../../../shared/models/api.model';
 import { Room } from '../../../shared/models/room.model';
 import { DialogModule } from 'primeng/dialog';
-import { DatePickerModule } from 'primeng/datepicker';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-booking-form',
   standalone: true,
-  imports: [ReactiveFormsModule, DialogModule, DatePickerModule, CommonModule],
+  imports: [ReactiveFormsModule, DialogModule, CommonModule],
   templateUrl: './booking-form.component.html',
   styleUrl: './booking-form.component.scss',
 })
@@ -34,15 +33,16 @@ export class BookingFormComponent implements OnInit {
   private bookingService = inject(BookingService);
 
   visible = true;
-  minDate: Date = new Date();
   isSubmitting = false;
 
   bookingForm = new FormGroup(
     {
-      startDateTime: new FormControl<Date | null>(null, {
+      startDateTime: new FormControl<string>('', {
+        nonNullable: true,
         validators: [Validators.required],
       }),
-      endDateTime: new FormControl<Date | null>(null, {
+      endDateTime: new FormControl<string>('', {
+        nonNullable: true,
         validators: [Validators.required],
       }),
       purpose: new FormControl<string>('', {
@@ -64,9 +64,19 @@ export class BookingFormComponent implements OnInit {
 
     const oneHourLater = new Date(nextHour.getTime() + 60 * 60 * 1000);
 
+    // Format as datetime-local (YYYY-MM-DDTHH:MM)
+    const formatDateTime = (date: Date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
+
     this.bookingForm.patchValue({
-      startDateTime: nextHour,
-      endDateTime: oneHourLater,
+      startDateTime: formatDateTime(nextHour),
+      endDateTime: formatDateTime(oneHourLater),
     });
   }
 
@@ -78,13 +88,15 @@ export class BookingFormComponent implements OnInit {
       return null;
     }
 
+    const startDate = new Date(startDateTime);
+    const endDate = new Date(endDateTime);
     const now = new Date();
 
-    if (startDateTime < now) {
+    if (startDate < now) {
       return { pastBooking: true };
     }
 
-    if (endDateTime <= startDateTime) {
+    if (endDate <= startDate) {
       return { endBeforeStart: true };
     }
 
@@ -110,8 +122,8 @@ export class BookingFormComponent implements OnInit {
 
     this.isSubmitting = true;
     const formValues = this.bookingForm.getRawValue();
-    const startDateTime = formValues.startDateTime!.toISOString();
-    const endDateTime = formValues.endDateTime!.toISOString();
+    const startDateTime = new Date(formValues.startDateTime).toISOString();
+    const endDateTime = new Date(formValues.endDateTime).toISOString();
 
     const booking: CreateBookingRequest = {
       room_id: this.room.id,

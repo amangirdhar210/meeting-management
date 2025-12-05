@@ -43,3 +43,71 @@ select {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* PrimeNG Global Overrides - Ensure modals and dialogs appear above navbar */
+.p-dialog-mask {
+  z-index: 1099 !important;
+}
+
+.p-dialog {
+  z-index: 1100 !important;
+}
+
+.p-confirm-dialog {
+  z-index: 1100 !important;
+}
+
+.p-datepicker {
+  z-index: 1110 !important;
+  font-size: 0.75rem !important;
+}
+
+/* Fix datepicker positioning and size for better visibility in modals */
+.p-datepicker-panel {
+  max-width: 260px !important;
+  max-height: 65vh !important;
+  overflow: auto !important;
+}
+
+.p-datepicker .p-datepicker-header {
+  padding: 0.4rem !important;
+}
+
+.p-datepicker .p-datepicker-calendar-container {
+  padding: 0.3rem !important;
+}
+
+.p-datepicker .p-timepicker {
+  padding: 0.4rem !important;
+}
+
+.p-datepicker table td,
+.p-datepicker table th {
+  padding: 0.15rem !important;
+}
+
+.p-datepicker table td > span {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  font-size: 0.75rem !important;
+}
+
+.p-datepicker .p-timepicker button {
+  width: 1.4rem !important;
+  height: 1.4rem !important;
+}
+
+.p-datepicker .p-timepicker span {
+  font-size: 0.8rem !important;
+}
+
+/* Ensure dialogs are centered and responsive */
+.p-dialog {
+  max-height: 90vh !important;
+  overflow: visible !important;
+}
+
+.p-dialog-content {
+  overflow-y: auto !important;
+  max-height: calc(90vh - 150px) !important;
+}
