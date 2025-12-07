@@ -17,7 +17,7 @@
 }
 
 .add-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -26,7 +26,7 @@
   font-weight: 600;
   font-size: 0.95rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(51, 65, 85, 0.3);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -34,7 +34,7 @@
 
 .add-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(51, 65, 85, 0.4);
 }
 
 table {
@@ -67,7 +67,7 @@ td {
 }
 
 .role.admin {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
   color: white;
   border-color: transparent;
 }
@@ -81,4 +81,88 @@ td {
 
 .delete:hover {
   color: #b02a37;
+}
+
+.search-bar {
+  position: relative;
+  margin-bottom: 1.5rem;
+
+  i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px 14px 10px 40px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+
+    &:focus {
+      border-color: #475569;
+      box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
+    }
+  }
+}
+
+.no-data {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 2rem 0 !important;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover:not(:disabled):not(.active) {
+    background: #f9fafb;
+    border-color: #475569;
+  }
+
+  &.active {
+    background: #475569;
+    color: white;
+    border-color: #475569;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.ellipsis {
+  padding: 0 8px;
+  color: #6b7280;
 }

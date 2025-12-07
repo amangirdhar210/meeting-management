@@ -22,7 +22,9 @@ export interface Room {
 export interface Booking {
   id: string;
   user_id: string;
+  user_name: string;
   room_id: string;
+  room_number: number;
   start_time: number;
   end_time: number;
   purpose: string;

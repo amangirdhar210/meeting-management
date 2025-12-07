@@ -20,6 +20,12 @@ interface TimeSlot {
   bookings: ScheduleBooking[];
 }
 
+interface BookingPosition {
+  top: string;
+  height: string;
+  display: boolean;
+}
+
 @Component({
   selector: 'app-room-schedule-modal',
   standalone: true,
@@ -32,15 +38,15 @@ export class RoomScheduleModalComponent implements OnInit {
   @Input({ required: true }) roomName!: string;
   @Output() closeModal = new EventEmitter<void>();
 
-  private roomService = inject(RoomService);
+  private readonly roomService = inject(RoomService);
 
-  schedule = signal<RoomScheduleByDate | null>(null);
-  selectedDate = signal<string>(this.getTodayDate());
-  timeSlots = signal<TimeSlot[]>([]);
-  loading = signal<boolean>(true);
+  readonly schedule = signal<RoomScheduleByDate | null>(null);
+  readonly selectedDate = signal<string>(this.getTodayDate());
+  readonly timeSlots = signal<TimeSlot[]>([]);
+  readonly loading = signal<boolean>(true);
 
-  workDayStart = 0; // 12 AM (Midnight)
-  workDayEnd = 24; // 12 AM (Midnight next day)
+  readonly workDayStart = 0;
+  readonly workDayEnd = 24;
 
   ngOnInit(): void {
     this.loadSchedule();
@@ -48,7 +54,7 @@ export class RoomScheduleModalComponent implements OnInit {
 
   getTodayDate(): string {
     const today = new Date();
-    return today.toISOString().split('T')[0];
+    return today.toISOString().split('T')[0] as string;
   }
 
   loadSchedule(): void {
@@ -56,9 +62,9 @@ export class RoomScheduleModalComponent implements OnInit {
     this.roomService
       .getRoomScheduleByDate(this.roomId, this.selectedDate())
       .subscribe({
-        next: (data) => {
+        next: (data: RoomScheduleByDate) => {
           this.schedule.set(data);
-          this.generateTimeSlots(data.bookings || []);
+          this.generateTimeSlots(data.bookings ?? []);
           this.loading.set(false);
         },
         error: () => {
@@ -70,18 +76,16 @@ export class RoomScheduleModalComponent implements OnInit {
 
   generateTimeSlots(bookings: ScheduleBooking[]): void {
     const slots: TimeSlot[] = [];
+    const selectedDateObj = new Date(`${this.selectedDate()}T00:00:00`);
+
     for (let hour = this.workDayStart; hour < this.workDayEnd; hour++) {
-      const hourBookings = bookings.filter((booking) => {
-        const startDate = new Date(booking.startTime);
-        const endDate = new Date(booking.endTime);
-        const slotStart = hour;
-        const slotEnd = hour + 1;
-
-        const bookingStart = startDate.getHours() + startDate.getMinutes() / 60;
-        const bookingEnd = endDate.getHours() + endDate.getMinutes() / 60;
-
-        return bookingStart < slotEnd && bookingEnd > slotStart;
-      });
+      const slotStartTime = this.createSlotTime(selectedDateObj, hour);
+      const slotEndTime = this.createSlotTime(selectedDateObj, hour + 1);
+      const hourBookings = this.filterBookingsByTimeSlot(
+        bookings,
+        slotStartTime,
+        slotEndTime
+      );
 
       slots.push({
         hour,
@@ -90,6 +94,24 @@ export class RoomScheduleModalComponent implements OnInit {
       });
     }
     this.timeSlots.set(slots);
+  }
+
+  private createSlotTime(baseDate: Date, hour: number): Date {
+    const slotTime = new Date(baseDate);
+    slotTime.setHours(hour, 0, 0, 0);
+    return slotTime;
+  }
+
+  private filterBookingsByTimeSlot(
+    bookings: ScheduleBooking[],
+    slotStart: Date,
+    slotEnd: Date
+  ): ScheduleBooking[] {
+    return bookings.filter((booking: ScheduleBooking) => {
+      const bookingStart = new Date(booking.startTime);
+      const bookingEnd = new Date(booking.endTime);
+      return bookingStart < slotEnd && bookingEnd > slotStart;
+    });
   }
 
   formatHour(hour: number): string {
@@ -105,31 +127,36 @@ export class RoomScheduleModalComponent implements OnInit {
     this.loadSchedule();
   }
 
-  getBookingPosition(booking: ScheduleBooking, slotHour: number): any {
-    const start = new Date(booking.startTime);
-    const end = new Date(booking.endTime);
+  getBookingPosition(
+    booking: ScheduleBooking,
+    slotHour: number
+  ): BookingPosition | null {
+    const selectedDateObj = new Date(`${this.selectedDate()}T00:00:00`);
+    const slotStartTime = this.createSlotTime(selectedDateObj, slotHour);
+    const slotEndTime = this.createSlotTime(selectedDateObj, slotHour + 1);
 
-    const bookingStart = start.getHours() + start.getMinutes() / 60;
-    const bookingEnd = end.getHours() + end.getMinutes() / 60;
+    const bookingStart = new Date(booking.startTime);
+    const bookingEnd = new Date(booking.endTime);
 
-    const slotStart = slotHour;
-    const slotEnd = slotHour + 1;
-
-    // Calculate overlap within this hour slot
-    const overlapStart = Math.max(bookingStart, slotStart);
-    const overlapEnd = Math.min(bookingEnd, slotEnd);
-
-    if (overlapStart >= overlapEnd) {
+    if (bookingStart >= slotEndTime || bookingEnd <= slotStartTime) {
       return null;
     }
 
-    const top = ((overlapStart - slotStart) * 100).toFixed(2);
-    const height = ((overlapEnd - overlapStart) * 100).toFixed(2);
+    const overlapStart =
+      bookingStart > slotStartTime ? bookingStart : slotStartTime;
+    const overlapEnd = bookingEnd < slotEndTime ? bookingEnd : slotEndTime;
+
+    const slotDurationMs = slotEndTime.getTime() - slotStartTime.getTime();
+    const topOffsetMs = overlapStart.getTime() - slotStartTime.getTime();
+    const heightMs = overlapEnd.getTime() - overlapStart.getTime();
+
+    const top = ((topOffsetMs / slotDurationMs) * 100).toFixed(2);
+    const height = ((heightMs / slotDurationMs) * 100).toFixed(2);
 
     return {
       top: `${top}%`,
       height: `${height}%`,
-      display: bookingStart >= slotStart && bookingStart < slotEnd,
+      display: true,
     };
   }
 
@@ -147,21 +174,21 @@ export class RoomScheduleModalComponent implements OnInit {
   }
 
   getCurrentStatus(): string {
-    if (!this.schedule()) return 'Unknown';
-
-    const now = new Date();
-    const bookings = this.schedule()?.bookings || [];
-
-    for (const booking of bookings) {
-      const start = new Date(booking.startTime);
-      const end = new Date(booking.endTime);
-
-      if (now >= start && now <= end) {
-        return 'In Use';
-      }
+    const scheduleData = this.schedule();
+    if (!scheduleData) {
+      return 'Unknown';
     }
 
-    return 'Available';
+    const now = new Date();
+    const bookings = scheduleData.bookings ?? [];
+
+    const isInUse = bookings.some((booking: ScheduleBooking) => {
+      const start = new Date(booking.startTime);
+      const end = new Date(booking.endTime);
+      return now >= start && now <= end;
+    });
+
+    return isInUse ? 'In Use' : 'Available';
   }
 
   isToday(): boolean {

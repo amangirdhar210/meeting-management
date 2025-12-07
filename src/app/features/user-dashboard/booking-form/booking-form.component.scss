@@ -12,7 +12,7 @@
   }
 
   .p-dialog-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
     color: white;
     padding: 28px 32px;
     border-radius: 0;
@@ -99,7 +99,7 @@
 }
 
 .form-group label i {
-  color: #667eea;
+  color: #475569;
   font-size: 0.9rem;
 }
 
@@ -117,18 +117,18 @@
 }
 
 .datetime-input:hover {
-  border-color: #667eea;
+  border-color: #475569;
 }
 
 .datetime-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+  border-color: #475569;
+  box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.15);
   outline: none;
 }
 
 .datetime-input::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  color: #667eea;
+  color: #475569;
   font-size: 1.1rem;
 }
 
@@ -146,8 +146,8 @@
 }
 
 .purpose-textarea:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #475569;
+  box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
 }
 
 ::ng-deep .booking-datepicker {
@@ -161,7 +161,7 @@
   }
 
   .p-icon {
-    color: #667eea;
+    color: #475569;
   }
 
   input {
@@ -175,12 +175,12 @@
   }
 
   input:enabled:hover {
-    border-color: #667eea;
+    border-color: #475569;
   }
 
   input:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    border-color: #475569;
+    box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.15);
     outline: none;
   }
 }
@@ -195,7 +195,7 @@
   max-height: 80vh !important;
 
   .p-datepicker-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #334155 0%, #475569 100%);
     color: white;
     padding: 8px 12px;
     border-bottom: none;
@@ -237,16 +237,16 @@
     }
 
     .p-datepicker-day:not(.p-datepicker-day-selected):hover {
-      background: rgba(102, 126, 234, 0.15);
+      background: rgba(71, 85, 105, 0.15);
     }
 
     .p-datepicker-day.p-datepicker-day-selected {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #334155 0%, #475569 100%);
       color: white;
     }
 
     .p-datepicker-today .p-datepicker-day {
-      background: rgba(102, 126, 234, 0.1);
+      background: rgba(71, 85, 105, 0.1);
       font-weight: 600;
     }
 
@@ -262,14 +262,14 @@
     padding: 8px;
 
     button {
-      color: #667eea;
+      color: #475569;
       border-radius: 4px;
       width: 1.5rem !important;
       height: 1.5rem !important;
     }
 
     button:hover {
-      background: rgba(102, 126, 234, 0.15);
+      background: rgba(71, 85, 105, 0.15);
     }
 
     span {
@@ -302,7 +302,7 @@
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
   color: #fff;
   font-weight: 600;
   padding: 14px 28px;
@@ -312,12 +312,12 @@
   flex: 1;
   font-size: 1rem;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
+  box-shadow: 0 4px 14px rgba(51, 65, 85, 0.35);
 }
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+  box-shadow: 0 6px 20px rgba(51, 65, 85, 0.45);
 }
 
 .submit-btn:active:not(:disabled) {
@@ -348,7 +348,7 @@
 }
 
 .cancel-btn:hover {
-  border-color: #667eea;
-  color: #667eea;
-  background: rgba(102, 126, 234, 0.05);
+  border-color: #475569;
+  color: #475569;
+  background: rgba(71, 85, 105, 0.05);
 }

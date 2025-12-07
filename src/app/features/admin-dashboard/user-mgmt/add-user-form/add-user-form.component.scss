@@ -82,8 +82,8 @@
 
 .add-user-form input:focus,
 .add-user-form select:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #475569;
+  box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
 }
 
 .error {
@@ -100,7 +100,7 @@
 }
 
 button[type="submit"] {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
   color: #fff;
   font-weight: 600;
   padding: 12px 0;
@@ -110,12 +110,12 @@ button[type="submit"] {
   flex: 1;
   font-size: 1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(51, 65, 85, 0.3);
 }
 
 button[type="submit"]:hover:not([disabled]) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 20px rgba(51, 65, 85, 0.4);
 }
 
 button[type="submit"]:active {
@@ -135,8 +135,8 @@ button[type="submit"] i {
 
 .cancel-btn {
   background-color: #fff;
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: #475569;
+  border: 2px solid #475569;
   border-radius: 10px;
   font-weight: 600;
   padding: 10px 0;
@@ -146,7 +146,7 @@ button[type="submit"] i {
 }
 
 .cancel-btn:hover {
-  background-color: #667eea;
+  background-color: #475569;
   color: #fff;
   transform: translateY(-1px);
 }

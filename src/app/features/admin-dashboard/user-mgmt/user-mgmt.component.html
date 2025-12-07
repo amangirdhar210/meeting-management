@@ -2,8 +2,18 @@
 
 <div class="table-container">
   <div class="table-header">
-    <h3>{{ users().length }} users total</h3>
+    <h3>{{ filteredUsers().length }} of {{ users().length }} users</h3>
     <button class="add-btn" (click)="startAddingUser()">+ Add User</button>
+  </div>
+
+  <div class="search-bar">
+    <i class="fa fa-search"></i>
+    <input
+      type="text"
+      placeholder="Search by name or email..."
+      [value]="searchQuery()"
+      (input)="onSearch($event)"
+    />
   </div>
 
   @if (isAddingUser()) {
@@ -20,7 +30,14 @@
       </tr>
     </thead>
     <tbody>
-      @for (user of users(); track user.id) {
+      @if (paginatedUsers().length === 0) {
+      <tr>
+        <td colspan="4" class="no-data">
+          @if (searchQuery()) { No users found matching "{{ searchQuery() }}" }
+          @else { No users available }
+        </td>
+      </tr>
+      } @for (user of paginatedUsers(); track user.id) {
       <tr>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
@@ -39,4 +56,34 @@
       }
     </tbody>
   </table>
+
+  <div class="pagination">
+    <button
+      class="page-btn"
+      (click)="prevPage()"
+      [disabled]="currentPage() === 1"
+    >
+      <i class="fa fa-chevron-left"></i>
+    </button>
+
+    @for (page of getPageNumbers(); track page) { @if (page === -1) {
+    <span class="ellipsis">...</span>
+    } @else {
+    <button
+      class="page-btn"
+      [class.active]="currentPage() === page"
+      (click)="goToPage(page)"
+    >
+      {{ page }}
+    </button>
+    } }
+
+    <button
+      class="page-btn"
+      (click)="nextPage()"
+      [disabled]="currentPage() === totalPages()"
+    >
+      <i class="fa fa-chevron-right"></i>
+    </button>
+  </div>
 </div>

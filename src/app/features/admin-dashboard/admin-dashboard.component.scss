@@ -29,8 +29,8 @@ app-stats-card {
 
 app-stats-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
-  border-color: #667eea;
+  box-shadow: 0 8px 20px rgba(71, 85, 105, 0.15);
+  border-color: #475569;
 }
 
 .toggle-buttons {
@@ -65,14 +65,14 @@ app-stats-card:hover {
 }
 
 .toggle-buttons button.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(51, 65, 85, 0.3);
 }
 
 .toggle-buttons button:hover:not(.active) {
   background-color: #f0f0f0;
-  color: #667eea;
+  color: #475569;
 }
 
 .tab-content {

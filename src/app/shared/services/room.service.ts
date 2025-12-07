@@ -136,10 +136,17 @@ export class RoomService {
         this.fetchRooms().subscribe();
       }),
       catchError((error) => {
+        let errorMessage = 'Failed to add room';
+        if (error.status === 409) {
+          errorMessage = `A room with number ${newRoom.roomNumber} already exists on floor ${newRoom.floor}`;
+        } else if (error.error?.error) {
+          errorMessage = error.error.error;
+        }
+
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: error.error?.error || 'Failed to add room',
+          detail: errorMessage,
         });
         return throwError(() => error);
       })

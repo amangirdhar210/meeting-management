@@ -21,11 +21,21 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
 
   users = signal<User[]>([]);
   isAddingUser = signal<boolean>(false);
+  searchQuery = signal<string>('');
+  currentPage = signal<number>(1);
+  pageSize = signal<number>(10);
+
+  filteredUsers = signal<User[]>([]);
+  paginatedUsers = signal<User[]>([]);
+  totalPages = signal<number>(1);
 
   ngOnInit(): void {
     this.userService.fetchUsers().subscribe();
     this.sub.add(
-      this.userService.users$.subscribe((data: User[]) => this.users.set(data))
+      this.userService.users$.subscribe((data: User[]) => {
+        this.users.set(data);
+        this.applyFiltersAndPagination();
+      })
     );
   }
 
@@ -50,5 +60,76 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
         this.userService.deleteUser(id).subscribe();
       },
     });
+  }
+
+  onSearch(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchQuery.set(input.value);
+    this.currentPage.set(1);
+    this.applyFiltersAndPagination();
+  }
+
+  applyFiltersAndPagination(): void {
+    let filtered = this.users();
+
+    const query = this.searchQuery().toLowerCase();
+    if (query) {
+      filtered = filtered.filter(
+        (user) =>
+          user.name.toLowerCase().includes(query) ||
+          user.email.toLowerCase().includes(query)
+      );
+    }
+
+    this.filteredUsers.set(filtered);
+    this.totalPages.set(Math.ceil(filtered.length / this.pageSize()));
+
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    this.paginatedUsers.set(filtered.slice(start, end));
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
+      this.applyFiltersAndPagination();
+    }
+  }
+
+  nextPage(): void {
+    this.goToPage(this.currentPage() + 1);
+  }
+
+  prevPage(): void {
+    this.goToPage(this.currentPage() - 1);
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const total = this.totalPages();
+    const current = this.currentPage();
+
+    if (total <= 7) {
+      for (let i = 1; i <= total; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (current <= 3) {
+        for (let i = 1; i <= 5; i++) pages.push(i);
+        pages.push(-1);
+        pages.push(total);
+      } else if (current >= total - 2) {
+        pages.push(1);
+        pages.push(-1);
+        for (let i = total - 4; i <= total; i++) pages.push(i);
+      } else {
+        pages.push(1);
+        pages.push(-1);
+        for (let i = current - 1; i <= current + 1; i++) pages.push(i);
+        pages.push(-1);
+        pages.push(total);
+      }
+    }
+    return pages;
   }
 }

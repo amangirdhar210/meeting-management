@@ -21,11 +21,12 @@
   align-items: center;
 }
 
-.search-bar i {
+.search-bar > i.fa-search {
   position: absolute;
   left: 16px;
   color: #999;
   font-size: 1rem;
+  pointer-events: none;
 }
 
 .search-bar input {
@@ -39,23 +40,27 @@
 }
 
 .search-bar input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #475569;
+  box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
 }
 
 .clear-search-btn {
   position: absolute;
   right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   background: transparent;
   border: none;
   color: #999;
   cursor: pointer;
-  padding: 8px;
+  padding: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   transition: all 0.2s ease;
+  width: 28px;
+  height: 28px;
 }
 
 .clear-search-btn:hover {
@@ -64,7 +69,8 @@
 }
 
 .clear-search-btn i {
-  font-size: 1rem;
+  font-size: 0.9rem;
+  position: static;
 }
 
 .filter-toggle {
@@ -84,13 +90,13 @@
 }
 
 .filter-toggle:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #475569;
+  color: #475569;
 }
 
 .filter-toggle.active {
-  background: #667eea;
-  border-color: #667eea;
+  background: #475569;
+  border-color: #475569;
   color: white;
 }
 
@@ -147,8 +153,8 @@
 }
 
 .filter-group input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #475569;
+  box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
 }
 
 .capacity-filter {
@@ -172,19 +178,19 @@
   .p-slider-handle {
     width: 16px;
     height: 16px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #334155 0%, #475569 100%);
     border: 2px solid white;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 2px 8px rgba(51, 65, 85, 0.3);
     transition: all 0.2s ease;
   }
 
   .p-slider-handle:hover {
     transform: scale(1.15);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 4px 12px rgba(51, 65, 85, 0.5);
   }
 
   .p-slider-range {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #334155 0%, #475569 100%);
   }
 }
 
@@ -214,13 +220,13 @@
 }
 
 .amenity-chip:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #475569;
+  color: #475569;
 }
 
 .amenity-chip.selected {
-  background: #667eea;
-  border-color: #667eea;
+  background: #475569;
+  border-color: #475569;
   color: white;
 }
 

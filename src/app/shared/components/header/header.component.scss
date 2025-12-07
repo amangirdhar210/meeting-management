@@ -2,7 +2,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   color: #fff;
   padding: 16px 32px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
@@ -62,7 +62,7 @@ header {
 
 .avatar {
   background-color: #fff;
-  color: #667eea;
+  color: #334155;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -137,7 +137,7 @@ header {
 }
 
 .profile-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   padding: 24px;
   display: flex;
   align-items: center;
@@ -147,7 +147,7 @@ header {
 
 .profile-avatar {
   background-color: #fff;
-  color: #667eea;
+  color: #334155;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -200,7 +200,7 @@ header {
 
 .detail-item i {
   font-size: 18px;
-  color: #667eea;
+  color: #475569;
   width: 24px;
   text-align: center;
   margin-top: 2px;

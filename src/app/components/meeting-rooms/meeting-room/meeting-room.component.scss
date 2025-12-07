@@ -17,7 +17,7 @@
   transform: translateY(-8px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border-color: #667eea;
+  border-color: #475569;
 }
 
 /* CARD HEADER */
@@ -29,9 +29,9 @@
 .image-wrapper {
   position: relative;
   width: 100%;
-  height: 140px;
+  height: 120px;
   overflow: hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
 }
 
 .image-wrapper img {
@@ -117,10 +117,10 @@
 
 /* CARD BODY */
 .card-body {
-  padding: 14px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   flex: 1;
 }
 
@@ -128,13 +128,13 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 10px;
+  gap: 8px;
   padding-bottom: 8px;
-  border-bottom: 2px solid #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .room-name {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   margin: 0;
   color: #111827;
@@ -143,181 +143,105 @@
 }
 
 .room-number {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
   color: white;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.7rem;
+  font-weight: 600;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.room-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .room-location {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   color: #6b7280;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 500;
-  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
 
   i {
-    color: #667eea;
-    font-size: 1rem;
+    color: #475569;
+    font-size: 0.85rem;
+    flex-shrink: 0;
   }
 
   span:first-of-type {
     flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
 .floor-badge {
   background: #f3f4f6;
   color: #374151;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.8rem;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
   font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-/* INFO GRID */
-.room-info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.info-item {
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-  padding: 10px;
-  border-radius: 8px;
+.room-capacity {
   display: flex;
   align-items: center;
-  gap: 8px;
-  border: 1px solid #e5e7eb;
-  transition: all 0.3s ease;
+  gap: 4px;
+  color: #374151;
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
 
   i {
-    font-size: 1.1rem;
-    color: #667eea;
-    min-width: 18px;
+    color: #475569;
+    font-size: 0.85rem;
   }
 }
 
-.info-item:hover {
-  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
-  border-color: #667eea;
-  transform: translateY(-2px);
-}
-
-.info-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.info-label {
+.room-description {
   font-size: 0.75rem;
   color: #6b7280;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.info-value {
-  font-size: 0.95rem;
-  color: #111827;
-  font-weight: 700;
-}
-
-/* DESCRIPTION */
-.room-description {
-  font-size: 0.85rem;
-  color: #6b7280;
-  line-height: 1.5;
-  background: #f9fafb;
-  border-left: 3px solid #667eea;
-  border-radius: 6px;
-  padding: 10px 12px;
+  line-height: 1.4;
   margin: 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
   overflow: hidden;
+  text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  max-height: 4.5em;
-
-  i {
-    color: #667eea;
-    font-size: 0.9rem;
-    margin-top: 2px;
-    min-width: 14px;
-    flex-shrink: 0;
-  }
-}
-
-/* AMENITIES SECTION */
-.amenities-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.amenities-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #374151;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-
-  i {
-    color: #f59e0b;
-    font-size: 1rem;
-  }
 }
 
 .amenities-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .amenity-chip {
-  background: #ffffff;
-  color: #667eea;
-  border: 2px solid #e0e7ff;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.3s ease;
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
   cursor: default;
-
-  i {
-    font-size: 0.7rem;
-    color: #10b981;
-  }
 }
 
 .amenity-chip:hover {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-color: #667eea;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-
-  i {
-    color: white;
-  }
+  background: #e2e8f0;
+  border-color: #cbd5e1;
 }
 
 /* CARD FOOTER */
@@ -372,14 +296,14 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(51, 65, 85, 0.4);
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 8px 20px rgba(51, 65, 85, 0.5);
 }
 
 .btn-primary:active:not(:disabled) {
@@ -395,16 +319,16 @@
 
 .btn-secondary {
   background: white;
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: #475569;
+  border: 2px solid #475569;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .btn-secondary:hover {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
   color: white;
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 20px rgba(51, 65, 85, 0.4);
 }
 
 .btn-secondary:active {

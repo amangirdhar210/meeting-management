@@ -5,11 +5,11 @@
       <div class="image-overlay"></div>
       <div
         class="status-badge"
-        [class.available]="roomData.status === 'Available'"
-        [class.inuse]="roomData.status === 'In Use'"
+        [class.available]="currentStatus() === 'Available'"
+        [class.inuse]="currentStatus() === 'In Use'"
       >
         <span class="status-dot"></span>
-        {{ roomData.status }}
+        {{ currentStatus() }}
       </div>
     </div>
   </div>
@@ -20,65 +20,37 @@
       <span class="room-number">Room {{ roomData.roomNumber }}</span>
     </div>
 
-    <div class="room-location">
-      <i class="fa-solid fa-location-dot"></i>
-      <span>{{ roomData.location }}</span>
-      <span class="floor-badge">Floor {{ roomData.floor }}</span>
-    </div>
-
-    <div class="room-info-grid">
-      <div class="info-item">
-        <i class="fa-solid fa-users"></i>
-        <div class="info-content">
-          <span class="info-label">Capacity</span>
-          <span class="info-value">{{ roomData.capacity }} People</span>
-        </div>
+    <div class="room-info">
+      <div class="room-location">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>{{ roomData.location }}</span>
+        <span class="floor-badge">Floor {{ roomData.floor }}</span>
       </div>
-      <div class="info-item">
-        <i class="fa-solid fa-building"></i>
-        <div class="info-content">
-          <span class="info-label">Building</span>
-          <span class="info-value">{{ roomData.location.split(",")[0] }}</span>
-        </div>
+      <div class="room-capacity">
+        <i class="fa-solid fa-users"></i>
+        <span>{{ roomData.capacity }}</span>
       </div>
     </div>
 
     @if (roomData.description) {
     <p class="room-description">
-      <i class="fa-solid fa-info-circle"></i>
       {{ roomData.description }}
     </p>
     }
 
-    <div class="amenities-section">
-      <div class="amenities-header">
-        <i class="fa-solid fa-star"></i>
-        <span>Amenities</span>
-      </div>
-      <div class="amenities-list">
-        @for (amenity of roomData.amenities; track amenity) {
-        <span class="amenity-chip">
-          <i class="fa-solid fa-check"></i>
-          {{ amenity }}
-        </span>
-        }
-      </div>
+    <div class="amenities-list">
+      @for (amenity of roomData.amenities; track amenity) {
+      <span class="amenity-chip">
+        {{ amenity }}
+      </span>
+      }
     </div>
   </div>
 
   <div class="card-footer">
-    <button
-      class="btn btn-primary"
-      (click)="startBooking()"
-      [disabled]="roomData.status === 'In Use'"
-    >
-      @if (roomData.status === 'Available') {
+    <button class="btn btn-primary" (click)="startBooking()">
       <i class="fa-solid fa-calendar-plus"></i>
       <span>Book Room</span>
-      } @else {
-      <i class="fa-solid fa-ban"></i>
-      <span>Unavailable</span>
-      }
     </button>
 
     <button class="btn btn-secondary" (click)="viewSchedule()">
