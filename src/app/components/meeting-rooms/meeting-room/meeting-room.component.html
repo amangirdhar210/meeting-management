@@ -3,21 +3,13 @@
     <div class="image-wrapper">
       <img src="meetingo.jpg" alt="{{ roomData.name }}" />
       <div class="image-overlay"></div>
-      <div
-        class="status-badge"
-        [class.available]="currentStatus() === 'Available'"
-        [class.inuse]="currentStatus() === 'In Use'"
-      >
-        <span class="status-dot"></span>
-        {{ currentStatus() }}
-      </div>
     </div>
   </div>
 
   <div class="card-body">
     <div class="room-header">
       <h3 class="room-name">{{ roomData.name }}</h3>
-      <span class="room-number">Room {{ roomData.roomNumber }}</span>
+      <span class="room-number">Room {{ roomData.room_number }}</span>
     </div>
 
     <div class="room-info">

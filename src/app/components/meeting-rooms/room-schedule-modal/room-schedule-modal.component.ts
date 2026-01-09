@@ -8,6 +8,8 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { DatePickerModule } from 'primeng/datepicker';
 import { RoomService } from '../../../shared/services/room.service';
 import {
   RoomScheduleByDate,
@@ -29,7 +31,7 @@ interface BookingPosition {
 @Component({
   selector: 'app-room-schedule-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, DatePickerModule],
   templateUrl: './room-schedule-modal.component.html',
   styleUrl: './room-schedule-modal.component.scss',
 })
@@ -44,6 +46,7 @@ export class RoomScheduleModalComponent implements OnInit {
   readonly selectedDate = signal<string>(this.getTodayDate());
   readonly timeSlots = signal<TimeSlot[]>([]);
   readonly loading = signal<boolean>(true);
+  selectedDateValue: Date | null = new Date();
 
   readonly workDayStart = 0;
   readonly workDayEnd = 24;
@@ -108,8 +111,8 @@ export class RoomScheduleModalComponent implements OnInit {
     slotEnd: Date
   ): ScheduleBooking[] {
     return bookings.filter((booking: ScheduleBooking) => {
-      const bookingStart = new Date(booking.startTime);
-      const bookingEnd = new Date(booking.endTime);
+      const bookingStart = new Date(booking.start_time * 1000);
+      const bookingEnd = new Date(booking.end_time * 1000);
       return bookingStart < slotEnd && bookingEnd > slotStart;
     });
   }
@@ -121,10 +124,16 @@ export class RoomScheduleModalComponent implements OnInit {
     return `${displayHour}:00 ${period}`;
   }
 
-  onDateChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.selectedDate.set(input.value);
-    this.loadSchedule();
+  onDateChange(): void {
+    if (this.selectedDateValue) {
+      const date = new Date(this.selectedDateValue);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const dateString = `${year}-${month}-${day}`;
+      this.selectedDate.set(dateString);
+      this.loadSchedule();
+    }
   }
 
   getBookingPosition(
@@ -135,8 +144,8 @@ export class RoomScheduleModalComponent implements OnInit {
     const slotStartTime = this.createSlotTime(selectedDateObj, slotHour);
     const slotEndTime = this.createSlotTime(selectedDateObj, slotHour + 1);
 
-    const bookingStart = new Date(booking.startTime);
-    const bookingEnd = new Date(booking.endTime);
+    const bookingStart = new Date(booking.start_time * 1000);
+    const bookingEnd = new Date(booking.end_time * 1000);
 
     if (bookingStart >= slotEndTime || bookingEnd <= slotStartTime) {
       return null;
@@ -160,8 +169,8 @@ export class RoomScheduleModalComponent implements OnInit {
     };
   }
 
-  formatTime(dateString: string): string {
-    const date = new Date(dateString);
+  formatTime(timestamp: number): string {
+    const date = new Date(timestamp * 1000);
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
@@ -183,8 +192,8 @@ export class RoomScheduleModalComponent implements OnInit {
     const bookings = scheduleData.bookings ?? [];
 
     const isInUse = bookings.some((booking: ScheduleBooking) => {
-      const start = new Date(booking.startTime);
-      const end = new Date(booking.endTime);
+      const start = new Date(booking.start_time * 1000);
+      const end = new Date(booking.end_time * 1000);
       return now >= start && now <= end;
     });
 

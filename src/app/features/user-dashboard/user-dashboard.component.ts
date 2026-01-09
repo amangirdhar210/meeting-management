@@ -70,7 +70,7 @@ export class UserDashboardComponent implements OnInit {
           room.name.toLowerCase().includes(searchLower) ||
           room.location.toLowerCase().includes(searchLower) ||
           room.description?.toLowerCase().includes(searchLower) ||
-          room.roomNumber.toString().includes(searchLower) ||
+          room.room_number.toString().includes(searchLower) ||
           room.capacity.toString().includes(searchLower) ||
           room.amenities.some((amenity) =>
             amenity.toLowerCase().includes(searchLower)

@@ -7,6 +7,7 @@
   padding: 0;
 }
 
+html,
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
@@ -14,6 +15,19 @@ body {
   color: #1e293b;
   line-height: 1.6;
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  isolation: auto;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+app-root {
+  display: block;
+  position: relative;
 }
 
 button {
@@ -45,60 +59,30 @@ select {
 }
 
 /* PrimeNG Global Overrides - Ensure modals and dialogs appear above navbar */
+.p-toast {
+  z-index: 10003 !important;
+}
+
 .p-dialog-mask {
-  z-index: 1099 !important;
+  z-index: 10000 !important;
 }
 
 .p-dialog {
-  z-index: 1100 !important;
+  z-index: 10001 !important;
 }
 
 .p-confirm-dialog {
-  z-index: 1100 !important;
+  z-index: 10001 !important;
 }
 
+/* Enhanced Global Datepicker Styles */
 .p-datepicker {
-  z-index: 1110 !important;
-  font-size: 0.75rem !important;
+  z-index: 10002 !important;
+  font-family: inherit;
 }
 
-/* Fix datepicker positioning and size for better visibility in modals */
 .p-datepicker-panel {
-  max-width: 260px !important;
-  max-height: 65vh !important;
-  overflow: auto !important;
-}
-
-.p-datepicker .p-datepicker-header {
-  padding: 0.4rem !important;
-}
-
-.p-datepicker .p-datepicker-calendar-container {
-  padding: 0.3rem !important;
-}
-
-.p-datepicker .p-timepicker {
-  padding: 0.4rem !important;
-}
-
-.p-datepicker table td,
-.p-datepicker table th {
-  padding: 0.15rem !important;
-}
-
-.p-datepicker table td > span {
-  width: 1.8rem !important;
-  height: 1.8rem !important;
-  font-size: 0.75rem !important;
-}
-
-.p-datepicker .p-timepicker button {
-  width: 1.4rem !important;
-  height: 1.4rem !important;
-}
-
-.p-datepicker .p-timepicker span {
-  font-size: 0.8rem !important;
+  z-index: 10002 !important;
 }
 
 /* Ensure dialogs are centered and responsive */

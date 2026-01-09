@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 1050;
+  z-index: 10000;
 }
 
 .modal {
@@ -19,7 +19,7 @@
   border-radius: 14px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
   padding: 30px 35px;
-  z-index: 1051;
+  z-index: 10001;
   animation: fadeIn 0.25s ease;
 }
 

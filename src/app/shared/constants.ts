@@ -1,4 +1,4 @@
-const BASE_URL = 'https://6f6nqpgo3g.execute-api.us-east-1.amazonaws.com/Dev';
+const BASE_URL = 'http://localhost:8000';
 
 export const API_CONFIG = {
   BASE_URL: BASE_URL,

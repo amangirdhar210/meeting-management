@@ -14,7 +14,7 @@
     <div class="dialog-header">
       <h3>Book {{ room.name }}</h3>
       <p class="room-info">
-        Room {{ room.roomNumber }} • Capacity: {{ room.capacity }} people
+        Room {{ room.room_number }} • Capacity: {{ room.capacity }} people
       </p>
     </div>
   </ng-template>
@@ -32,11 +32,20 @@
         <i class="pi pi-calendar"></i>
         Start Date & Time
       </label>
-      <input
-        type="datetime-local"
-        id="startDateTime"
+      <p-datepicker
+        inputId="startDateTime"
         formControlName="startDateTime"
-        class="datetime-input"
+        [showTime]="true"
+        [hourFormat]="'24'"
+        [stepMinute]="15"
+        [showIcon]="true"
+        iconDisplay="input"
+        dateFormat="dd M yy"
+        placeholder="Select start date and time"
+        styleClass="booking-calendar"
+        appendTo="body"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
       />
       @if (bookingForm.controls.startDateTime.invalid &&
       bookingForm.controls.startDateTime.touched) {
@@ -49,11 +58,20 @@
         <i class="pi pi-calendar"></i>
         End Date & Time
       </label>
-      <input
-        type="datetime-local"
-        id="endDateTime"
+      <p-datepicker
+        inputId="endDateTime"
         formControlName="endDateTime"
-        class="datetime-input"
+        [showTime]="true"
+        [hourFormat]="'24'"
+        [stepMinute]="15"
+        [showIcon]="true"
+        iconDisplay="input"
+        dateFormat="dd M yy"
+        placeholder="Select end date and time"
+        styleClass="booking-calendar"
+        appendTo="body"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
       />
       @if (bookingForm.controls.endDateTime.invalid &&
       bookingForm.controls.endDateTime.touched) {

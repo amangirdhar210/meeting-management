@@ -10,7 +10,7 @@ export interface User {
 export interface Room {
   id: string;
   name: string;
-  roomNumber: number;
+  room_number: number;
   capacity: number;
   floor: number;
   amenities: string[];
@@ -38,7 +38,7 @@ export interface DetailedBooking {
   userEmail: string;
   room_id: string;
   roomName: string;
-  roomNumber: number;
+  room_number: number;
   start_time: number;
   end_time: number;
   duration: number;
@@ -65,7 +65,7 @@ export interface RegisterUserRequest {
 
 export interface AddRoomRequest {
   name: string;
-  roomNumber: number;
+  room_number: number;
   capacity: number;
   floor: number;
   amenities: string[];
@@ -76,16 +76,16 @@ export interface AddRoomRequest {
 
 export interface CreateBookingRequest {
   room_id: string;
-  start_time: string;
-  end_time: string;
+  start_time: number;
+  end_time: number;
   purpose: string;
   user_id?: string;
 }
 
 export interface AvailabilityCheckRequest {
   roomId: string;
-  startTime: string;
-  endTime: string;
+  startTime: number;
+  endTime: number;
 }
 
 export interface AvailabilityCheckResponse {
@@ -117,8 +117,8 @@ export interface RoomSearchParams {
   maxCapacity?: number;
   floor?: number;
   amenities?: string;
-  startTime?: string;
-  endTime?: string;
+  startTime?: number;
+  endTime?: number;
 }
 
 export interface GenericResponse {
@@ -130,18 +130,18 @@ export interface ErrorResponse {
 }
 
 export interface RoomScheduleByDate {
-  roomId: string;
-  roomName: string;
-  roomNumber: number;
+  room_id: string;
+  room_name: string;
+  room_number: number;
   date: string;
   bookings: ScheduleBooking[];
 }
 
 export interface ScheduleBooking {
-  startTime: string;
-  endTime: string;
-  isBooked: boolean;
-  bookingId: string;
-  userName: string;
+  start_time: number;
+  end_time: number;
+  is_booked: boolean;
+  booking_id: string;
+  user_name: string;
   purpose: string;
 }

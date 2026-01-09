@@ -65,8 +65,9 @@ export class RoomService {
     if (params.amenities)
       httpParams = httpParams.set('amenities', params.amenities);
     if (params.startTime)
-      httpParams = httpParams.set('startTime', params.startTime);
-    if (params.endTime) httpParams = httpParams.set('endTime', params.endTime);
+      httpParams = httpParams.set('startTime', params.startTime.toString());
+    if (params.endTime)
+      httpParams = httpParams.set('endTime', params.endTime.toString());
 
     return this.http
       .get<Room[]>(`${API_ENDPOINTS.ROOMS}/search`, { params: httpParams })
@@ -110,7 +111,7 @@ export class RoomService {
   ): Observable<RoomScheduleByDate> {
     return this.http
       .get<RoomScheduleByDate>(
-        `${API_ENDPOINTS.ROOMS}/${roomId}/schedule/date?date=${date}`
+        `${API_ENDPOINTS.ROOMS}/${roomId}/schedule?date=${date}`
       )
       .pipe(
         catchError((error) => {
@@ -138,7 +139,7 @@ export class RoomService {
       catchError((error) => {
         let errorMessage = 'Failed to add room';
         if (error.status === 409) {
-          errorMessage = `A room with number ${newRoom.roomNumber} already exists on floor ${newRoom.floor}`;
+          errorMessage = `A room with number ${newRoom.room_number} already exists on floor ${newRoom.floor}`;
         } else if (error.error?.error) {
           errorMessage = error.error.error;
         }

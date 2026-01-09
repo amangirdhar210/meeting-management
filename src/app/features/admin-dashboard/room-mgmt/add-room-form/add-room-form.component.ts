@@ -71,7 +71,7 @@ export class AddRoomFormComponent implements OnInit, OnDestroy {
 
     const newRoom: AddRoomRequest = {
       name: formValues.name,
-      roomNumber: formValues.roomNumber!,
+      room_number: formValues.roomNumber!,
       capacity: formValues.capacity!,
       floor: formValues.floor!,
       amenities: formValues.amenities.split(',').map((a: string) => a.trim()),

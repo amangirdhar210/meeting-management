@@ -1,6 +1,5 @@
-// Modal Overlay and Container
 .modal-overlay {
-  position: fixed;
+  position: fixed !important;
   top: 0;
   left: 0;
   width: 100%;
@@ -9,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1050;
+  z-index: 9999 !important;
   animation: fadeIn 0.2s ease-in-out;
 }
 
@@ -24,9 +23,10 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.3s ease-out;
   overflow: hidden;
+  z-index: 10000 !important;
+  position: relative;
 }
 
-// Modal Header
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -100,7 +100,6 @@
   }
 }
 
-// Date Picker Section
 .date-picker-section {
   padding: 20px 28px;
   background-color: #f8f9fa;
@@ -142,7 +141,6 @@
   }
 }
 
-// Modal Body
 .modal-body {
   flex: 1;
   overflow-y: auto;
@@ -150,7 +148,6 @@
   background-color: #ffffff;
 }
 
-// Loading State
 .loading-state {
   display: flex;
   flex-direction: column;
@@ -170,7 +167,6 @@
   }
 }
 
-// Empty State
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -190,7 +186,6 @@
   }
 }
 
-// Schedule Container (Outlook-style)
 .schedule-container {
   display: flex;
   flex-direction: column;
@@ -216,7 +211,6 @@
   overflow-y: auto;
   flex: 1;
 
-  // Custom scrollbar styling
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -235,7 +229,6 @@
   }
 }
 
-// Time Column
 .time-column {
   width: 100px;
   border-right: 2px solid #dee2e6;
@@ -503,5 +496,75 @@
   .date-picker-section {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* PrimeNG Calendar Styling */
+::ng-deep {
+  .room-schedule-modal p-calendar {
+    width: 100%;
+  }
+
+  .room-schedule-modal .p-calendar .p-inputtext {
+    padding: 8px 40px 8px 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #495057;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+
+    &:hover {
+      border-color: #475569;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #475569;
+      box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
+    }
+  }
+
+  .room-schedule-modal .p-datepicker {
+    z-index: 10002 !important;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
+  }
+
+  .room-schedule-modal .p-datepicker .p-datepicker-header {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: white;
+    padding: 12px;
+  }
+
+  .room-schedule-modal .p-datepicker .p-datepicker-prev,
+  .room-schedule-modal .p-datepicker .p-datepicker-next {
+    color: white;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .room-schedule-modal .p-datepicker table td > span {
+    border-radius: 6px;
+
+    &:hover {
+      background-color: #e9ecef;
+    }
+  }
+
+  .room-schedule-modal .p-datepicker .p-datepicker-today > span {
+    background-color: #f0f9ff;
+    border: 2px solid #3b82f6;
+    color: #1e40af;
+    font-weight: 600;
+  }
+
+  .room-schedule-modal .p-datepicker .p-highlight {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    color: white;
+    font-weight: 600;
   }
 }
