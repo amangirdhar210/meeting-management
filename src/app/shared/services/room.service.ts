@@ -15,6 +15,7 @@ import {
   RoomSearchParams,
   DetailedBooking,
   RoomScheduleByDate,
+  UpdateRoomRequest,
 } from '../models/api.model';
 import { MessageService } from 'primeng/api';
 import { API_ENDPOINTS } from '../constants';
@@ -171,6 +172,29 @@ export class RoomService {
             severity: 'error',
             summary: 'Error',
             detail: error.error?.error || 'Failed to delete room',
+          });
+          return throwError(() => error);
+        })
+      );
+  }
+
+  updateRoom(id: string, updates: UpdateRoomRequest): Observable<GenericResponse> {
+    return this.http
+      .put<GenericResponse>(`${API_ENDPOINTS.ROOMS}/${id}`, updates)
+      .pipe(
+        tap(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Room updated successfully',
+          });
+          this.fetchRooms().subscribe();
+        }),
+        catchError((error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error?.error || 'Failed to update room',
           });
           return throwError(() => error);
         })

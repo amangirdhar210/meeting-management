@@ -43,25 +43,23 @@ export class UserDashboardComponent implements OnInit {
       return;
     }
 
-    const needsApiCall =
-      params.minCapacity || params.maxCapacity || params.floor;
-
-    if (needsApiCall) {
-      const apiParams: RoomSearchParams = {};
-      if (params.minCapacity) apiParams.minCapacity = params.minCapacity;
-      if (params.maxCapacity) apiParams.maxCapacity = params.maxCapacity;
-      if (params.floor) apiParams.floor = params.floor;
-
-      this.roomService.searchRooms(apiParams).subscribe((data: Room[]) => {
-        this.applyClientSideFilters(data, params);
-      });
-    } else {
-      this.applyClientSideFilters(this.allRooms, params);
-    }
+    this.applyClientSideFilters(this.allRooms, params);
   }
 
   applyClientSideFilters(rooms: Room[], params: RoomSearchParams): void {
     let filtered = [...rooms];
+
+    if (params.minCapacity !== undefined || params.maxCapacity !== undefined) {
+      const min = params.minCapacity ?? 0;
+      const max = params.maxCapacity ?? Number.MAX_SAFE_INTEGER;
+      filtered = filtered.filter(
+        (room) => room.capacity >= min && room.capacity <= max
+      );
+    }
+
+    if (params.floor !== null && params.floor !== undefined) {
+      filtered = filtered.filter((room) => room.floor === params.floor);
+    }
 
     if (params.searchText) {
       const searchLower = params.searchText.toLowerCase();

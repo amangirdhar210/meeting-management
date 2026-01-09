@@ -14,7 +14,7 @@ export interface Room {
   capacity: number;
   floor: number;
   amenities: string[];
-  status: 'Available' | 'In Use';
+  status: 'available' | 'unavailable' | 'maintenance';
   location: string;
   description?: string;
 }
@@ -69,8 +69,23 @@ export interface AddRoomRequest {
   capacity: number;
   floor: number;
   amenities: string[];
-  status: string;
+  status: 'available' | 'unavailable' | 'maintenance';
   location: string;
+  description?: string;
+}
+
+export interface UpdateUserRequest {
+  name?: string;
+  email?: string;
+  role?: 'admin' | 'user';
+}
+
+export interface UpdateRoomRequest {
+  name?: string;
+  capacity?: number;
+  amenities?: string[];
+  status?: 'available' | 'unavailable' | 'maintenance';
+  location?: string;
   description?: string;
 }
 

@@ -21,6 +21,7 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
 
   users = signal<User[]>([]);
   isAddingUser = signal<boolean>(false);
+  editingUser = signal<User | undefined>(undefined);
   searchQuery = signal<string>('');
   currentPage = signal<number>(1);
   pageSize = signal<number>(10);
@@ -44,11 +45,18 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
   }
 
   startAddingUser(): void {
+    this.editingUser.set(undefined);
+    this.isAddingUser.set(true);
+  }
+
+  startEditingUser(user: User): void {
+    this.editingUser.set(user);
     this.isAddingUser.set(true);
   }
 
   stopAddingUser(): void {
     this.isAddingUser.set(false);
+    this.editingUser.set(undefined);
   }
 
   onDeleteUser(id: string, name: string): void {

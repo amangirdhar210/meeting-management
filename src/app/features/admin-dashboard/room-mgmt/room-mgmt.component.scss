@@ -101,10 +101,39 @@ tbody td {
   border: 1.5px solid #2e7d32;
 }
 
-.status.inuse {
+.status.unavailable {
   background: #ffebee;
   color: #c62828;
   border: 1.5px solid #c62828;
+}
+
+.status.maintenance {
+  background: #fff3e0;
+  color: #e65100;
+  border: 1.5px solid #e65100;
+}
+
+.edit {
+  color: #007bff;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.2s;
+  margin-right: 12px;
+}
+
+.edit:hover {
+  color: #0056b3;
+}
+
+.delete {
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+.delete:hover {
+  color: #b02a37;
 }
 
 .action-delete {

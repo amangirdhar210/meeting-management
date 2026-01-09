@@ -17,7 +17,7 @@
   </div>
 
   @if (isAddingUser()) {
-  <app-add-user-form (cancelAdd)="stopAddingUser()" />
+  <app-add-user-form [user]="editingUser()" (cancelAdd)="stopAddingUser()" />
   }
 
   <table>
@@ -47,6 +47,10 @@
           }}</span>
         </td>
         <td>
+          <i
+            class="fa fa-edit edit"
+            (click)="startEditingUser(user)"
+          ></i>
           <i
             class="fa fa-trash delete"
             (click)="onDeleteUser(user.id, user.name)"

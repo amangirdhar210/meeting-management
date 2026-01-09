@@ -21,6 +21,7 @@ export class RoomManagementComponent implements OnInit, OnDestroy {
 
   rooms = signal<Room[]>([]);
   isAddingRoom = signal<boolean>(false);
+  editingRoom = signal<Room | undefined>(undefined);
 
   ngOnInit(): void {
     this.subscription = this.roomService.rooms$.subscribe((data: Room[]) =>
@@ -34,11 +35,18 @@ export class RoomManagementComponent implements OnInit, OnDestroy {
   }
 
   onAddRoom(): void {
+    this.editingRoom.set(undefined);
+    this.isAddingRoom.set(true);
+  }
+
+  startEditingRoom(room: Room): void {
+    this.editingRoom.set(room);
     this.isAddingRoom.set(true);
   }
 
   onCancelAdd(): void {
     this.isAddingRoom.set(false);
+    this.editingRoom.set(undefined);
   }
 
   onDeleteRoom(id: string, name: string): void {

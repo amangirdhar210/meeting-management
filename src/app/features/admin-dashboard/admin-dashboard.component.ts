@@ -32,7 +32,7 @@ export class AdminDashboardComponent implements OnInit {
 
   totalRooms = computed(() => this.rooms().length);
   availableRooms = computed(
-    () => this.rooms().filter((r: Room) => r.status === 'Available').length
+    () => this.rooms().filter((r: Room) => r.status === 'available').length
   );
   totalUsers = computed(() => this.users().length);
 

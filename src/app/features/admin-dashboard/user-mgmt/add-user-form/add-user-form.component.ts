@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,7 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { UserService } from '../../../../shared/services/user.service';
-import { RegisterUserRequest } from '../../../../shared/models/api.model';
+import { RegisterUserRequest, UpdateUserRequest } from '../../../../shared/models/api.model';
+import { User } from '../../../../shared/models/user.model';
 
 @Component({
   selector: 'app-add-user-form',
@@ -14,10 +15,12 @@ import { RegisterUserRequest } from '../../../../shared/models/api.model';
   templateUrl: './add-user-form.component.html',
   styleUrl: './add-user-form.component.scss',
 })
-export class AddUserFormComponent {
+export class AddUserFormComponent implements OnInit {
+  @Input() user?: User;
   @Output() cancelAdd = new EventEmitter<void>();
   private userService = inject(UserService);
   isSubmitting = false;
+  isEditMode = false;
 
   addUserForm = new FormGroup({
     firstName: new FormControl<string>('', {
@@ -38,9 +41,30 @@ export class AddUserFormComponent {
     }),
     password: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(6)],
+      validators: [Validators.minLength(6)],
     }),
   });
+
+  ngOnInit(): void {
+    if (this.user) {
+      this.isEditMode = true;
+      const nameParts = this.user.name.split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      this.addUserForm.patchValue({
+        firstName,
+        lastName,
+        email: this.user.email,
+        role: this.user.role,
+      });
+
+      this.addUserForm.get('password')?.clearValidators();
+      this.addUserForm.get('password')?.updateValueAndValidity();
+    } else {
+      this.addUserForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
+    }
+  }
 
   onAddUser(): void {
     if (this.addUserForm.invalid || this.isSubmitting) {
@@ -51,23 +75,41 @@ export class AddUserFormComponent {
     this.isSubmitting = true;
     const formValues = this.addUserForm.getRawValue();
 
-    const newUser: RegisterUserRequest = {
-      name: `${formValues.firstName} ${formValues.lastName}`,
-      role: formValues.role,
-      email: formValues.email,
-      password: formValues.password,
-    };
+    if (this.isEditMode && this.user) {
+      const updates: UpdateUserRequest = {
+        name: `${formValues.firstName} ${formValues.lastName}`,
+        email: formValues.email,
+        role: formValues.role,
+      };
 
-    this.userService.addUser(newUser).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.addUserForm.reset({ role: 'user' });
-        this.cancelAdd.emit();
-      },
-      error: () => {
-        this.isSubmitting = false;
-      },
-    });
+      this.userService.updateUser(this.user.id, updates).subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          this.cancelAdd.emit();
+        },
+        error: () => {
+          this.isSubmitting = false;
+        },
+      });
+    } else {
+      const newUser: RegisterUserRequest = {
+        name: `${formValues.firstName} ${formValues.lastName}`,
+        role: formValues.role,
+        email: formValues.email,
+        password: formValues.password,
+      };
+
+      this.userService.addUser(newUser).subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          this.addUserForm.reset({ role: 'user' });
+          this.cancelAdd.emit();
+        },
+        error: () => {
+          this.isSubmitting = false;
+        },
+      });
+    }
   }
 
   onCancelAdd(): void {

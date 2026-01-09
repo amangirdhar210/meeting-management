@@ -3,7 +3,7 @@
 <div class="modal">
   <form class="room-form" [formGroup]="addRoomForm" (ngSubmit)="onAddRoom()">
     <div class="welcome-message">
-      <h3>Add New Room</h3>
+      <h3>{{ isEditMode ? 'Edit Room' : 'Add New Room' }}</h3>
     </div>
 
     <div class="form-row">
@@ -110,10 +110,21 @@
       />
     </div>
 
+    @if (isEditMode) {
+    <div class="add-room-form full-width">
+      <label for="status">Status</label>
+      <select id="status" formControlName="status">
+        <option value="available">Available</option>
+        <option value="unavailable">Unavailable</option>
+        <option value="maintenance">Maintenance</option>
+      </select>
+    </div>
+    }
+
     <div class="button-group">
       <button type="submit" [disabled]="addRoomForm.invalid || isSubmitting">
         @if (isSubmitting) {
-        <i class="pi pi-spinner pi-spin"></i> Adding... } @else { Add Room }
+        <i class="pi pi-spinner pi-spin"></i> {{ isEditMode ? 'Updating...' : 'Adding...' }} } @else { {{ isEditMode ? 'Update Room' : 'Add Room' }} }
       </button>
       <button
         type="button"

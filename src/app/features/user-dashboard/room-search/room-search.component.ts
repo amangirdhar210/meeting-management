@@ -63,6 +63,12 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
         this.capacityRange.set(values);
         this.performSearch();
       });
+
+    this.searchForm.valueChanges
+      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.performSearch();
+      });
   }
 
   ngOnDestroy(): void {

@@ -8,8 +8,10 @@ import {
   of,
   throwError,
 } from 'rxjs';
-import { User } from '../models/user.model';
-import { GenericResponse, RegisterUserRequest } from '../models/api.model';
+import {
+  User
+} from '../models/user.model';
+import { GenericResponse, RegisterUserRequest, UpdateUserRequest } from '../models/api.model';
 import { MessageService } from 'primeng/api';
 import { API_ENDPOINTS } from '../constants';
 
@@ -75,6 +77,29 @@ export class UserService {
             severity: 'error',
             summary: 'Error',
             detail: error.error?.error || 'Failed to delete user',
+          });
+          return throwError(() => error);
+        })
+      );
+  }
+
+  updateUser(id: string, updates: UpdateUserRequest): Observable<GenericResponse> {
+    return this.http
+      .put<GenericResponse>(`${API_ENDPOINTS.USERS}/${id}`, updates)
+      .pipe(
+        tap(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'User updated successfully',
+          });
+          this.fetchUsers().subscribe();
+        }),
+        catchError((error) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.error?.error || 'Failed to update user',
           });
           return throwError(() => error);
         })

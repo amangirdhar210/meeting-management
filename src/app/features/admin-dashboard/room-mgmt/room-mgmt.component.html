@@ -7,7 +7,7 @@
   </div>
 
   @if (isAddingRoom()) {
-  <add-room-form (cancelAdd)="onCancelAdd()" />
+  <add-room-form [room]="editingRoom()" (cancelAdd)="onCancelAdd()" />
   }
 
   <table>
@@ -41,13 +41,18 @@
         <td>
           <span
             class="status"
-            [class.available]="room.status === 'Available'"
-            [class.inuse]="room.status === 'In Use'"
+            [class.available]="room.status === 'available'"
+            [class.unavailable]="room.status === 'unavailable'"
+            [class.maintenance]="room.status === 'maintenance'"
           >
             {{ room.status }}
           </span>
         </td>
         <td>
+          <i
+            class="fa fa-edit edit"
+            (click)="startEditingRoom(room)"
+          ></i>
           <i
             class="fa fa-trash delete"
             (click)="onDeleteRoom(room.id, room.name)"
