@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,7 +13,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { UserService } from '../../../../shared/services/user.service';
-import { RegisterUserRequest, UpdateUserRequest } from '../../../../shared/models/api.model';
+import {
+  RegisterUserRequest,
+  UpdateUserRequest,
+} from '../../../../shared/models/api.model';
 import { User } from '../../../../shared/models/user.model';
 
 @Component({
@@ -62,7 +72,9 @@ export class AddUserFormComponent implements OnInit {
       this.addUserForm.get('password')?.clearValidators();
       this.addUserForm.get('password')?.updateValueAndValidity();
     } else {
-      this.addUserForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
+      this.addUserForm
+        .get('password')
+        ?.setValidators([Validators.required, Validators.minLength(6)]);
     }
   }
 

@@ -6,7 +6,7 @@
       class="add-user-form"
     >
       <div class="welcome-message">
-        <h3>{{ isEditMode ? 'Edit User' : 'Add New User' }}</h3>
+        <h3>{{ isEditMode ? "Edit User" : "Add New User" }}</h3>
       </div>
 
       <div class="form-group">
@@ -106,7 +106,9 @@
           [disabled]="addUserForm.invalid || isSubmitting"
         >
           @if (isSubmitting) {
-          <i class="pi pi-spinner pi-spin"></i> {{ isEditMode ? 'Updating...' : 'Adding...' }} } @else { {{ isEditMode ? 'Update User' : 'Add User' }} }
+          <i class="pi pi-spinner pi-spin"></i>
+          {{ isEditMode ? "Updating..." : "Adding..." }} } @else {
+          {{ isEditMode ? "Update User" : "Add User" }} }
         </button>
         <button
           type="button"

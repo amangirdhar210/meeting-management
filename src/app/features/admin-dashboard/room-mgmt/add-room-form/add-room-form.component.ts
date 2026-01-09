@@ -14,7 +14,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { RoomService } from '../../../../shared/services/room.service';
-import { AddRoomRequest, UpdateRoomRequest } from '../../../../shared/models/api.model';
+import {
+  AddRoomRequest,
+  UpdateRoomRequest,
+} from '../../../../shared/models/api.model';
 import { Room } from '../../../../shared/models/room.model';
 
 @Component({
@@ -33,7 +36,7 @@ export class AddRoomFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     document.body.style.overflow = 'hidden';
-    
+
     if (this.room) {
       this.isEditMode = true;
       this.addRoomForm.patchValue({
@@ -46,7 +49,7 @@ export class AddRoomFormComponent implements OnInit, OnDestroy {
         description: this.room.description || '',
         status: this.room.status,
       });
-      
+
       this.addRoomForm.get('roomNumber')?.disable();
       this.addRoomForm.get('floor')?.disable();
     }
@@ -79,10 +82,13 @@ export class AddRoomFormComponent implements OnInit, OnDestroy {
       validators: [Validators.required],
     }),
     description: new FormControl<string>('', { nonNullable: true }),
-    status: new FormControl<'available' | 'unavailable' | 'maintenance'>('available', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
+    status: new FormControl<'available' | 'unavailable' | 'maintenance'>(
+      'available',
+      {
+        nonNullable: true,
+        validators: [Validators.required],
+      }
+    ),
   });
 
   onAddRoom(): void {

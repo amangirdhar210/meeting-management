@@ -178,7 +178,10 @@ export class RoomService {
       );
   }
 
-  updateRoom(id: string, updates: UpdateRoomRequest): Observable<GenericResponse> {
+  updateRoom(
+    id: string,
+    updates: UpdateRoomRequest
+  ): Observable<GenericResponse> {
     return this.http
       .put<GenericResponse>(`${API_ENDPOINTS.ROOMS}/${id}`, updates)
       .pipe(

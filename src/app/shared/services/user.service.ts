@@ -8,10 +8,12 @@ import {
   of,
   throwError,
 } from 'rxjs';
+import { User } from '../models/user.model';
 import {
-  User
-} from '../models/user.model';
-import { GenericResponse, RegisterUserRequest, UpdateUserRequest } from '../models/api.model';
+  GenericResponse,
+  RegisterUserRequest,
+  UpdateUserRequest,
+} from '../models/api.model';
 import { MessageService } from 'primeng/api';
 import { API_ENDPOINTS } from '../constants';
 
@@ -83,7 +85,10 @@ export class UserService {
       );
   }
 
-  updateUser(id: string, updates: UpdateUserRequest): Observable<GenericResponse> {
+  updateUser(
+    id: string,
+    updates: UpdateUserRequest
+  ): Observable<GenericResponse> {
     return this.http
       .put<GenericResponse>(`${API_ENDPOINTS.USERS}/${id}`, updates)
       .pipe(
