@@ -31,28 +31,12 @@ export class RoomService {
   fetchRooms(): Observable<Room[]> {
     return this.http.get<Room[]>(API_ENDPOINTS.ROOMS).pipe(
       tap((rooms: Room[]) => this.rooms.next(rooms ?? [])),
-      catchError((error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.error?.error || 'Failed to fetch rooms',
-        });
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
   getRoomById(id: string): Observable<Room> {
-    return this.http.get<Room>(`${API_ENDPOINTS.ROOMS}/${id}`).pipe(
-      catchError((error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.error?.error || 'Failed to fetch room details',
-        });
-        return throwError(() => error);
-      })
-    );
+    return this.http.get<Room>(`${API_ENDPOINTS.ROOMS}/${id}`);
   }
 
   searchRooms(params: RoomSearchParams): Observable<Room[]> {
@@ -81,11 +65,6 @@ export class RoomService {
             this.rooms.next([]);
             return of([]);
           }
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Failed to search rooms',
-          });
           return of([]);
         })
       );
@@ -94,37 +73,16 @@ export class RoomService {
   getRoomSchedule(roomId: string): Observable<DetailedBooking[]> {
     return this.http
       .get<DetailedBooking[]>(`${API_ENDPOINTS.ROOMS}/${roomId}/schedule`)
-      .pipe(
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Failed to fetch room schedule',
-          });
-          return of([]);
-        })
-      );
+      .pipe(catchError(() => of([])));
   }
 
   getRoomScheduleByDate(
     roomId: string,
     date: string
   ): Observable<RoomScheduleByDate> {
-    return this.http
-      .get<RoomScheduleByDate>(
-        `${API_ENDPOINTS.ROOMS}/${roomId}/schedule?date=${date}`
-      )
-      .pipe(
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail:
-              error.error?.error || 'Failed to fetch room schedule by date',
-          });
-          return throwError(() => error);
-        })
-      );
+    return this.http.get<RoomScheduleByDate>(
+      `${API_ENDPOINTS.ROOMS}/${roomId}/schedule?date=${date}`
+    );
   }
 
   addRoom(newRoom: AddRoomRequest): Observable<GenericResponse> {
@@ -136,21 +94,6 @@ export class RoomService {
           detail: 'Room added successfully',
         });
         this.fetchRooms().subscribe();
-      }),
-      catchError((error) => {
-        let errorMessage = 'Failed to add room';
-        if (error.status === 409) {
-          errorMessage = `A room with number ${newRoom.room_number} already exists on floor ${newRoom.floor}`;
-        } else if (error.error?.error) {
-          errorMessage = error.error.error;
-        }
-
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: errorMessage,
-        });
-        return throwError(() => error);
       })
     );
   }
@@ -166,14 +109,6 @@ export class RoomService {
             detail: 'Room deleted successfully',
           });
           this.fetchRooms().subscribe();
-        }),
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Failed to delete room',
-          });
-          return throwError(() => error);
         })
       );
   }
@@ -192,14 +127,6 @@ export class RoomService {
             detail: 'Room updated successfully',
           });
           this.fetchRooms().subscribe();
-        }),
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Failed to update room',
-          });
-          return throwError(() => error);
         })
       );
   }

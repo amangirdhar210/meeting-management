@@ -78,14 +78,6 @@ export class LoginService {
         } else if (decoded.role === 'user') {
           this.router.navigate(['/user-dashboard']);
         }
-      }),
-      catchError((error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.error?.error || 'Login failed',
-        });
-        return throwError(() => error);
       })
     );
   }

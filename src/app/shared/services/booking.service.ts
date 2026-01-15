@@ -28,29 +28,12 @@ export class BookingService {
             summary: 'Success',
             detail: 'Booking created successfully',
           });
-        }),
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Failed to create booking',
-          });
-          return throwError(() => error);
         })
       );
   }
 
   getAllBookings(): Observable<Booking[]> {
-    return this.http.get<Booking[]>(API_ENDPOINTS.BOOKINGS).pipe(
-      catchError((error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.error?.error || 'Failed to fetch bookings',
-        });
-        return throwError(() => error);
-      })
-    );
+    return this.http.get<Booking[]>(API_ENDPOINTS.BOOKINGS);
   }
 
   cancelBooking(id: string): Observable<GenericResponse> {
@@ -63,14 +46,6 @@ export class BookingService {
             summary: 'Success',
             detail: 'Booking cancelled successfully',
           });
-        }),
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Failed to cancel booking',
-          });
-          return throwError(() => error);
         })
       );
   }
@@ -78,20 +53,9 @@ export class BookingService {
   checkAvailability(
     request: AvailabilityCheckRequest
   ): Observable<AvailabilityCheckResponse> {
-    return this.http
-      .post<AvailabilityCheckResponse>(
-        API_ENDPOINTS.CHECK_AVAILABILITY,
-        request
-      )
-      .pipe(
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Failed to check availability',
-          });
-          return throwError(() => error);
-        })
-      );
+    return this.http.post<AvailabilityCheckResponse>(
+      API_ENDPOINTS.CHECK_AVAILABILITY,
+      request
+    );
   }
 }

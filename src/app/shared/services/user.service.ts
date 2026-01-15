@@ -28,14 +28,7 @@ export class UserService {
   fetchUsers(): Observable<User[]> {
     return this.http.get<User[]>(API_ENDPOINTS.USERS).pipe(
       tap((users: User[]) => this.users.next(users)),
-      catchError((error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error.error?.error || 'Failed to fetch users',
-        });
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
@@ -50,14 +43,6 @@ export class UserService {
             detail: 'User added successfully',
           });
           this.fetchUsers().subscribe();
-        }),
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Failed to add user',
-          });
-          return throwError(() => error);
         })
       );
   }
@@ -73,14 +58,6 @@ export class UserService {
             detail: 'User deleted successfully',
           });
           this.fetchUsers().subscribe();
-        }),
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Failed to delete user',
-          });
-          return throwError(() => error);
         })
       );
   }
@@ -99,14 +76,6 @@ export class UserService {
             detail: 'User updated successfully',
           });
           this.fetchUsers().subscribe();
-        }),
-        catchError((error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.error?.error || 'Failed to update user',
-          });
-          return throwError(() => error);
         })
       );
   }
