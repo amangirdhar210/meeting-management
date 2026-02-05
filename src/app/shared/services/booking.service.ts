@@ -9,7 +9,8 @@ import {
   AvailabilityCheckResponse,
 } from '../models/api.model';
 import { MessageService } from 'primeng/api';
-import { API_ENDPOINTS } from '../constants';
+import { API_ENDPOINTS } from '../constants/constants';
+import { SUCCESS_MESSAGES, TOAST_SEVERITY, TOAST_SUMMARY } from '../constants/app.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +25,9 @@ export class BookingService {
       .pipe(
         tap(() => {
           this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Booking created successfully',
+            severity: TOAST_SEVERITY.SUCCESS,
+            summary: TOAST_SUMMARY.SUCCESS,
+            detail: SUCCESS_MESSAGES.BOOKING_CREATED,
           });
         })
       );
@@ -42,9 +43,9 @@ export class BookingService {
       .pipe(
         tap(() => {
           this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Booking cancelled successfully',
+            severity: TOAST_SEVERITY.SUCCESS,
+            summary: TOAST_SUMMARY.SUCCESS,
+            detail: SUCCESS_MESSAGES.BOOKING_CANCELLED,
           });
         })
       );

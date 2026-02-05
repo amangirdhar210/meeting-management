@@ -8,6 +8,7 @@ import { RoomService } from '../../shared/services/room.service';
 import { UserService } from '../../shared/services/user.service';
 import { User } from '../../shared/models/user.model';
 import { Room } from '../../shared/models/room.model';
+import { ROOM_STATUS, UI_LABELS, BUTTON_LABELS } from '../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -26,13 +27,16 @@ export class AdminDashboardComponent implements OnInit {
   private roomService = inject(RoomService);
   private userService = inject(UserService);
 
+  readonly UI = UI_LABELS;
+  readonly BUTTONS = BUTTON_LABELS;
+
   rooms = signal<Room[]>([]);
   users = signal<User[]>([]);
   activeTab = signal<'rooms' | 'users' | 'bookings'>('rooms');
 
   totalRooms = computed(() => this.rooms().length);
   availableRooms = computed(
-    () => this.rooms().filter((r: Room) => r.status === 'available').length
+    () => this.rooms().filter((r: Room) => r.status === ROOM_STATUS.AVAILABLE).length
   );
   totalUsers = computed(() => this.users().length);
 

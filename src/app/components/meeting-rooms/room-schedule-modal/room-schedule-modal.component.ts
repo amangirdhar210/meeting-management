@@ -14,19 +14,15 @@ import { RoomService } from '../../../shared/services/room.service';
 import {
   RoomScheduleByDate,
   ScheduleBooking,
+  TimeSlotDisplay,
+  BookingPosition,
 } from '../../../shared/models/api.model';
-
-interface TimeSlot {
-  hour: number;
-  label: string;
-  bookings: ScheduleBooking[];
-}
-
-interface BookingPosition {
-  top: string;
-  height: string;
-  display: boolean;
-}
+import { 
+  TIME_CONFIG, 
+  DATE_TIME_FORMATS, 
+  ROOM_STATUS, 
+  UI_LABELS 
+} from '../../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-room-schedule-modal',
@@ -42,14 +38,17 @@ export class RoomScheduleModalComponent implements OnInit {
 
   private readonly roomService = inject(RoomService);
 
+  readonly UI = UI_LABELS;
+  readonly ROOM_STATUS = ROOM_STATUS;
+
   readonly schedule = signal<RoomScheduleByDate | null>(null);
   readonly selectedDate = signal<string>(this.getTodayDate());
-  readonly timeSlots = signal<TimeSlot[]>([]);
+  readonly timeSlots = signal<TimeSlotDisplay[]>([]);
   readonly loading = signal<boolean>(true);
   selectedDateValue: Date | null = new Date();
 
-  readonly workDayStart = 0;
-  readonly workDayEnd = 24;
+  readonly workDayStart = TIME_CONFIG.WORK_DAY_START;
+  readonly workDayEnd = TIME_CONFIG.WORK_DAY_END;
 
   ngOnInit(): void {
     this.loadSchedule();
@@ -78,7 +77,7 @@ export class RoomScheduleModalComponent implements OnInit {
   }
 
   generateTimeSlots(bookings: ScheduleBooking[]): void {
-    const slots: TimeSlot[] = [];
+    const slots: TimeSlotDisplay[] = [];
     const selectedDateObj = new Date(`${this.selectedDate()}T00:00:00`);
 
     for (let hour = this.workDayStart; hour < this.workDayEnd; hour++) {
@@ -171,11 +170,10 @@ export class RoomScheduleModalComponent implements OnInit {
 
   formatTime(timestamp: number): string {
     const date = new Date(timestamp * 1000);
-    return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
+    return date.toLocaleTimeString(
+      DATE_TIME_FORMATS.LOCALE, 
+      DATE_TIME_FORMATS.TIME_ONLY
+    );
   }
 
   close(): void {
@@ -185,7 +183,7 @@ export class RoomScheduleModalComponent implements OnInit {
   getCurrentStatus(): string {
     const scheduleData = this.schedule();
     if (!scheduleData) {
-      return 'Unknown';
+      return ROOM_STATUS.UNKNOWN;
     }
 
     const now = new Date();
@@ -197,7 +195,7 @@ export class RoomScheduleModalComponent implements OnInit {
       return now >= start && now <= end;
     });
 
-    return isInUse ? 'In Use' : 'Available';
+    return isInUse ? ROOM_STATUS.IN_USE : ROOM_STATUS.AVAILABLE;
   }
 
   isToday(): boolean {

@@ -18,6 +18,7 @@ import {
   UpdateUserRequest,
 } from '../../../../shared/models/api.model';
 import { User } from '../../../../shared/models/user.model';
+import { DEFAULT_VALUES } from '../../../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-add-user-form',
@@ -114,7 +115,7 @@ export class AddUserFormComponent implements OnInit {
       this.userService.addUser(newUser).subscribe({
         next: () => {
           this.isSubmitting = false;
-          this.addUserForm.reset({ role: 'user' });
+          this.addUserForm.reset({ role: DEFAULT_VALUES.USER_ROLE });
           this.cancelAdd.emit();
         },
         error: () => {
@@ -125,7 +126,7 @@ export class AddUserFormComponent implements OnInit {
   }
 
   onCancelAdd(): void {
-    this.addUserForm.reset({ role: 'user' });
+    this.addUserForm.reset({ role: DEFAULT_VALUES.USER_ROLE });
     this.cancelAdd.emit();
   }
 

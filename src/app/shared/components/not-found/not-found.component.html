@@ -1,1 +1,16 @@
-<p>not-found works!</p>
+<div class="error-container">
+  <div class="error-content">
+    <div class="error-icon">
+      <i class="fa-solid fa-exclamation-triangle"></i>
+    </div>
+    <h1 class="error-code">404</h1>
+    <h2 class="error-title">Page Not Found</h2>
+    <p class="error-message">
+      The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+    </p>
+    <button class="home-button" (click)="goToHome()">
+      <i class="fa-solid fa-home"></i>
+      {{ BUTTONS.GO_TO_HOME }}
+    </button>
+  </div>
+</div>

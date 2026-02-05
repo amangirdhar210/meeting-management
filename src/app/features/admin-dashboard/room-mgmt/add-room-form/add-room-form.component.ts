@@ -19,6 +19,7 @@ import {
   UpdateRoomRequest,
 } from '../../../../shared/models/api.model';
 import { Room } from '../../../../shared/models/room.model';
+import { ROOM_STATUS } from '../../../../shared/constants/app.constants';
 
 @Component({
   selector: 'add-room-form',
@@ -83,7 +84,7 @@ export class AddRoomFormComponent implements OnInit, OnDestroy {
     }),
     description: new FormControl<string>('', { nonNullable: true }),
     status: new FormControl<'available' | 'unavailable' | 'maintenance'>(
-      'available',
+      ROOM_STATUS.AVAILABLE,
       {
         nonNullable: true,
         validators: [Validators.required],
@@ -126,7 +127,7 @@ export class AddRoomFormComponent implements OnInit, OnDestroy {
         capacity: formValues.capacity!,
         floor: formValues.floor!,
         amenities: formValues.amenities.split(',').map((a: string) => a.trim()),
-        status: 'available',
+        status: ROOM_STATUS.AVAILABLE,
         location: formValues.location,
         description: formValues.description || undefined,
       };

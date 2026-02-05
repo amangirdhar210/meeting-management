@@ -4,16 +4,18 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { MessageService } from 'primeng/api';
-import { LoginRequest, LoginResponse } from '../models/api.model';
+import { LoginRequest, LoginResponse, DecodedToken } from '../models/api.model';
 import { User } from '../models/user.model';
-import { API_ENDPOINTS } from '../constants';
-
-interface DecodedToken {
-  user_id: string;
-  role: 'admin' | 'user';
-  exp: number;
-  iat: number;
-}
+import { API_ENDPOINTS } from '../constants/constants';
+import { 
+  STORAGE_KEYS, 
+  ROUTES, 
+  USER_ROLES, 
+  SUCCESS_MESSAGES, 
+  INFO_MESSAGES,
+  TOAST_SEVERITY,
+  TOAST_SUMMARY 
+} from '../constants/app.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -31,26 +33,26 @@ export class LoginService {
   }
 
   get userRole(): 'admin' | 'user' | 'unauthenticated' {
-    const token = localStorage.getItem('authToken');
-    if (!token) return 'unauthenticated';
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    if (!token) return USER_ROLES.UNAUTHENTICATED;
     try {
       const decoded = jwtDecode<DecodedToken>(token);
       return decoded.role;
     } catch {
-      return 'unauthenticated';
+      return USER_ROLES.UNAUTHENTICATED;
     }
   }
 
   get isAdmin(): boolean {
-    return this.userRole === 'admin';
+    return this.userRole === USER_ROLES.ADMIN;
   }
 
   get isUser(): boolean {
-    return this.userRole === 'user';
+    return this.userRole === USER_ROLES.USER;
   }
 
   get userId(): string | null {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
     if (!token) return null;
     try {
       const decoded = jwtDecode<DecodedToken>(token);
@@ -63,20 +65,20 @@ export class LoginService {
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(API_ENDPOINTS.LOGIN, credentials).pipe(
       tap((res: LoginResponse) => {
-        localStorage.setItem('authToken', res.token);
-        localStorage.setItem('currentUser', JSON.stringify(res.user));
+        localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, res.token);
+        localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(res.user));
         this.currentUser.set(res.user);
         this.isLoggedIn.set(true);
         this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Login successful',
+          severity: TOAST_SEVERITY.SUCCESS,
+          summary: TOAST_SUMMARY.SUCCESS,
+          detail: SUCCESS_MESSAGES.LOGIN_SUCCESS,
         });
         const decoded = jwtDecode<DecodedToken>(res.token);
-        if (decoded.role === 'admin') {
-          this.router.navigate(['/admin-dashboard']);
-        } else if (decoded.role === 'user') {
-          this.router.navigate(['/user-dashboard']);
+        if (decoded.role === USER_ROLES.ADMIN) {
+          this.router.navigate([ROUTES.ADMIN_DASHBOARD]);
+        } else if (decoded.role === USER_ROLES.USER) {
+          this.router.navigate([ROUTES.USER_DASHBOARD]);
         }
       })
     );
@@ -85,19 +87,19 @@ export class LoginService {
   logout(): void {
     this.isLoggedIn.set(false);
     this.currentUser.set(null);
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
     this.messageService.add({
-      severity: 'info',
-      summary: 'Info',
-      detail: 'Logged out successfully',
+      severity: TOAST_SEVERITY.INFO,
+      summary: TOAST_SUMMARY.INFO,
+      detail: SUCCESS_MESSAGES.LOGOUT_SUCCESS,
     });
-    this.router.navigate(['/login']);
+    this.router.navigate([ROUTES.LOGIN]);
   }
 
   private restoreSession(): void {
-    const token = localStorage.getItem('authToken');
-    const userStr = localStorage.getItem('currentUser');
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    const userStr = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
     if (token) {
       try {
         const decoded = jwtDecode<DecodedToken>(token);
@@ -107,11 +109,9 @@ export class LoginService {
             this.currentUser.set(JSON.parse(userStr));
           }
         } else {
-          // Token expired - clear silently
           this.clearSession();
         }
       } catch {
-        // Invalid token - clear silently
         this.clearSession();
       }
     }
@@ -120,7 +120,7 @@ export class LoginService {
   private clearSession(): void {
     this.isLoggedIn.set(false);
     this.currentUser.set(null);
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
   }
 }

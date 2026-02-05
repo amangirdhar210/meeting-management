@@ -20,6 +20,10 @@ import { Room } from '../../../shared/models/room.model';
 import { DialogModule } from 'primeng/dialog';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CommonModule } from '@angular/common';
+import { 
+  TIME_CONFIG, 
+  VALIDATION_MESSAGES 
+} from '../../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-booking-form',
@@ -33,6 +37,8 @@ export class BookingFormComponent implements OnInit {
   @Output() cancelBooking = new EventEmitter<void>();
   private bookingService = inject(BookingService);
 
+  readonly VALIDATION = VALIDATION_MESSAGES;
+
   visible = true;
   isSubmitting = false;
   minDate: Date = new Date();
@@ -41,7 +47,7 @@ export class BookingFormComponent implements OnInit {
   constructor() {
     const today = new Date();
     this.maxDate = new Date(today);
-    this.maxDate.setDate(today.getDate() + 10);
+    this.maxDate.setDate(today.getDate() + TIME_CONFIG.MAX_BOOKING_DAYS_AHEAD);
   }
 
   bookingForm = new FormGroup(
@@ -69,7 +75,7 @@ export class BookingFormComponent implements OnInit {
     const nextHour = new Date(now.getTime() + 60 * 60 * 1000);
     nextHour.setMinutes(0, 0, 0);
 
-    const oneHourLater = new Date(nextHour.getTime() + 60 * 60 * 1000);
+    const oneHourLater = new Date(nextHour.getTime() + TIME_CONFIG.DEFAULT_BOOKING_DURATION_HOURS * 60 * 60 * 1000);
 
     this.bookingForm.patchValue({
       startDateTime: nextHour,
@@ -105,10 +111,10 @@ export class BookingFormComponent implements OnInit {
   getFormError(): string {
     const errors = this.bookingForm.errors;
     if (errors?.['pastBooking']) {
-      return 'Cannot book a room in the past';
+      return VALIDATION_MESSAGES.PAST_BOOKING_ERROR;
     }
     if (errors?.['endBeforeStart']) {
-      return 'End time must be after start time';
+      return VALIDATION_MESSAGES.END_BEFORE_START_ERROR;
     }
     return '';
   }
@@ -142,7 +148,7 @@ export class BookingFormComponent implements OnInit {
         setTimeout(() => {
           this.bookingForm.reset();
           this.cancelBooking.emit();
-        }, 300);
+        }, TIME_CONFIG.MODAL_CLOSE_DELAY);
       },
       error: () => {
         this.isSubmitting = false;
@@ -155,6 +161,6 @@ export class BookingFormComponent implements OnInit {
     setTimeout(() => {
       this.bookingForm.reset();
       this.cancelBooking.emit();
-    }, 300);
+    }, TIME_CONFIG.MODAL_CLOSE_DELAY);
   }
 }

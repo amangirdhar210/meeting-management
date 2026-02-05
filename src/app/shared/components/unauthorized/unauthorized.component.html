@@ -1,1 +1,16 @@
-<p>unauthorized works!</p>
+<div class="error-container">
+  <div class="error-content">
+    <div class="error-icon unauthorized">
+      <i class="fa-solid fa-lock"></i>
+    </div>
+    <h1 class="error-code">403</h1>
+    <h2 class="error-title">Access Denied</h2>
+    <p class="error-message">
+      You do not have permission to access this page. Please login with appropriate credentials.
+    </p>
+    <button class="login-button" (click)="goToLogin()">
+      <i class="fa-solid fa-right-to-bracket"></i>
+      {{ BUTTONS.GO_TO_LOGIN }}
+    </button>
+  </div>
+</div>

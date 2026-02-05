@@ -2,8 +2,8 @@
   <div class="logo-section">
     <i class="fa-solid fa-book"></i>
     <div>
-      <h2>RoomBook</h2>
-      <p>Meeting Room Management</p>
+      <h2>{{ APP_INFO.NAME }}</h2>
+      <p>{{ APP_INFO.TAGLINE }}</p>
     </div>
   </div>
 
@@ -17,7 +17,7 @@
     </div>
     <button class="logout-btn" (click)="logout()">
       <i class="fa-solid fa-right-from-bracket"></i>
-      Logout
+      {{ UI.LOGOUT }}
     </button>
   </div>
 </header>
@@ -36,21 +36,21 @@
         <div class="detail-item">
           <i class="fa-solid fa-envelope"></i>
           <div>
-            <label>Email</label>
+            <label>{{ UI.EMAIL_LABEL }}</label>
             <span>{{ userEmail() }}</span>
           </div>
         </div>
         <div class="detail-item">
           <i class="fa-solid fa-user-shield"></i>
           <div>
-            <label>Role</label>
+            <label>{{ UI.ROLE_LABEL }}</label>
             <span>{{ userRole() }}</span>
           </div>
         </div>
         <div class="detail-item">
           <i class="fa-solid fa-id-card"></i>
           <div>
-            <label>Name</label>
+            <label>{{ UI.NAME_LABEL }}</label>
             <span>{{ userName() }}</span>
           </div>
         </div>

@@ -5,6 +5,14 @@ import { AddRoomFormComponent } from './add-room-form/add-room-form.component';
 import { Subscription } from 'rxjs';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { 
+  CONFIRMATION_MESSAGES, 
+  DIALOG_HEADERS,
+  UI_LABELS,
+  BUTTON_LABELS,
+  TABLE_HEADERS,
+  INFO_MESSAGES 
+} from '../../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-room-mgmt',
@@ -18,6 +26,11 @@ export class RoomManagementComponent implements OnInit, OnDestroy {
   private roomService = inject(RoomService);
   private confirmationService = inject(ConfirmationService);
   private subscription!: Subscription;
+
+  readonly UI = UI_LABELS;
+  readonly BUTTONS = BUTTON_LABELS;
+  readonly HEADERS = TABLE_HEADERS;
+  readonly INFO = INFO_MESSAGES;
 
   rooms = signal<Room[]>([]);
   isAddingRoom = signal<boolean>(false);
@@ -51,8 +64,8 @@ export class RoomManagementComponent implements OnInit, OnDestroy {
 
   onDeleteRoom(id: string, name: string): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete ${name}?`,
-      header: 'Delete Confirmation',
+      message: CONFIRMATION_MESSAGES.DELETE_ROOM(name),
+      header: DIALOG_HEADERS.DELETE_CONFIRMATION,
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.roomService.deleteRoom(id).subscribe();

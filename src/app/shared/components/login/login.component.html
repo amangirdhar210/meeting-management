@@ -1,49 +1,46 @@
 <div class="login-container">
   <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <h1 class="header">Meeting Room Management</h1>
+    <h1 class="header">{{ UI.LOGIN_HEADER }}</h1>
 
     <div class="welcome-message">
-      Welcome to <strong>RoomBook</strong>. Sign in to manage your meeting
-      rooms.
+      {{ UI.LOGIN_WELCOME }} <strong>{{ APP_INFO.NAME }}</strong>. {{ UI.LOGIN_TAGLINE }}
     </div>
 
     <div class="form-group">
-      <label for="email">Email</label>
+      <label for="email">{{ LABELS.EMAIL }}</label>
       <input
         type="email"
         id="email"
         formControlName="email"
-        placeholder="Enter Email"
+        [placeholder]="PLACEHOLDERS.ENTER_EMAIL"
       />
 
       @if (email.invalid && (email.touched || email.dirty)) {
       <div>
         @if (email.errors?.['required']) {
-        <small class="error-message">Email is required</small>
+        <small class="error-message">{{ VALIDATION.EMAIL_REQUIRED }}</small>
         } @if (email.errors?.['email']) {
-        <small class="error-message">Please enter a valid email</small>
+        <small class="error-message">{{ VALIDATION.EMAIL_INVALID }}</small>
         }
       </div>
       }
     </div>
 
     <div class="form-group">
-      <label for="password">Password</label>
+      <label for="password">{{ LABELS.PASSWORD }}</label>
       <input
         type="password"
         id="password"
         formControlName="password"
-        placeholder="Enter your password"
+        [placeholder]="PLACEHOLDERS.ENTER_PASSWORD"
       />
 
       @if (password.invalid && (password.touched || password.dirty)) {
       <div>
         @if (password.errors?.['required']) {
-        <small class="error-message">Password is required</small>
+        <small class="error-message">{{ VALIDATION.PASSWORD_REQUIRED }}</small>
         } @if (password.errors?.['minlength']) {
-        <small class="error-message"
-          >Password must be at least 6 characters</small
-        >
+        <small class="error-message">{{ VALIDATION.PASSWORD_MIN_LENGTH }}</small>
         }
       </div>
       }
@@ -51,7 +48,7 @@
 
     <button type="submit" [disabled]="loginForm.invalid || isSubmitting">
       @if (isSubmitting) {
-      <i class="pi pi-spinner pi-spin"></i> Logging in... } @else { Log In }
+      <i class="pi pi-spinner pi-spin"></i> {{ BUTTONS.LOGGING_IN }} } @else { {{ BUTTONS.LOG_IN }} }
     </button>
   </form>
 </div>

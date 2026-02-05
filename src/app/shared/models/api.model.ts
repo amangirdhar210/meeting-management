@@ -160,3 +160,22 @@ export interface ScheduleBooking {
   user_name: string;
   purpose: string;
 }
+
+export interface DecodedToken {
+  user_id: string;
+  role: 'admin' | 'user';
+  exp: number;
+  iat: number;
+}
+
+export interface TimeSlotDisplay {
+  hour: number;
+  label: string;
+  bookings: ScheduleBooking[];
+}
+
+export interface BookingPosition {
+  top: string;
+  height: string;
+  display: boolean;
+}

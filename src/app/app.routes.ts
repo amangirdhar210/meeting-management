@@ -23,10 +23,6 @@ export const routes: Routes = [
     component: AdminDashboardComponent,
     canActivate: [authGuard, roleGuard(['admin'])],
     children: [
-      // {
-      //   path: 'user-mgmt',
-      //   component: UserMgmtComponent,
-      // },
       {
         path: 'room-mgmt',
         component: RoomManagementComponent,

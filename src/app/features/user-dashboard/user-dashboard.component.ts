@@ -6,6 +6,7 @@ import { RoomSearchComponent } from './room-search/room-search.component';
 import { RoomService } from '../../shared/services/room.service';
 import { Room } from '../../shared/models/room.model';
 import { RoomSearchParams } from '../../shared/models/api.model';
+import { UI_LABELS, BUTTON_LABELS } from '../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -20,6 +21,10 @@ import { RoomSearchParams } from '../../shared/models/api.model';
 })
 export class UserDashboardComponent implements OnInit {
   private roomService = inject(RoomService);
+  
+  readonly UI = UI_LABELS;
+  readonly BUTTONS = BUTTON_LABELS;
+  
   rooms = signal<Room[]>([]);
   showMyBookings = signal<boolean>(false);
   private allRooms: Room[] = [];

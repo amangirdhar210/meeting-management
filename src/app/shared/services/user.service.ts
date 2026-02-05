@@ -15,7 +15,8 @@ import {
   UpdateUserRequest,
 } from '../models/api.model';
 import { MessageService } from 'primeng/api';
-import { API_ENDPOINTS } from '../constants';
+import { API_ENDPOINTS } from '../constants/constants';
+import { SUCCESS_MESSAGES, TOAST_SEVERITY, TOAST_SUMMARY } from '../constants/app.constants';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -38,9 +39,9 @@ export class UserService {
       .pipe(
         tap(() => {
           this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'User added successfully',
+            severity: TOAST_SEVERITY.SUCCESS,
+            summary: TOAST_SUMMARY.SUCCESS,
+            detail: SUCCESS_MESSAGES.USER_ADDED,
           });
           this.fetchUsers().subscribe();
         })
@@ -53,9 +54,9 @@ export class UserService {
       .pipe(
         tap(() => {
           this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'User deleted successfully',
+            severity: TOAST_SEVERITY.SUCCESS,
+            summary: TOAST_SUMMARY.SUCCESS,
+            detail: SUCCESS_MESSAGES.USER_DELETED,
           });
           this.fetchUsers().subscribe();
         })
@@ -71,9 +72,9 @@ export class UserService {
       .pipe(
         tap(() => {
           this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'User updated successfully',
+            severity: TOAST_SEVERITY.SUCCESS,
+            summary: TOAST_SUMMARY.SUCCESS,
+            detail: SUCCESS_MESSAGES.USER_UPDATED,
           });
           this.fetchUsers().subscribe();
         })

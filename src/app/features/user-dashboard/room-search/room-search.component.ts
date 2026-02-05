@@ -15,7 +15,14 @@ import {
 } from '@angular/forms';
 import { RoomSearchParams } from '../../../shared/models/api.model';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
-import { SliderModule } from 'primeng/slider';
+import { SliderModule, SliderChangeEvent } from 'primeng/slider';
+import { 
+  TIME_CONFIG, 
+  CAPACITY_CONFIG, 
+  COMMON_AMENITIES, 
+  BUTTON_LABELS, 
+  FORM_LABELS 
+} from '../../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-room-search',
@@ -27,13 +34,17 @@ import { SliderModule } from 'primeng/slider';
 export class RoomSearchComponent implements OnInit, OnDestroy {
   @Output() search = new EventEmitter<RoomSearchParams>();
 
+  readonly BUTTONS = BUTTON_LABELS;
+  readonly LABELS = FORM_LABELS;
+  readonly COMMON_AMENITIES = COMMON_AMENITIES;
+
   showFilters = signal<boolean>(false);
   private destroy$ = new Subject<void>();
   private searchSubject$ = new Subject<void>();
   private capacityChangeSubject$ = new Subject<number[]>();
 
-  capacityRange = signal<number[]>([1, 50]);
-  capacityRangeValue: number[] = [1, 50];
+  capacityRange = signal<number[]>([CAPACITY_CONFIG.MIN_CAPACITY, CAPACITY_CONFIG.MAX_CAPACITY]);
+  capacityRangeValue: number[] = [CAPACITY_CONFIG.MIN_CAPACITY, CAPACITY_CONFIG.MAX_CAPACITY];
 
   searchForm = new FormGroup({
     searchText: new FormControl<string>(''),
@@ -41,24 +52,15 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
     amenities: new FormControl<string>(''),
   });
 
-  commonAmenities = [
-    'Projector',
-    'Whiteboard',
-    'Video Conference',
-    'TV',
-    'Phone',
-    'WiFi',
-  ];
-
   ngOnInit(): void {
     this.searchSubject$
-      .pipe(debounceTime(300), takeUntil(this.destroy$))
+      .pipe(debounceTime(TIME_CONFIG.DEBOUNCE_TIME), takeUntil(this.destroy$))
       .subscribe(() => {
         this.performSearch();
       });
 
     this.capacityChangeSubject$
-      .pipe(debounceTime(500), takeUntil(this.destroy$))
+      .pipe(debounceTime(TIME_CONFIG.CAPACITY_DEBOUNCE_TIME), takeUntil(this.destroy$))
       .subscribe((values) => {
         this.capacityRange.set(values);
         this.performSearch();
@@ -93,7 +95,7 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
     }
 
     const [min, max] = this.capacityRange();
-    if (min > 1 || max < 50) {
+    if (min > CAPACITY_CONFIG.MIN_CAPACITY || max < CAPACITY_CONFIG.MAX_CAPACITY) {
       params.minCapacity = min;
       params.maxCapacity = max;
     }
@@ -106,8 +108,8 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
 
   clearFilters(): void {
     this.searchForm.reset();
-    this.capacityRange.set([1, 50]);
-    this.capacityRangeValue = [1, 50];
+    this.capacityRange.set([CAPACITY_CONFIG.MIN_CAPACITY, CAPACITY_CONFIG.MAX_CAPACITY]);
+    this.capacityRangeValue = [CAPACITY_CONFIG.MIN_CAPACITY, CAPACITY_CONFIG.MAX_CAPACITY];
     this.search.emit({});
   }
 
@@ -116,7 +118,7 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
     this.performSearch();
   }
 
-  onCapacityChange(event: any): void {
+  onCapacityChange(event: SliderChangeEvent): void {
     const values = event.values || this.capacityRangeValue;
     if (values && Array.isArray(values) && values.length === 2) {
       this.capacityRangeValue = [...values];

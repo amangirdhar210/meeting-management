@@ -4,6 +4,17 @@ import { Booking } from '../../../shared/models/api.model';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
+import { 
+  CONFIRMATION_MESSAGES, 
+  DIALOG_HEADERS, 
+  DATE_TIME_FORMATS, 
+  PAGINATION, 
+  BOOKING_STATUS,
+  UI_LABELS,
+  BUTTON_LABELS,
+  INFO_MESSAGES,
+  NO_DATA_MESSAGES 
+} from '../../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-all-bookings',
@@ -17,11 +28,17 @@ export class AllBookingsComponent implements OnInit {
   private bookingService = inject(BookingService);
   private confirmationService = inject(ConfirmationService);
 
+  readonly UI = require('../../../shared/constants/app.constants').UI_LABELS;
+  readonly BUTTONS = require('../../../shared/constants/app.constants').BUTTON_LABELS;
+  readonly STATUS = BOOKING_STATUS;
+  readonly INFO = require('../../../shared/constants/app.constants').INFO_MESSAGES;
+  readonly NO_DATA = require('../../../shared/constants/app.constants').NO_DATA_MESSAGES;
+
   bookings = signal<Booking[]>([]);
   loading = signal<boolean>(true);
   searchQuery = signal<string>('');
-  currentPage = signal<number>(1);
-  pageSize = signal<number>(10);
+  currentPage = signal<number>(PAGINATION.DEFAULT_CURRENT_PAGE);
+  pageSize = signal<number>(PAGINATION.DEFAULT_PAGE_SIZE);
 
   filteredBookings = signal<Booking[]>([]);
   paginatedBookings = signal<Booking[]>([]);
@@ -47,8 +64,8 @@ export class AllBookingsComponent implements OnInit {
 
   cancelBooking(id: string, purpose: string): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to cancel this booking: "${purpose}"?`,
-      header: 'Cancel Booking',
+      message: CONFIRMATION_MESSAGES.CANCEL_BOOKING(purpose),
+      header: DIALOG_HEADERS.CANCEL_BOOKING,
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.bookingService.cancelBooking(id).subscribe({
@@ -63,8 +80,8 @@ export class AllBookingsComponent implements OnInit {
 
   deleteBooking(id: string, purpose: string): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete this booking: "${purpose}"? This action cannot be undone.`,
-      header: 'Delete Booking',
+      message: CONFIRMATION_MESSAGES.DELETE_BOOKING(purpose),
+      header: DIALOG_HEADERS.DELETE_BOOKING,
       icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
@@ -92,19 +109,16 @@ export class AllBookingsComponent implements OnInit {
   }
 
   getStatus(startTime: number, endTime: number): string {
-    if (this.isPast(endTime)) return 'completed';
-    if (this.isActive(startTime, endTime)) return 'active';
-    return 'upcoming';
+    if (this.isPast(endTime)) return BOOKING_STATUS.COMPLETED;
+    if (this.isActive(startTime, endTime)) return BOOKING_STATUS.ACTIVE;
+    return BOOKING_STATUS.UPCOMING;
   }
 
   formatDate(timestamp: number): string {
-    return new Date(timestamp * 1000).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    return new Date(timestamp * 1000).toLocaleString(
+      DATE_TIME_FORMATS.LOCALE,
+      DATE_TIME_FORMATS.SHORT_DATE_TIME
+    );
   }
 
   getDuration(startTime: number, endTime: number): number {
@@ -114,7 +128,7 @@ export class AllBookingsComponent implements OnInit {
   onSearch(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchQuery.set(input.value);
-    this.currentPage.set(1);
+    this.currentPage.set(PAGINATION.DEFAULT_CURRENT_PAGE);
     this.applyFiltersAndPagination();
   }
 
@@ -158,16 +172,16 @@ export class AllBookingsComponent implements OnInit {
     const total = this.totalPages();
     const current = this.currentPage();
 
-    if (total <= 7) {
+    if (total <= PAGINATION.MAX_PAGE_BUTTONS) {
       for (let i = 1; i <= total; i++) {
         pages.push(i);
       }
     } else {
-      if (current <= 3) {
+      if (current <= PAGINATION.PAGE_RANGE_START) {
         for (let i = 1; i <= 5; i++) pages.push(i);
         pages.push(-1);
         pages.push(total);
-      } else if (current >= total - 2) {
+      } else if (current >= total - PAGINATION.PAGE_RANGE_END) {
         pages.push(1);
         pages.push(-1);
         for (let i = total - 4; i <= total; i++) pages.push(i);

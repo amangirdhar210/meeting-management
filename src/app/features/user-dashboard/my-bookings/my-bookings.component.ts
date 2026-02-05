@@ -3,6 +3,14 @@ import { BookingService } from '../../../shared/services/booking.service';
 import { Booking } from '../../../shared/models/api.model';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { 
+  CONFIRMATION_MESSAGES, 
+  DIALOG_HEADERS, 
+  DATE_TIME_FORMATS,
+  UI_LABELS,
+  BUTTON_LABELS,
+  BOOKING_STATUS 
+} from '../../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-my-bookings',
@@ -15,6 +23,10 @@ import { ConfirmationService } from 'primeng/api';
 export class MyBookingsComponent implements OnInit {
   private bookingService = inject(BookingService);
   private confirmationService = inject(ConfirmationService);
+
+  readonly UI = UI_LABELS;
+  readonly BUTTONS = BUTTON_LABELS;
+  readonly STATUS = BOOKING_STATUS;
 
   bookings = signal<Booking[]>([]);
   loading = signal<boolean>(true);
@@ -38,8 +50,8 @@ export class MyBookingsComponent implements OnInit {
 
   cancelBooking(id: string, purpose: string): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to cancel this booking: "${purpose}"?`,
-      header: 'Cancel Booking',
+      message: CONFIRMATION_MESSAGES.CANCEL_BOOKING(purpose),
+      header: DIALOG_HEADERS.CANCEL_BOOKING,
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.bookingService.cancelBooking(id).subscribe({
@@ -61,13 +73,10 @@ export class MyBookingsComponent implements OnInit {
   }
 
   formatDate(timestamp: number): string {
-    return new Date(timestamp * 1000).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    return new Date(timestamp * 1000).toLocaleString(
+      DATE_TIME_FORMATS.LOCALE, 
+      DATE_TIME_FORMATS.SHORT_DATE_TIME
+    );
   }
 
   getDuration(startTime: number, endTime: number): number {

@@ -7,6 +7,17 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/login.service';
+import { 
+  ROUTES, 
+  USER_ROLES, 
+  FORM_CONTROLS, 
+  VALIDATION_MESSAGES,
+  UI_LABELS,
+  BUTTON_LABELS,
+  FORM_LABELS,
+  PLACEHOLDERS,
+  APP_INFO 
+} from '../../constants/app.constants';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +29,14 @@ import { LoginService } from '../../services/login.service';
 export class LoginComponent implements OnInit {
   private router = inject(Router);
   private loginService = inject(LoginService);
+  
+  readonly UI = UI_LABELS;
+  readonly BUTTONS = BUTTON_LABELS;
+  readonly LABELS = FORM_LABELS;
+  readonly PLACEHOLDERS = PLACEHOLDERS;
+  readonly VALIDATION = VALIDATION_MESSAGES;
+  readonly APP_INFO = APP_INFO;
+  
   isSubmitting = false;
 
   loginForm = new FormGroup({
@@ -34,20 +53,20 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     if (this.loginService.isLoggedIn()) {
       const role = this.loginService.userRole;
-      if (role === 'admin') {
-        this.router.navigate(['/admin-dashboard']);
-      } else if (role === 'user') {
-        this.router.navigate(['/user-dashboard']);
+      if (role === USER_ROLES.ADMIN) {
+        this.router.navigate([ROUTES.ADMIN_DASHBOARD]);
+      } else if (role === USER_ROLES.USER) {
+        this.router.navigate([ROUTES.USER_DASHBOARD]);
       }
     }
   }
 
   get email(): FormControl<string> {
-    return this.loginForm.get('email') as FormControl<string>;
+    return this.loginForm.get(FORM_CONTROLS.EMAIL) as FormControl<string>;
   }
 
   get password(): FormControl<string> {
-    return this.loginForm.get('password') as FormControl<string>;
+    return this.loginForm.get(FORM_CONTROLS.PASSWORD) as FormControl<string>;
   }
 
   onSubmit(): void {

@@ -18,7 +18,8 @@ import {
   UpdateRoomRequest,
 } from '../models/api.model';
 import { MessageService } from 'primeng/api';
-import { API_ENDPOINTS } from '../constants';
+import { API_ENDPOINTS } from '../constants/constants';
+import { SUCCESS_MESSAGES, TOAST_SEVERITY, TOAST_SUMMARY } from '../constants/app.constants';
 
 @Injectable({ providedIn: 'root' })
 export class RoomService {
@@ -89,9 +90,9 @@ export class RoomService {
     return this.http.post<GenericResponse>(API_ENDPOINTS.ROOMS, newRoom).pipe(
       tap(() => {
         this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Room added successfully',
+          severity: TOAST_SEVERITY.SUCCESS,
+          summary: TOAST_SUMMARY.SUCCESS,
+          detail: SUCCESS_MESSAGES.ROOM_ADDED,
         });
         this.fetchRooms().subscribe();
       })
@@ -104,9 +105,9 @@ export class RoomService {
       .pipe(
         tap(() => {
           this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Room deleted successfully',
+            severity: TOAST_SEVERITY.SUCCESS,
+            summary: TOAST_SUMMARY.SUCCESS,
+            detail: SUCCESS_MESSAGES.ROOM_DELETED,
           });
           this.fetchRooms().subscribe();
         })
@@ -122,9 +123,9 @@ export class RoomService {
       .pipe(
         tap(() => {
           this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Room updated successfully',
+            severity: TOAST_SEVERITY.SUCCESS,
+            summary: TOAST_SUMMARY.SUCCESS,
+            detail: SUCCESS_MESSAGES.ROOM_UPDATED,
           });
           this.fetchRooms().subscribe();
         })

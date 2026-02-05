@@ -5,6 +5,17 @@ import { AddUserFormComponent } from './add-user-form/add-user-form.component';
 import { Subscription } from 'rxjs';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { 
+  CONFIRMATION_MESSAGES, 
+  DIALOG_HEADERS, 
+  PAGINATION,
+  UI_LABELS,
+  BUTTON_LABELS,
+  TABLE_HEADERS,
+  PLACEHOLDERS,
+  INFO_MESSAGES,
+  NO_DATA_MESSAGES 
+} from '../../../shared/constants/app.constants';
 
 @Component({
   selector: 'app-user-mgmt',
@@ -19,12 +30,19 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
   private confirmationService = inject(ConfirmationService);
   private sub = new Subscription();
 
+  readonly UI = UI_LABELS;
+  readonly BUTTONS = BUTTON_LABELS;
+  readonly HEADERS = TABLE_HEADERS;
+  readonly PLACEHOLDERS = PLACEHOLDERS;
+  readonly INFO = INFO_MESSAGES;
+  readonly NO_DATA = NO_DATA_MESSAGES;
+
   users = signal<User[]>([]);
   isAddingUser = signal<boolean>(false);
   editingUser = signal<User | undefined>(undefined);
   searchQuery = signal<string>('');
-  currentPage = signal<number>(1);
-  pageSize = signal<number>(10);
+  currentPage = signal<number>(PAGINATION.DEFAULT_CURRENT_PAGE);
+  pageSize = signal<number>(PAGINATION.DEFAULT_PAGE_SIZE);
 
   filteredUsers = signal<User[]>([]);
   paginatedUsers = signal<User[]>([]);
@@ -61,8 +79,8 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
 
   onDeleteUser(id: string, name: string): void {
     this.confirmationService.confirm({
-      message: `Are you sure you want to delete ${name}?`,
-      header: 'Delete Confirmation',
+      message: CONFIRMATION_MESSAGES.DELETE_USER(name),
+      header: DIALOG_HEADERS.DELETE_CONFIRMATION,
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.userService.deleteUser(id).subscribe();
@@ -73,7 +91,7 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
   onSearch(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchQuery.set(input.value);
-    this.currentPage.set(1);
+    this.currentPage.set(PAGINATION.DEFAULT_CURRENT_PAGE);
     this.applyFiltersAndPagination();
   }
 
@@ -117,16 +135,16 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
     const total = this.totalPages();
     const current = this.currentPage();
 
-    if (total <= 7) {
+    if (total <= PAGINATION.MAX_PAGE_BUTTONS) {
       for (let i = 1; i <= total; i++) {
         pages.push(i);
       }
     } else {
-      if (current <= 3) {
+      if (current <= PAGINATION.PAGE_RANGE_START) {
         for (let i = 1; i <= 5; i++) pages.push(i);
         pages.push(-1);
         pages.push(total);
-      } else if (current >= total - 2) {
+      } else if (current >= total - PAGINATION.PAGE_RANGE_END) {
         pages.push(1);
         pages.push(-1);
         for (let i = total - 4; i <= total; i++) pages.push(i);
