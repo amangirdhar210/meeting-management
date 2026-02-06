@@ -13,7 +13,7 @@ import {
   UI_LABELS,
   BUTTON_LABELS,
   INFO_MESSAGES,
-  NO_DATA_MESSAGES 
+  NO_DATA_MESSAGES
 } from '../../../shared/constants/app.constants';
 
 @Component({
@@ -28,11 +28,11 @@ export class AllBookingsComponent implements OnInit {
   private bookingService = inject(BookingService);
   private confirmationService = inject(ConfirmationService);
 
-  readonly UI = require('../../../shared/constants/app.constants').UI_LABELS;
-  readonly BUTTONS = require('../../../shared/constants/app.constants').BUTTON_LABELS;
+  readonly UI = UI_LABELS;
+  readonly BUTTONS = BUTTON_LABELS;
   readonly STATUS = BOOKING_STATUS;
-  readonly INFO = require('../../../shared/constants/app.constants').INFO_MESSAGES;
-  readonly NO_DATA = require('../../../shared/constants/app.constants').NO_DATA_MESSAGES;
+  readonly INFO = INFO_MESSAGES;
+  readonly NO_DATA = NO_DATA_MESSAGES;
 
   bookings = signal<Booking[]>([]);
   loading = signal<boolean>(true);

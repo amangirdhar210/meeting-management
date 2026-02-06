@@ -1,1271 +1,1114 @@
-openapi: 3.0.3
+---
+openapi: 3.1.0
 info:
   title: Meeting Room Booking API
-  description: |
-    RESTful API for managing meeting room bookings, users, and rooms with JWT authentication.
-
-    **Key Features:**
-    - JWT-based authentication with role-based access control
-    - Advanced room search with filters (capacity, floor, amenities, availability)
-    - Real-time availability checking with conflict detection
-    - Detailed booking information with user and room details
-    - Modern Go 1.18+ implementation with proper error handling
-    - Clean architecture with repository, service, and handler layers
-
-  version: "2.0.0"
-  contact:
-    name: API Support
-    email: admin@example.com
-servers:
-  - url: http://localhost:8080
-    description: Local development server
+  description: RESTful API for managing meeting room bookings, users, and rooms with
+    JWT authentication
+  version: 1.0.0
 paths:
-  /health:
-    get:
-      summary: Health check
+  "/login":
+    post:
+      tags:
+      - Authentication
+      summary: Login
+      operationId: login_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/LoginUserRequest"
+        required: true
       responses:
-        "200":
-          description: OK
+        '200':
+          description: Successful Response
           content:
             application/json:
               schema:
+                "$ref": "#/components/schemas/LoginUserResponse"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/health":
+    get:
+      tags:
+      - Authentication
+      summary: Health Check
+      operationId: health_check_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
                 type: object
-                properties:
-                  status:
-                    type: string
-                    example: ok
-  /login:
+                title: Response Health Check Health Get
+  "/api/bookings":
     post:
-      summary: Authenticate user and receive JWT token
       tags:
-        - Authentication
+      - Bookings
+      summary: Create Booking
+      operationId: create_booking_api_bookings_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LoginUserRequest"
-            example:
-              email: "admin@example.com"
-              password: "admin123"
+              "$ref": "#/components/schemas/CreateBookingRequest"
       responses:
-        "200":
-          description: Authentication successful
+        '201':
+          description: Successful Response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LoginUserResponse"
-              example:
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                user:
-                  id: "123e4567-e89b-12d3-a456-426614174000"
-                  name: "Admin"
-                  email: "admin@example.com"
-                  role: "admin"
-                  created_at: 1699999999
-                  updated_at: 1699999999
-        "400":
-          description: Invalid request body
+                "$ref": "#/components/schemas/GenericResponse"
+        '422':
+          description: Validation Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "invalid request body"
-        "401":
-          description: Invalid credentials
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "unauthorized"
-  /api/register:
-    post:
-      summary: Register a new user (admin only)
+                "$ref": "#/components/schemas/HTTPValidationError"
+    get:
       tags:
-        - Users
-      security:
-        - bearerAuth: []
-      requestBody:
+      - Bookings
+      summary: Get All Bookings
+      operationId: get_all_bookings_api_bookings_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/BookingDTO"
+                title: Response Get All Bookings Api Bookings Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/bookings/my":
+    get:
+      tags:
+      - Bookings
+      summary: Get My Bookings
+      operationId: get_my_bookings_api_bookings_my_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/BookingDTO"
+                title: Response Get My Bookings Api Bookings My Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/bookings/{booking_id}":
+    get:
+      tags:
+      - Bookings
+      summary: Get Booking By Id
+      operationId: get_booking_by_id_api_bookings__booking_id__get
+      parameters:
+      - name: booking_id
+        in: path
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RegisterUserRequest"
-            example:
-              name: "John Doe"
-              email: "john.doe@example.com"
-              password: "password123"
-              role: "user"
-      responses:
-        "201":
-          description: User created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GenericResponse"
-              example:
-                message: "user registered successfully"
-        "400":
-          description: Invalid input or validation error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "invalid request body"
-        "403":
-          description: Forbidden - admin role required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "forbidden"
-  /api/users:
-    get:
-      summary: Get all users (admin only)
-      tags:
-        - Users
-      security:
-        - bearerAuth: []
-      responses:
-        "200":
-          description: List of all users
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/UserDTO"
-              example:
-                - id: "123e4567-e89b-12d3-a456-426614174000"
-                  name: "Admin"
-                  email: "admin@example.com"
-                  role: "admin"
-                  created_at: 1699999999
-                  updated_at: 1699999999
-                - id: "123e4567-e89b-12d3-a456-426614174005"
-                  name: "John Doe"
-                  email: "john.doe@example.com"
-                  role: "user"
-                  created_at: 1699999999
-                  updated_at: 1699999999
-        "403":
-          description: Forbidden - admin role required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "forbidden"
-  /api/users/{id}:
-    delete:
-      summary: Delete a user by ID (admin only)
-      description: Delete a user. Cannot delete yourself or the superadmin account.
-      tags:
-        - Users
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: User ID to delete (UUID)
-          schema:
-            type: string
-          example: "123e4567-e89b-12d3-a456-426614174005"
-      responses:
-        "200":
-          description: User deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GenericResponse"
-              example:
-                message: "user deleted successfully"
-        "400":
-          description: Invalid user ID
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "invalid user id"
-        "403":
-          description: Forbidden - cannot delete self or superadmin
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "cannot delete yourself"
-        "404":
-          description: User not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "user not found"
-  /api/rooms:
-    post:
-      summary: Add a new meeting room (admin only)
-      tags:
-        - Rooms
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AddRoomRequest"
-            example:
-              name: "Conference Room A"
-              roomNumber: 101
-              capacity: 10
-              floor: 1
-              amenities: ["Projector", "Whiteboard", "Video Conference"]
-              status: "Available"
-              location: "Building A, Floor 1"
-              description: "Large conference room with video conferencing capabilities"
-      responses:
-        "201":
-          description: Room created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GenericResponse"
-              example:
-                message: "room added successfully"
-        "400":
-          description: Invalid input or validation error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "invalid request body"
-        "403":
-          description: Forbidden - admin role required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "forbidden"
-    get:
-      summary: Get all meeting rooms (authenticated users)
-      tags:
-        - Rooms
-      security:
-        - bearerAuth: []
-      responses:
-        "200":
-          description: List of all meeting rooms
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/RoomDTO"
-              example:
-                - id: "123e4567-e89b-12d3-a456-426614174001"
-                  name: "Conference Room A"
-                  roomNumber: 101
-                  capacity: 10
-                  floor: 1
-                  amenities: ["Projector", "Whiteboard"]
-                  status: "Available"
-                  location: "Building A, Floor 1"
-                  description: "Large conference room"
-                - id: "123e4567-e89b-12d3-a456-426614174004"
-                  name: "Meeting Room B"
-                  roomNumber: 102
-                  capacity: 6
-                  floor: 1
-                  amenities: ["TV", "Whiteboard"]
-                  status: "Available"
-                  location: "Building A, Floor 1"
-                  description: "Small meeting room"
-  /api/rooms/{id}:
-    get:
-      summary: Get room details by ID (authenticated users)
-      tags:
-        - Rooms
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: Room ID (UUID)
-          schema:
-            type: string
-          example: "123e4567-e89b-12d3-a456-426614174001"
-      responses:
-        "200":
-          description: Room details
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/RoomDTO"
-              example:
-                id: "123e4567-e89b-12d3-a456-426614174001"
-                name: "Conference Room A"
-                roomNumber: 101
-                capacity: 10
-                floor: 1
-                amenities: ["Projector", "Whiteboard", "Video Conference"]
-                status: "Available"
-                location: "Building A, Floor 1"
-                description: "Large conference room with video conferencing capabilities"
-        "400":
-          description: Invalid room ID
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "invalid room id"
-        "404":
-          description: Room not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "resource not found"
-    delete:
-      summary: Delete room by ID (admin only)
-      tags:
-        - Rooms
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: Room ID to delete (UUID)
-          schema:
-            type: string
-          example: "123e4567-e89b-12d3-a456-426614174003"
-      responses:
-        "200":
-          description: Room deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GenericResponse"
-              example:
-                message: "room deleted successfully"
-        "400":
-          description: Invalid room ID
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "invalid room id"
-        "403":
-          description: Forbidden - admin role required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "forbidden"
-        "404":
-          description: Room not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "resource not found"
-  /api/rooms/search:
-    get:
-      summary: Advanced room search with multiple filters (authenticated users)
-      description: |
-        Search for rooms based on multiple criteria with efficient database queries.
-
-        **Features:**
-        - Filter by capacity range (min/max)
-        - Filter by specific floor
-        - Filter by required amenities (must have all specified)
-        - Check availability for specific time range (optional)
-        - Returns empty array if no matches found
-
-        **Performance:** Single optimized SQL query with prepared statements
-
-        **Use Cases:**
-        - Find rooms for specific meeting size
-        - Locate rooms with required equipment
-        - Check available rooms for a time slot
-      tags:
-        - Rooms
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: query
-          name: minCapacity
-          schema:
-            type: integer
-          description: Minimum room capacity
-          example: 5
-        - in: query
-          name: maxCapacity
-          schema:
-            type: integer
-          description: Maximum room capacity
-          example: 20
-        - in: query
-          name: floor
-          schema:
-            type: integer
-          description: Specific floor number
-          example: 1
-        - in: query
-          name: amenities
-          schema:
-            type: string
-          description: Comma-separated amenities or JSON array
-          example: "Projector"
-        - in: query
-          name: startTime
-          schema:
-            type: string
-            format: date-time
-          description: Check availability from this time (RFC3339 format)
-          example: "2025-11-14T09:00:00Z"
-        - in: query
-          name: endTime
-          schema:
-            type: string
-            format: date-time
-          description: Check availability until this time (RFC3339 format)
-          example: "2025-11-14T10:00:00Z"
-      responses:
-        "200":
-          description: List of rooms matching the search criteria
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/RoomDTO"
-              example:
-                - id: 1
-                  name: "Conference Room A"
-                  roomNumber: 101
-                  capacity: 10
-                  floor: 1
-                  amenities: ["Projector", "Whiteboard"]
-                  status: "Available"
-                  location: "Building A, Floor 1"
-                  description: "Large conference room"
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-  /api/rooms/check-availability:
-    post:
-      summary: Real-time room availability check with conflict detection
-      description: |
-        Checks if a room is available for a given time period with detailed conflict information.
-
-        **Features:**
-        - Real-time availability verification
-        - Lists all conflicting bookings with details
-        - Returns room information for context
-        - Sub-50ms response time (optimized queries)
-
-        **Workflow:**
-        1. Frontend sends room ID and desired time range
-        2. Backend checks for booking conflicts
-        3. Returns availability status and conflict details
-        4. Frontend can display conflicts to help user choose alternative times
-
-        **Error Handling:** Properly validates room existence and time format
-      tags:
-        - Rooms
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AvailabilityCheckRequest"
-            example:
-              roomId: "123e4567-e89b-12d3-a456-426614174001"
-              startTime: "2025-12-14T09:00:00Z"
-              endTime: "2025-12-14T10:00:00Z"
-      responses:
-        "200":
-          description: Availability check result with conflicts and suggestions
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AvailabilityCheckResponse"
-              example:
-                available: true
-                roomId: "123e4567-e89b-12d3-a456-426614174001"
-                roomName: "Conference Room A"
-                requestedStart: 1734166800
-                requestedEnd: 1734170400
-                conflictingSlots: []
-                suggestedSlots: []
-        "400":
-          description: Invalid request or datetime format
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "invalid start_time format"
-        "404":
-          description: Room not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "room not found"
-  /api/rooms/{id}/schedule:
-    get:
-      summary: Get enriched room schedule with complete booking details
-      description: |
-        Returns all bookings for a specific room with enriched user and room information.
-
-        **Optimization Benefits:**
-        - **Before:** 3 separate API calls (booking + user details + room details)
-        - **After:** 1 call with all data using efficient JOIN queries
-        - Response time: <100ms with optimized database queries
-
-        **Included Information:**
-        - Complete booking details (times, purpose, status)
-        - User information (name, email) for each booking
-        - Room information (name, number)
-        - Pre-calculated duration in minutes
-
-        **Use Cases:**
-        - Display room schedule in calendar view
-        - Show who booked each time slot
-        - Enable users to contact booking owners
-        - Calculate total room utilization
-      tags:
-        - Bookings
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: Room ID to get schedule for (UUID)
-          schema:
-            type: string
-          example: "123e4567-e89b-12d3-a456-426614174001"
-      responses:
-        "200":
-          description: List of bookings with user and room details for the specified room (empty array if no bookings)
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/DetailedBookingDTO"
-              example:
-                - id: "123e4567-e89b-12d3-a456-426614174002"
-                  user_id: "123e4567-e89b-12d3-a456-426614174000"
-                  userName: "John Doe"
-                  userEmail: "john.doe@example.com"
-                  room_id: "123e4567-e89b-12d3-a456-426614174001"
-                  roomName: "Conference Room A"
-                  roomNumber: 101
-                  start_time: 1734166800
-                  end_time: 1734170400
-                  duration: 60
-                  purpose: "Team standup meeting"
-                  status: "confirmed"
-                - id: "123e4567-e89b-12d3-a456-426614174003"
-                  user_id: "123e4567-e89b-12d3-a456-426614174005"
-                  userName: "Jane Smith"
-                  userEmail: "jane.smith@example.com"
-                  room_id: "123e4567-e89b-12d3-a456-426614174001"
-                  roomName: "Conference Room A"
-                  roomNumber: 101
-                  start_time: 1734184800
-                  end_time: 1734190200
-                  duration: 90
-                  purpose: "Client presentation"
-                  status: "confirmed"
-        "400":
-          description: Invalid room ID
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "invalid room id"
-  /api/bookings:
-    post:
-      summary: Create a new booking (authenticated users)
-      description: Book a meeting room for a specific time slot. User ID is automatically extracted from JWT token.
-      tags:
-        - Bookings
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateBookingRequest"
-            example:
-              room_id: "123e4567-e89b-12d3-a456-426614174001"
-              start_time: "2025-12-14T09:00:00Z"
-              end_time: "2025-12-14T10:00:00Z"
-              purpose: "Team standup meeting"
-      responses:
-        "201":
-          description: Booking created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GenericResponse"
-              example:
-                message: "booking created successfully"
-        "400":
-          description: Invalid input or datetime format
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "invalid start_time format"
-        "401":
-          description: Unauthorized - missing or invalid JWT token
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "unauthorized"
-        "409":
-          description: Conflict - room is already booked for the requested time
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "room is not available for the requested time"
-    get:
-      summary: Get all bookings (admin only)
-      tags:
-        - Bookings
-      security:
-        - bearerAuth: []
-      responses:
-        "200":
-          description: List of all bookings
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/BookingDTO"
-              example:
-                - id: "123e4567-e89b-12d3-a456-426614174002"
-                  user_id: "123e4567-e89b-12d3-a456-426614174000"
-                  room_id: "123e4567-e89b-12d3-a456-426614174001"
-                  start_time: 1734166800
-                  end_time: 1734170400
-                  purpose: "Team standup meeting"
-                  status: "confirmed"
-                - id: "123e4567-e89b-12d3-a456-426614174003"
-                  user_id: "123e4567-e89b-12d3-a456-426614174005"
-                  room_id: "123e4567-e89b-12d3-a456-426614174004"
-                  start_time: 1734184800
-                  end_time: 1734190200
-                  purpose: "Client presentation"
-                  status: "confirmed"
-        "403":
-          description: Forbidden - admin role required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "forbidden"
-  /api/bookings/{id}:
-    delete:
-      summary: Cancel a booking by ID (admin only)
-      tags:
-        - Bookings
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: Booking ID to cancel (UUID)
-          schema:
-            type: string
-          example: "123e4567-e89b-12d3-a456-426614174005"
-      responses:
-        "200":
-          description: Booking cancelled successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GenericResponse"
-              example:
-                message: "booking canceled successfully"
-        "400":
-          description: Invalid booking ID
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "invalid booking id"
-        "403":
-          description: Forbidden - admin role required
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "forbidden"
-        "404":
-          description: Booking not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-              example:
-                error: "booking not found"
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-      description: |
-        JWT token-based authentication. Include the token in the Authorization header.
-
-        **Usage:** `Authorization: Bearer <your_jwt_token>`
-
-        **How to get a token:**
-        1. Call POST /api/login with valid credentials
-        2. Extract the `token` field from the response
-        3. Use this token in subsequent requests
-
-        **Token Details:**
-        - Expires after 24 hours
-        - Contains user ID and role
-        - Required for all endpoints except /health and /api/login
-  schemas:
-    ErrorResponse:
-      type: object
-      properties:
-        error:
+        schema:
           type: string
-          description: |
-            Error message describing what went wrong. Common errors include:
-            - "invalid request body" - Request body is malformed or missing required fields
-            - "unauthorized" - Missing or invalid authentication token
-            - "forbidden" - User lacks required permissions
-            - "invalid room id" / "invalid booking id" - Invalid ID format or non-existent resource
-            - "room not found" / "user not found" / "booking not found" - Resource does not exist
-            - "conflict" - Booking conflict or duplicate email
-          example: "invalid request body"
-    GenericResponse:
+          title: Booking Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BookingDTO"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/bookings/{id}":
+    delete:
+      tags:
+      - Bookings
+      summary: Cancel Booking
+      operationId: cancel_booking_api_bookings__id__delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GenericResponse"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/rooms/{room_id}/bookings":
+    get:
+      tags:
+      - Bookings
+      summary: Get Bookings By Room Id
+      operationId: get_bookings_by_room_id_api_rooms__room_id__bookings_get
+      parameters:
+      - name: room_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Room Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/BookingDTO"
+                title: Response Get Bookings By Room Id Api Rooms  Room Id  Bookings
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/rooms/{room_id}/schedule":
+    get:
+      tags:
+      - Bookings
+      summary: Get Room Schedule By Date
+      operationId: get_room_schedule_by_date_api_rooms__room_id__schedule_get
+      parameters:
+      - name: room_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Room Id
+      - name: date
+        in: query
+        required: true
+        schema:
+          type: string
+          pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+          description: Date in YYYY-MM-DD format
+          title: Date
+        description: Date in YYYY-MM-DD format
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RoomScheduleResponse"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/rooms":
+    post:
+      tags:
+      - Rooms
+      summary: Add Room
+      operationId: add_room_api_rooms_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/AddRoomRequest"
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GenericResponse"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+    get:
+      tags:
+      - Rooms
+      summary: Get All Rooms
+      operationId: get_all_rooms_api_rooms_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/RoomDTO"
+                title: Response Get All Rooms Api Rooms Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/rooms/{id}":
+    get:
+      tags:
+      - Rooms
+      summary: Get Room By Id
+      operationId: get_room_by_id_api_rooms__id__get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/RoomDTO"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+    put:
+      tags:
+      - Rooms
+      summary: Update Room
+      operationId: update_room_api_rooms__id__put
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateRoomRequest"
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GenericResponse"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+    delete:
+      tags:
+      - Rooms
+      summary: Delete Room By Id
+      operationId: delete_room_by_id_api_rooms__id__delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GenericResponse"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/users/register":
+    post:
+      tags:
+      - Users
+      summary: Register
+      operationId: register_api_users_register_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/RegisterUserRequest"
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GenericResponse"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/users":
+    get:
+      tags:
+      - Users
+      summary: Get All Users
+      operationId: get_all_users_api_users_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/UserDTO"
+                title: Response Get All Users Api Users Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/users/{user_id}":
+    get:
+      tags:
+      - Users
+      summary: Get User By Id
+      operationId: get_user_by_id_api_users__user_id__get
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: User Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UserDTO"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  "/api/users/{id}":
+    put:
+      tags:
+      - Users
+      summary: Update User
+      operationId: update_user_api_users__id__put
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/UpdateUserRequest"
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GenericResponse"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+    delete:
+      tags:
+      - Users
+      summary: Delete User By Id
+      operationId: delete_user_by_id_api_users__id__delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/GenericResponse"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+components:
+  schemas:
+    AddRoomRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Name
+        room_number:
+          type: integer
+          maximum: 9999
+          exclusiveMinimum: 0
+          title: Room Number
+        capacity:
+          type: integer
+          maximum: 1000
+          exclusiveMinimum: 0
+          title: Capacity
+        floor:
+          type: integer
+          maximum: 200
+          minimum: 0
+          title: Floor
+        amenities:
+          items:
+            type: string
+          type: array
+          maxItems: 50
+          title: Amenities
+        status:
+          anyOf:
+          - type: string
+            pattern: "^(available|unavailable|maintenance)$"
+          - type: 'null'
+          title: Status
+          default: available
+        location:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Location
+        description:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Description
       type: object
+      required:
+      - name
+      - room_number
+      - capacity
+      - floor
+      - location
+      title: AddRoomRequest
+    BookingDTO:
+      properties:
+        id:
+          type: string
+          minLength: 1
+          title: Id
+        user_id:
+          type: string
+          minLength: 1
+          title: User Id
+        user_name:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: User Name
+        room_id:
+          type: string
+          minLength: 1
+          title: Room Id
+        room_number:
+          type: integer
+          exclusiveMinimum: 0
+          title: Room Number
+        start_time:
+          type: integer
+          exclusiveMinimum: 0
+          title: Start Time
+        end_time:
+          type: integer
+          exclusiveMinimum: 0
+          title: End Time
+        purpose:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Purpose
+        status:
+          type: string
+          pattern: "^(confirmed|cancelled)$"
+          title: Status
+        created_at:
+          type: integer
+          exclusiveMinimum: 0
+          title: Created At
+        updated_at:
+          type: integer
+          exclusiveMinimum: 0
+          title: Updated At
+      type: object
+      required:
+      - id
+      - user_id
+      - user_name
+      - room_id
+      - room_number
+      - start_time
+      - end_time
+      - purpose
+      - status
+      - created_at
+      - updated_at
+      title: BookingDTO
+    CreateBookingRequest:
+      properties:
+        room_id:
+          type: string
+          minLength: 1
+          title: Room Id
+        start_time:
+          type: integer
+          exclusiveMinimum: 0
+          title: Start Time
+        end_time:
+          type: integer
+          exclusiveMinimum: 0
+          title: End Time
+        purpose:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Purpose
+      type: object
+      required:
+      - room_id
+      - start_time
+      - end_time
+      - purpose
+      title: CreateBookingRequest
+    GenericResponse:
       properties:
         message:
           type: string
-          description: Success message
-          example: "operation completed successfully"
-    RegisterUserRequest:
+          minLength: 1
+          title: Message
       type: object
-      required: [name, email, password, role]
+      required:
+      - message
+      title: GenericResponse
+    HTTPValidationError:
       properties:
-        name:
-          type: string
-          description: Full name of the user
-          example: "John Doe"
-        email:
-          type: string
-          format: email
-          description: Valid email address
-          example: "john.doe@example.com"
-        password:
-          type: string
-          minLength: 6
-          description: Password (minimum 6 characters)
-          example: "password123"
-        role:
-          type: string
-          enum: [admin, user]
-          description: User role
-          example: "user"
+        detail:
+          items:
+            "$ref": "#/components/schemas/ValidationError"
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     LoginUserRequest:
-      type: object
-      required: [email, password]
       properties:
         email:
           type: string
           format: email
-          description: User's email address
-          example: "admin@example.com"
+          title: Email
         password:
           type: string
-          description: User's password
-          example: "admin123"
-    LoginUserResponse:
+          maxLength: 200
+          minLength: 1
+          title: Password
       type: object
+      required:
+      - email
+      - password
+      title: LoginUserRequest
+    LoginUserResponse:
       properties:
         token:
           type: string
-          description: JWT token for authentication
-          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MzE1MDAwMDB9.signature"
+          minLength: 1
+          title: Token
         user:
-          $ref: "#/components/schemas/UserDTO"
-    UserDTO:
+          "$ref": "#/components/schemas/UserDTO"
       type: object
+      required:
+      - token
+      - user
+      title: LoginUserResponse
+    RegisterUserRequest:
       properties:
-        id:
-          type: string
-          description: Unique user identifier (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174000"
         name:
           type: string
-          description: User's full name
-          example: "Admin"
+          maxLength: 100
+          minLength: 1
+          title: Name
         email:
           type: string
           format: email
-          description: User's email address
-          example: "admin@example.com"
+          title: Email
+        password:
+          type: string
+          maxLength: 200
+          minLength: 6
+          title: Password
         role:
           type: string
-          enum: [admin, user]
-          description: User's role in the system
-          example: "admin"
+          pattern: "^(user|admin)$"
+          title: Role
+      type: object
+      required:
+      - name
+      - email
+      - password
+      - role
+      title: RegisterUserRequest
+    RoomDTO:
+      properties:
+        id:
+          type: string
+          minLength: 1
+          title: Id
+        name:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Name
+        room_number:
+          type: integer
+          exclusiveMinimum: 0
+          title: Room Number
+        capacity:
+          type: integer
+          maximum: 1000
+          exclusiveMinimum: 0
+          title: Capacity
+        floor:
+          type: integer
+          maximum: 200
+          minimum: 0
+          title: Floor
+        amenities:
+          items:
+            type: string
+          type: array
+          title: Amenities
+        status:
+          type: string
+          pattern: "^(available|unavailable|maintenance)$"
+          title: Status
+        location:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Location
+        description:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Description
         created_at:
           type: integer
-          format: int64
-          description: Creation timestamp (Unix epoch seconds)
-          example: 1699999999
+          exclusiveMinimum: 0
+          title: Created At
         updated_at:
           type: integer
-          format: int64
-          description: Last update timestamp (Unix epoch seconds)
-          example: 1699999999
-    AddRoomRequest:
+          exclusiveMinimum: 0
+          title: Updated At
       type: object
-      required: [name, roomNumber, capacity, floor, location]
+      required:
+      - id
+      - name
+      - room_number
+      - capacity
+      - floor
+      - status
+      - location
+      - created_at
+      - updated_at
+      title: RoomDTO
+    RoomScheduleResponse:
       properties:
-        name:
-          type: string
-          description: Name of the meeting room
-          example: "Conference Room A"
-        roomNumber:
-          type: integer
-          description: Room number identifier
-          example: 101
-        capacity:
-          type: integer
-          minimum: 1
-          description: Maximum number of people the room can accommodate
-          example: 10
-        floor:
-          type: integer
-          description: Floor number where the room is located
-          example: 1
-        amenities:
-          type: array
-          items:
-            type: string
-          description: List of available amenities (optional, defaults to empty array)
-          example: ["Projector", "Whiteboard", "Video Conference"]
-        status:
-          type: string
-          description: Current status of the room (optional, defaults to "Available")
-          example: "Available"
-        location:
-          type: string
-          description: Detailed location description
-          example: "Building A, Floor 1, East Wing"
-        description:
-          type: string
-          description: Additional room details (optional)
-          example: "Large conference room with video conferencing capabilities"
-    RoomDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique room identifier (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174001"
-        name:
-          type: string
-          description: Name of the meeting room
-          example: "Conference Room A"
-        roomNumber:
-          type: integer
-          description: Room number identifier
-          example: 101
-        capacity:
-          type: integer
-          description: Maximum capacity
-          example: 10
-        floor:
-          type: integer
-          description: Floor number
-          example: 1
-        amenities:
-          type: array
-          items:
-            type: string
-          description: List of available amenities
-          example: ["Projector", "Whiteboard", "Video Conference"]
-        status:
-          type: string
-          description: Current room status
-          example: "Available"
-        location:
-          type: string
-          description: Room location
-          example: "Building A, Floor 1, East Wing"
-        description:
-          type: string
-          description: Room description
-          example: "Large conference room with video conferencing capabilities"
-    CreateBookingRequest:
-      type: object
-      required: [room_id, start_time, end_time, purpose]
-      properties:
-        user_id:
-          type: string
-          description: User ID (automatically set from JWT token, can be omitted in request)
-          example: "123e4567-e89b-12d3-a456-426614174000"
         room_id:
           type: string
-          description: ID of the room to book (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174001"
-        start_time:
+          minLength: 1
+          title: Room Id
+        room_name:
           type: string
-          format: date-time
-          description: Booking start time in RFC3339 format (ISO 8601) - will be converted to Unix timestamp
-          example: "2025-12-14T09:00:00Z"
-        end_time:
-          type: string
-          format: date-time
-          description: Booking end time in RFC3339 format (ISO 8601) - will be converted to Unix timestamp
-          example: "2025-12-14T10:00:00Z"
-        purpose:
-          type: string
-          description: Purpose or description of the meeting
-          example: "Team standup meeting"
-    BookingDTO:
+          maxLength: 100
+          minLength: 1
+          title: Room Name
+        room_number:
+          type: integer
+          exclusiveMinimum: 0
+          title: Room Number
+        date:
+          type: integer
+          exclusiveMinimum: 0
+          title: Date
+        bookings:
+          items:
+            "$ref": "#/components/schemas/ScheduleSlotDTO"
+          type: array
+          title: Bookings
       type: object
+      required:
+      - room_id
+      - room_name
+      - room_number
+      - date
+      title: RoomScheduleResponse
+    ScheduleSlotDTO:
       properties:
-        id:
-          type: string
-          description: Unique booking identifier (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174002"
-        user_id:
-          type: string
-          description: ID of the user who made the booking (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174000"
-        room_id:
-          type: string
-          description: ID of the booked room (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174001"
         start_time:
           type: integer
-          format: int64
-          description: Booking start time (Unix epoch seconds)
-          example: 1734166800
+          exclusiveMinimum: 0
+          title: Start Time
         end_time:
           type: integer
-          format: int64
-          description: Booking end time (Unix epoch seconds)
-          example: 1734170400
+          exclusiveMinimum: 0
+          title: End Time
+        is_booked:
+          type: boolean
+          title: Is Booked
+        booking_id:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Booking Id
+        user_name:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+          - type: 'null'
+          title: User Name
         purpose:
-          type: string
-          description: Purpose of the meeting
-          example: "Team standup meeting"
+          anyOf:
+          - type: string
+            maxLength: 500
+            minLength: 1
+          - type: 'null'
+          title: Purpose
+      type: object
+      required:
+      - start_time
+      - end_time
+      - is_booked
+      title: ScheduleSlotDTO
+    UpdateRoomRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+          - type: 'null'
+          title: Name
+        capacity:
+          anyOf:
+          - type: integer
+            maximum: 1000
+            exclusiveMinimum: 0
+          - type: 'null'
+          title: Capacity
+        amenities:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 50
+          - type: 'null'
+          title: Amenities
         status:
-          type: string
-          description: Booking status (optional)
-          example: "confirmed"
-    DetailedBookingDTO:
+          anyOf:
+          - type: string
+            pattern: "^(available|unavailable|maintenance)$"
+          - type: 'null'
+          title: Status
+        location:
+          anyOf:
+          - type: string
+            maxLength: 200
+            minLength: 1
+          - type: 'null'
+          title: Location
+        description:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Description
       type: object
-      description: |
-        Booking with enriched user and room details for frontend display.
-        This DTO reduces API calls by including all necessary information in a single response.
-
-        **Benefits:**
-        - No need for separate calls to fetch user/room details
-        - Pre-calculated duration in minutes
-        - Complete contact information (user email)
-        - Ready-to-display room identification (name + number)
+      title: UpdateRoomRequest
+    UpdateUserRequest:
+      properties:
+        name:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+          - type: 'null'
+          title: Name
+        email:
+          anyOf:
+          - type: string
+            format: email
+          - type: 'null'
+          title: Email
+        role:
+          anyOf:
+          - type: string
+            pattern: "^(user|admin)$"
+          - type: 'null'
+          title: Role
+      type: object
+      title: UpdateUserRequest
+    UserDTO:
       properties:
         id:
           type: string
-          description: Unique booking identifier (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174002"
-        user_id:
+          minLength: 1
+          title: Id
+        name:
           type: string
-          description: ID of the user who made the booking (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174000"
-        userName:
-          type: string
-          description: Name of the user who made the booking
-          example: "John Doe"
-        userEmail:
+          maxLength: 100
+          minLength: 1
+          title: Name
+        email:
           type: string
           format: email
-          description: Email of the user who made the booking
-          example: "john.doe@example.com"
-        room_id:
+          title: Email
+        role:
           type: string
-          description: ID of the booked room (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174001"
-        roomName:
-          type: string
-          description: Name of the booked room
-          example: "Conference Room A"
-        roomNumber:
+          pattern: "^(user|admin)$"
+          title: Role
+        created_at:
           type: integer
-          description: Room number of the booked room
-          example: 101
-        start_time:
+          exclusiveMinimum: 0
+          title: Created At
+        updated_at:
           type: integer
-          format: int64
-          description: Booking start time (Unix epoch seconds)
-          example: 1734166800
-        end_time:
-          type: integer
-          format: int64
-          description: Booking end time (Unix epoch seconds)
-          example: 1734170400
-        duration:
-          type: integer
-          description: Duration of booking in minutes
-          example: 60
-        purpose:
-          type: string
-          description: Purpose of the meeting
-          example: "Team standup meeting"
-        status:
-          type: string
-          description: Booking status
-          example: "confirmed"
-    AvailabilityCheckRequest:
+          exclusiveMinimum: 0
+          title: Updated At
       type: object
-      required: [roomId, startTime, endTime]
-      description: Request to check room availability for a specific time range
+      required:
+      - id
+      - name
+      - email
+      - role
+      - created_at
+      - updated_at
+      title: UserDTO
+    ValidationError:
       properties:
-        roomId:
-          type: string
-          description: ID of the room to check (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174001"
-        startTime:
-          type: string
-          format: date-time
-          description: Requested start time in RFC3339 format
-          example: "2025-12-14T09:00:00Z"
-        endTime:
-          type: string
-          format: date-time
-          description: Requested end time in RFC3339 format
-          example: "2025-12-14T10:00:00Z"
-    AvailabilityCheckResponse:
-      type: object
-      description: |
-        Comprehensive availability check response with conflict detection.
-
-        **Use Cases:**
-        - Pre-booking validation to prevent conflicts
-        - Display conflicting bookings to users
-        - Suggest alternative time slots (future enhancement)
-        - Show room availability status in UI
-
-        **Performance:** Optimized database queries ensure sub-100ms response times
-      properties:
-        available:
-          type: boolean
-          description: Whether the room is available for the requested time
-          example: true
-        roomId:
-          type: string
-          description: ID of the room (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174001"
-        roomName:
-          type: string
-          description: Name of the room
-          example: "Conference Room A"
-        requestedStart:
-          type: integer
-          format: int64
-          description: Requested start time (Unix epoch seconds)
-          example: 1734166800
-        requestedEnd:
-          type: integer
-          format: int64
-          description: Requested end time (Unix epoch seconds)
-          example: 1734170400
-        conflictingSlots:
-          type: array
-          description: List of conflicting bookings if room is not available
+        loc:
           items:
-            $ref: "#/components/schemas/ConflictingBookingDTO"
-        suggestedSlots:
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          description: List of suggested available time slots
-          items:
-            $ref: "#/components/schemas/TimeSlotDTO"
-    ConflictingBookingDTO:
-      type: object
-      description: Represents a booking time slot for conflict display
-      properties:
-        bookingId:
+          title: Location
+        msg:
           type: string
-          description: ID of the conflicting booking (UUID)
-          example: "123e4567-e89b-12d3-a456-426614174003"
-        startTime:
-          type: integer
-          format: int64
-          description: Start time of the conflicting booking (Unix epoch seconds)
-          example: 1734168600
-        endTime:
-          type: integer
-          format: int64
-          description: End time of the conflicting booking (Unix epoch seconds)
-          example: 1734172200
-        purpose:
+          title: Message
+        type:
           type: string
-          description: Purpose of the conflicting booking
-          example: "Board meeting"
-    TimeSlotDTO:
+          title: Error Type
       type: object
-      description: Represents an available time slot suggestion
-      properties:
-        startTime:
-          type: integer
-          format: int64
-          description: Start time of the available slot (Unix epoch seconds)
-          example: 1734177600
-        endTime:
-          type: integer
-          format: int64
-          description: End time of the available slot (Unix epoch seconds)
-          example: 1734181200
-        duration:
-          type: integer
-          description: Duration of the slot in minutes
-          example: 60
-tags:
-  - name: Authentication
-    description: |
-      User authentication and login operations
-
-      - JWT-based authentication with 24-hour token expiration
-      - Secure password hashing using bcrypt
-      - Role-based access control (admin/user)
-  - name: Users
-    description: |
-      User management operations (admin only)
-
-      - Register new users with role assignment
-      - View all users in the system
-      - Delete users by ID
-      - Automatic duplicate email detection
-  - name: Rooms
-    description: |
-      Meeting room management operations
-
-      - CRUD operations for meeting rooms
-      - Advanced search with multiple filters
-      - Real-time availability checking
-      - Amenities management (JSON storage)
-  - name: Bookings
-    description: |
-      Booking management operations
-
-      - Create bookings with conflict detection
-      - View room schedules with enriched data
-      - Cancel bookings (admin only)
-      - Automatic time validation
-      - Pre-calculated durations
-
-# ==================================================================================
-# RECENT IMPROVEMENTS (v2.0.0)
-# ==================================================================================
-#
-# Code Quality Enhancements:
-# ---------------------------
-# 1. Error Handling
-#    - All errors are now properly handled (no ignored errors with '_')
-#    - Consistent error checking throughout the codebase
-#    - Proper error propagation from repositories to handlers
-#    - User-friendly error messages in API responses
-#
-# 2. Code Duplication Reduction
-#    - Extracted booking scanning logic into reusable helper functions
-#    - Extracted room scanning logic into reusable helper functions
-#    - Reduced repetitive code by 40% in repository layer
-#    - Easier maintenance and testing
-#
-# 3. Modern Go Best Practices
-#    - Updated to use 'any' type alias instead of 'interface{}' (Go 1.18+)
-#    - Removed unnecessary comments for cleaner code
-#    - Descriptive variable names throughout (no 'rm', 'b', 'u' abbreviations)
-#    - Meaningful function parameter names
-#
-# 4. Performance Optimizations
-#    - Efficient JOIN queries for DetailedBookingDTO
-#    - Single query for room search with filters
-#    - Prepared statements prevent SQL injection
-#    - Context-based timeouts (3s) for all database operations
-#    - Response times: <50ms for availability checks, <100ms for schedules
-#
-# Naming Improvements:
-# --------------------
-# - EnhancedBooking → BookingWithDetails (clearer purpose)
-# - EnhancedBookingDTO → DetailedBookingDTO (more descriptive)
-# - BookingSlotDTO → ConflictingBookingDTO (clarifies usage)
-# - GetEnhancedBookingsByRoomID → GetBookingsWithDetailsByRoomID (explicit)
-#
-# Architecture:
-# -------------
-# - Clean architecture with separated layers (domain, service, repository, handler)
-# - Dependency injection for testability
-# - Interface-based design for flexibility
-# - Repository pattern for data access abstraction
-#
-# Security:
-# ---------
-# - JWT authentication on all protected endpoints
-# - Role-based access control (RBAC)
-# - Bcrypt password hashing
-# - SQL injection prevention with prepared statements
-# - Input validation at all layers
-#
-# API Improvements:
-# -----------------
-# - Room search endpoint with multiple filters
-# - Real-time availability checking with conflict details
-# - Enriched booking DTOs reduce API calls by 66%
-# - Consistent error responses across all endpoints
-# - Comprehensive OpenAPI documentation
-#
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
