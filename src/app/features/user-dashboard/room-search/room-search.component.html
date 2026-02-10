@@ -7,11 +7,15 @@
         formControlName="searchText"
         placeholder="Search by room name, capacity, or amenities..."
         (input)="onSearch()"
+        maxlength="200"
       />
       @if (searchForm.value.searchText) {
       <button type="button" class="clear-search-btn" (click)="clearSearch()">
         <i class="fa-solid fa-xmark"></i>
       </button>
+      }
+      @if (searchForm.get('searchText')?.invalid && searchForm.get('searchText')?.touched) {
+      <small class="error">Search text cannot exceed 200 characters</small>
       }
     </div>
     <button
@@ -51,8 +55,19 @@
           formControlName="floor"
           placeholder="Any floor"
           min="1"
+          max="100"
           (change)="onSearch()"
         />
+        @if (searchForm.get('floor')?.invalid && searchForm.get('floor')?.touched) {
+        <div class="error">
+          @if (searchForm.get('floor')?.errors?.['min']) {
+          <small>Floor must be at least 1</small>
+          }
+          @if (searchForm.get('floor')?.errors?.['max']) {
+          <small>Floor cannot exceed 100</small>
+          }
+        </div>
+        }
       </div>
 
       <div class="filter-group amenities-filter">

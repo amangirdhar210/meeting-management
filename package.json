@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "test:e2e": "mocha test/**/*.test.js --timeout 30000",
+    "test:e2e:report": "mocha test/**/*.test.js --timeout 30000 --reporter mochawesome"
   },
   "private": true,
   "dependencies": {
@@ -20,10 +22,16 @@
     "@primeng/themes": "^20.2.0",
     "@tailwindcss/postcss": "^4.1.16",
     "bootstrap": "^5.3.8",
+    "chai": "^6.2.2",
+    "fs-extra": "^11.3.3",
     "jwt-decode": "^4.0.0",
+    "mocha": "^11.7.5",
+    "mochawesome": "^7.1.4",
+    "mochawesome-report-generator": "^6.3.2",
     "postcss": "^8.5.6",
     "primeng": "^19.1.4",
     "rxjs": "~7.8.0",
+    "selenium-webdriver": "^4.40.0",
     "tailwindcss": "^4.1.16",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

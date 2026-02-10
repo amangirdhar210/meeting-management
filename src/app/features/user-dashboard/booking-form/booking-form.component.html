@@ -87,10 +87,21 @@
         rows="3"
         placeholder="Enter meeting purpose"
         class="purpose-textarea"
+        maxlength="500"
       ></textarea>
       @if (bookingForm.controls.purpose.invalid &&
       bookingForm.controls.purpose.touched) {
-      <small class="error">Purpose is required (minimum 5 characters)</small>
+      <div class="error">
+        @if (bookingForm.controls.purpose.errors?.['required']) {
+        <small>Purpose is required</small>
+        }
+        @if (bookingForm.controls.purpose.errors?.['minlength']) {
+        <small>Purpose must be at least 5 characters</small>
+        }
+        @if (bookingForm.controls.purpose.errors?.['maxlength']) {
+        <small>Purpose cannot exceed 500 characters</small>
+        }
+      </div>
       }
     </div>
 

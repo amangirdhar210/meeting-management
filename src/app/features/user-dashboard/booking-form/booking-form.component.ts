@@ -60,7 +60,7 @@ export class BookingFormComponent implements OnInit {
       }),
       purpose: new FormControl<string>('', {
         nonNullable: true,
-        validators: [Validators.required, Validators.minLength(5)],
+        validators: [Validators.required, Validators.minLength(5), Validators.maxLength(500)],
       }),
     },
     { validators: [this.dateTimeValidator] }
@@ -105,6 +105,16 @@ export class BookingFormComponent implements OnInit {
       return { endBeforeStart: true };
     }
 
+    const durationMinutes = (endDate.getTime() - startDate.getTime()) / (1000 * 60);
+    
+    if (durationMinutes < TIME_CONFIG.MIN_BOOKING_DURATION_MINUTES) {
+      return { bookingTooShort: true };
+    }
+
+    if (durationMinutes > TIME_CONFIG.MAX_BOOKING_DURATION_HOURS * 60) {
+      return { bookingTooLong: true };
+    }
+
     return null;
   }
 
@@ -115,6 +125,12 @@ export class BookingFormComponent implements OnInit {
     }
     if (errors?.['endBeforeStart']) {
       return VALIDATION_MESSAGES.END_BEFORE_START_ERROR;
+    }
+    if (errors?.['bookingTooShort']) {
+      return VALIDATION_MESSAGES.BOOKING_TOO_SHORT;
+    }
+    if (errors?.['bookingTooLong']) {
+      return VALIDATION_MESSAGES.BOOKING_TOO_LONG;
     }
     return '';
   }

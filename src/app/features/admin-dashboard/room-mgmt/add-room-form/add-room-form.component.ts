@@ -63,26 +63,29 @@ export class AddRoomFormComponent implements OnInit, OnDestroy {
   addRoomForm = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(3)],
+      validators: [Validators.required, Validators.minLength(3), Validators.maxLength(100)],
     }),
     roomNumber: new FormControl<number | null>(null, {
-      validators: [Validators.required, Validators.min(1)],
+      validators: [Validators.required, Validators.min(1), Validators.max(9999)],
     }),
     capacity: new FormControl<number | null>(null, {
-      validators: [Validators.required, Validators.min(1)],
+      validators: [Validators.required, Validators.min(1), Validators.max(500)],
     }),
     floor: new FormControl<number | null>(null, {
-      validators: [Validators.required, Validators.min(1)],
+      validators: [Validators.required, Validators.min(1), Validators.max(100)],
     }),
     amenities: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.maxLength(500)],
     }),
     location: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.maxLength(200)],
     }),
-    description: new FormControl<string>('', { nonNullable: true }),
+    description: new FormControl<string>('', { 
+      nonNullable: true,
+      validators: [Validators.maxLength(1000)]
+    }),
     status: new FormControl<'available' | 'unavailable' | 'maintenance'>(
       ROOM_STATUS.AVAILABLE,
       {

@@ -14,12 +14,22 @@
           id="roomNumber"
           formControlName="roomNumber"
           placeholder="Enter Room Number"
+          min="1"
+          max="9999"
         />
         @if (addRoomForm.get('roomNumber')?.touched &&
         addRoomForm.get('roomNumber')?.invalid) {
-        <small class="error"
-          >Room number is required and must be at least 1.</small
-        >
+        <div class="error">
+          @if (addRoomForm.get('roomNumber')?.errors?.['required']) {
+          <small>Room number is required</small>
+          }
+          @if (addRoomForm.get('roomNumber')?.errors?.['min']) {
+          <small>Room number must be at least 1</small>
+          }
+          @if (addRoomForm.get('roomNumber')?.errors?.['max']) {
+          <small>Room number cannot exceed 9999</small>
+          }
+        </div>
         }
       </div>
 
@@ -30,10 +40,21 @@
           id="name"
           formControlName="name"
           placeholder="Enter Room Name"
+          maxlength="100"
         />
         @if (addRoomForm.get('name')?.touched &&
         addRoomForm.get('name')?.invalid) {
-        <small class="error">Name must be at least 3 characters.</small>
+        <div class="error">
+          @if (addRoomForm.get('name')?.errors?.['required']) {
+          <small>Room name is required</small>
+          }
+          @if (addRoomForm.get('name')?.errors?.['minlength']) {
+          <small>Room name must be at least 3 characters</small>
+          }
+          @if (addRoomForm.get('name')?.errors?.['maxlength']) {
+          <small>Room name cannot exceed 100 characters</small>
+          }
+        </div>
         }
       </div>
     </div>
@@ -46,10 +67,22 @@
           id="capacity"
           formControlName="capacity"
           placeholder="Capacity"
+          min="1"
+          max="500"
         />
         @if (addRoomForm.get('capacity')?.touched &&
         addRoomForm.get('capacity')?.invalid) {
-        <small class="error">Capacity must be at least 1.</small>
+        <div class="error">
+          @if (addRoomForm.get('capacity')?.errors?.['required']) {
+          <small>Capacity is required</small>
+          }
+          @if (addRoomForm.get('capacity')?.errors?.['min']) {
+          <small>Capacity must be at least 1</small>
+          }
+          @if (addRoomForm.get('capacity')?.errors?.['max']) {
+          <small>Capacity cannot exceed 500</small>
+          }
+        </div>
         }
       </div>
 
@@ -60,12 +93,22 @@
           id="floor"
           formControlName="floor"
           placeholder="Floor Number"
+          min="1"
+          max="100"
         />
         @if (addRoomForm.get('floor')?.touched &&
         addRoomForm.get('floor')?.invalid) {
-        <small class="error"
-          >Floor number is required and must be at least 1.</small
-        >
+        <div class="error">
+          @if (addRoomForm.get('floor')?.errors?.['required']) {
+          <small>Floor is required</small>
+          }
+          @if (addRoomForm.get('floor')?.errors?.['min']) {
+          <small>Floor must be at least 1</small>
+          }
+          @if (addRoomForm.get('floor')?.errors?.['max']) {
+          <small>Floor cannot exceed 100</small>
+          }
+        </div>
         }
       </div>
     </div>
@@ -78,10 +121,18 @@
           id="location"
           formControlName="location"
           placeholder="Location"
+          maxlength="200"
         />
         @if (addRoomForm.get('location')?.touched &&
         addRoomForm.get('location')?.invalid) {
-        <small class="error">Location is required.</small>
+        <div class="error">
+          @if (addRoomForm.get('location')?.errors?.['required']) {
+          <small>Location is required</small>
+          }
+          @if (addRoomForm.get('location')?.errors?.['maxlength']) {
+          <small>Location cannot exceed 200 characters</small>
+          }
+        </div>
         }
       </div>
 
@@ -92,10 +143,18 @@
           id="amenities"
           formControlName="amenities"
           placeholder="Amenities (comma separated)"
+          maxlength="500"
         />
         @if (addRoomForm.get('amenities')?.touched &&
         addRoomForm.get('amenities')?.invalid) {
-        <small class="error">Amenities are required.</small>
+        <div class="error">
+          @if (addRoomForm.get('amenities')?.errors?.['required']) {
+          <small>Amenities are required</small>
+          }
+          @if (addRoomForm.get('amenities')?.errors?.['maxlength']) {
+          <small>Amenities cannot exceed 500 characters</small>
+          }
+        </div>
         }
       </div>
     </div>
@@ -107,7 +166,16 @@
         id="description"
         formControlName="description"
         placeholder="Description (optional)"
+        maxlength="1000"
       />
+      @if (addRoomForm.get('description')?.touched &&
+      addRoomForm.get('description')?.invalid) {
+      <div class="error">
+        @if (addRoomForm.get('description')?.errors?.['maxlength']) {
+        <small>Description cannot exceed 1000 characters</small>
+        }
+      </div>
+      }
     </div>
 
     @if (isEditMode) {

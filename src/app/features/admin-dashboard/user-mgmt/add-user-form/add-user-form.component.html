@@ -16,14 +16,17 @@
           type="text"
           formControlName="firstName"
           placeholder="Enter first name"
+          maxlength="50"
         />
         @if (addUserForm.controls.firstName.invalid &&
         addUserForm.controls.firstName.touched) {
         <div class="error">
           @if (addUserForm.controls.firstName.errors?.['required']) {
-          <small>First name is required.</small>
+          <small>First name is required</small>
           } @if (addUserForm.controls.firstName.errors?.['minlength']) {
-          <small>Must be at least 2 characters.</small>
+          <small>First name must be at least 2 characters</small>
+          } @if (addUserForm.controls.firstName.errors?.['maxlength']) {
+          <small>First name cannot exceed 50 characters</small>
           }
         </div>
         }
@@ -36,14 +39,17 @@
           type="text"
           formControlName="lastName"
           placeholder="Enter last name"
+          maxlength="50"
         />
         @if (addUserForm.controls.lastName.invalid &&
         addUserForm.controls.lastName.touched) {
         <div class="error">
           @if (addUserForm.controls.lastName.errors?.['required']) {
-          <small>Last name is required.</small>
+          <small>Last name is required</small>
           } @if (addUserForm.controls.lastName.errors?.['minlength']) {
-          <small>Must be at least 2 characters.</small>
+          <small>Last name must be at least 2 characters</small>
+          } @if (addUserForm.controls.lastName.errors?.['maxlength']) {
+          <small>Last name cannot exceed 50 characters</small>
           }
         </div>
         }
@@ -64,14 +70,17 @@
           type="email"
           formControlName="email"
           placeholder="Enter email address"
+          maxlength="254"
         />
         @if (addUserForm.controls.email.invalid &&
         addUserForm.controls.email.touched) {
         <div class="error">
           @if (addUserForm.controls.email.errors?.['required']) {
-          <small>Email is required.</small>
+          <small>Email is required</small>
           } @if (addUserForm.controls.email.errors?.['email']) {
-          <small>Enter a valid email.</small>
+          <small>Please enter a valid email</small>
+          } @if (addUserForm.controls.email.errors?.['maxlength']) {
+          <small>Email cannot exceed 254 characters</small>
           }
         </div>
         }
@@ -85,14 +94,17 @@
           type="password"
           formControlName="password"
           placeholder="Enter password"
+          maxlength="128"
         />
         @if (addUserForm.controls.password.invalid &&
         addUserForm.controls.password.touched) {
         <div class="error">
           @if (addUserForm.controls.password.errors?.['required']) {
-          <small>Password is required.</small>
+          <small>Password is required</small>
           } @if (addUserForm.controls.password.errors?.['minlength']) {
-          <small>Minimum 6 characters required.</small>
+          <small>Password must be at least 6 characters</small>
+          } @if (addUserForm.controls.password.errors?.['maxlength']) {
+          <small>Password cannot exceed 128 characters</small>
           }
         </div>
         }

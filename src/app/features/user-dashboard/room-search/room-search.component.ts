@@ -47,9 +47,15 @@ export class RoomSearchComponent implements OnInit, OnDestroy {
   capacityRangeValue: number[] = [CAPACITY_CONFIG.MIN_CAPACITY, CAPACITY_CONFIG.MAX_CAPACITY];
 
   searchForm = new FormGroup({
-    searchText: new FormControl<string>(''),
-    floor: new FormControl<number | null>(null),
-    amenities: new FormControl<string>(''),
+    searchText: new FormControl<string>('', {
+      validators: [Validators.maxLength(200)]
+    }),
+    floor: new FormControl<number | null>(null, {
+      validators: [Validators.min(1), Validators.max(100)]
+    }),
+    amenities: new FormControl<string>('', {
+      validators: [Validators.maxLength(500)]
+    }),
   });
 
   ngOnInit(): void {

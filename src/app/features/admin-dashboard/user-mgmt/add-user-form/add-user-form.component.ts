@@ -36,11 +36,11 @@ export class AddUserFormComponent implements OnInit {
   addUserForm = new FormGroup({
     firstName: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(2)],
+      validators: [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
     }),
     lastName: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(2)],
+      validators: [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
     }),
     role: new FormControl<'user' | 'admin'>('user', {
       nonNullable: true,
@@ -48,11 +48,11 @@ export class AddUserFormComponent implements OnInit {
     }),
     email: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.email],
+      validators: [Validators.required, Validators.email, Validators.maxLength(254)],
     }),
     password: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.minLength(6)],
+      validators: [Validators.minLength(6), Validators.maxLength(128)],
     }),
   });
 
@@ -75,7 +75,7 @@ export class AddUserFormComponent implements OnInit {
     } else {
       this.addUserForm
         .get('password')
-        ?.setValidators([Validators.required, Validators.minLength(6)]);
+        ?.setValidators([Validators.required, Validators.minLength(6), Validators.maxLength(128)]);
     }
   }
 
