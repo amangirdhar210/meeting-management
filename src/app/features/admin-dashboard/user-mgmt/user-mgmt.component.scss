@@ -99,6 +99,12 @@ tbody td {
   border-color: transparent;
 }
 
+.role.superadmin {
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  color: white;
+  border-color: transparent;
+}
+
 .edit {
   color: #007bff;
   cursor: pointer;

@@ -2,7 +2,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'user' | 'superadmin';
   created_at: number;
   updated_at: number;
 }
@@ -60,7 +60,7 @@ export interface RegisterUserRequest {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'user' | 'superadmin';
 }
 
 export interface AddRoomRequest {
@@ -77,7 +77,7 @@ export interface AddRoomRequest {
 export interface UpdateUserRequest {
   name?: string;
   email?: string;
-  role?: 'admin' | 'user';
+  role?: 'admin' | 'user' | 'superadmin';
 }
 
 export interface UpdateRoomRequest {
@@ -163,7 +163,7 @@ export interface ScheduleBooking {
 
 export interface DecodedToken {
   user_id: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'user' | 'superadmin';
   exp: number;
   iat: number;
 }

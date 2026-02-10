@@ -42,7 +42,7 @@ export class AddUserFormComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
     }),
-    role: new FormControl<'user' | 'admin'>('user', {
+    role: new FormControl<'user' | 'admin' | 'superadmin'>('user', {
       nonNullable: true,
       validators: [Validators.required],
     }),

@@ -32,7 +32,7 @@ export class LoginService {
     this.restoreSession();
   }
 
-  get userRole(): 'admin' | 'user' | 'unauthenticated' {
+  get userRole(): 'admin' | 'user' | 'superadmin' | 'unauthenticated' {
     const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
     if (!token) return USER_ROLES.UNAUTHENTICATED;
     try {
@@ -44,7 +44,7 @@ export class LoginService {
   }
 
   get isAdmin(): boolean {
-    return this.userRole === USER_ROLES.ADMIN;
+    return this.userRole === USER_ROLES.ADMIN || this.userRole === USER_ROLES.SUPERADMIN;
   }
 
   get isUser(): boolean {
@@ -75,7 +75,7 @@ export class LoginService {
           detail: SUCCESS_MESSAGES.LOGIN_SUCCESS,
         });
         const decoded = jwtDecode<DecodedToken>(res.token);
-        if (decoded.role === USER_ROLES.ADMIN) {
+        if (decoded.role === USER_ROLES.ADMIN || decoded.role === (USER_ROLES.SUPERADMIN as any)) {
           this.router.navigate([ROUTES.ADMIN_DASHBOARD]);
         } else if (decoded.role === USER_ROLES.USER) {
           this.router.navigate([ROUTES.USER_DASHBOARD]);

@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     if (this.loginService.isLoggedIn()) {
       const role = this.loginService.userRole;
-      if (role === USER_ROLES.ADMIN) {
+      if (role === USER_ROLES.ADMIN || role === USER_ROLES.SUPERADMIN) {
         this.router.navigate([ROUTES.ADMIN_DASHBOARD]);
       } else if (role === USER_ROLES.USER) {
         this.router.navigate([ROUTES.USER_DASHBOARD]);

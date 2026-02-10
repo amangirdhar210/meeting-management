@@ -13,9 +13,11 @@ export const ROUTES = {
 export const USER_ROLES = {
   ADMIN: 'admin' as const,
   USER: 'user' as const,
+  SUPERADMIN: 'superadmin' as const,
   UNAUTHENTICATED: 'unauthenticated' as const,
   GUEST: 'Guest',
   ADMINISTRATOR: 'Administrator',
+  SUPER_ADMINISTRATOR: 'Super Administrator',
   USER_DISPLAY: 'User',
 } as const;
 

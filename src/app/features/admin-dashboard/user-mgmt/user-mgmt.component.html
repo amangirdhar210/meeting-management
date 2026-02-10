@@ -64,7 +64,9 @@
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td>
-          <span class="role" [class.admin]="user.role === 'admin'">{{
+          <span class="role" 
+                [class.admin]="user.role === 'admin'"
+                [class.superadmin]="user.role === 'superadmin'">{{
             user.role
           }}</span>
         </td>

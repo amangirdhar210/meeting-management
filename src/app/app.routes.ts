@@ -21,7 +21,7 @@ export const routes: Routes = [
   {
     path: 'admin-dashboard',
     component: AdminDashboardComponent,
-    canActivate: [authGuard, roleGuard(['admin'])],
+    canActivate: [authGuard, roleGuard(['admin', 'superadmin'])],
     children: [
       {
         path: 'room-mgmt',

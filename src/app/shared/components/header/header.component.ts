@@ -41,7 +41,9 @@ export class HeaderComponent {
   userEmail = computed(() => this.user()?.email || DEFAULT_VALUES.NOT_AVAILABLE);
   userRole = computed(() => {
     const role = this.user()?.role;
-    return role === USER_ROLES.ADMIN
+    return role === USER_ROLES.SUPERADMIN
+      ? USER_ROLES.SUPER_ADMINISTRATOR
+      : role === USER_ROLES.ADMIN
       ? USER_ROLES.ADMINISTRATOR
       : role === USER_ROLES.USER
       ? USER_ROLES.USER_DISPLAY
