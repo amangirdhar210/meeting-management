@@ -12,6 +12,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
   FormsModule,
+  Validators,
 } from '@angular/forms';
 import { RoomSearchParams } from '../../../shared/models/api.model';
 import { Subject, debounceTime, takeUntil } from 'rxjs';

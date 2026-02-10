@@ -102,9 +102,11 @@
           @if (addUserForm.controls.password.errors?.['required']) {
           <small>Password is required</small>
           } @if (addUserForm.controls.password.errors?.['minlength']) {
-          <small>Password must be at least 6 characters</small>
+          <small>Password must be at least 8 characters</small>
           } @if (addUserForm.controls.password.errors?.['maxlength']) {
           <small>Password cannot exceed 128 characters</small>
+          } @if (addUserForm.controls.password.errors?.['pattern']) {
+          <small>Password must contain at least 1 uppercase letter, 1 number, and 1 special character</small>
           }
         </div>
         }

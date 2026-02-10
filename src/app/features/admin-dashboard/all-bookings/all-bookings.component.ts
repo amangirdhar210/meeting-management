@@ -37,6 +37,7 @@ export class AllBookingsComponent implements OnInit {
   bookings = signal<Booking[]>([]);
   loading = signal<boolean>(true);
   searchQuery = signal<string>('');
+  statusFilter = signal<string>('all');
   currentPage = signal<number>(PAGINATION.DEFAULT_CURRENT_PAGE);
   pageSize = signal<number>(PAGINATION.DEFAULT_PAGE_SIZE);
 
@@ -132,8 +133,21 @@ export class AllBookingsComponent implements OnInit {
     this.applyFiltersAndPagination();
   }
 
+  onStatusFilterChange(status: string): void {
+    this.statusFilter.set(status);
+    this.currentPage.set(PAGINATION.DEFAULT_CURRENT_PAGE);
+    this.applyFiltersAndPagination();
+  }
+
   applyFiltersAndPagination(): void {
     let filtered = this.bookings();
+
+    if (this.statusFilter() !== 'all') {
+      filtered = filtered.filter(booking => {
+        const bookingStatus = this.getStatus(booking.start_time, booking.end_time);
+        return bookingStatus.toLowerCase() === this.statusFilter();
+      });
+    }
 
     const query = this.searchQuery().toLowerCase();
     if (query) {

@@ -2,9 +2,9 @@
 
 <div class="dashboard-container">
   <div class="stats-container">
-    <app-stats-card title="Total Rooms" [value]="totalRooms()" />
-    <app-stats-card title="Total Users" [value]="totalUsers()" />
-    <app-stats-card title="Available Rooms" [value]="availableRooms()" />
+    <app-stats-card title="Total Rooms" [value]="totalRooms()" (cardClick)="switchTab('rooms')" />
+    <app-stats-card title="Total Users" [value]="totalUsers()" (cardClick)="switchTab('users')" />
+    <app-stats-card title="Available Rooms" [value]="availableRooms()" (cardClick)="switchTab('rooms')" />
   </div>
 
   <div class="toggle-buttons">

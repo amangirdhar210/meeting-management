@@ -10,53 +10,63 @@
   <add-room-form [room]="editingRoom()" (cancelAdd)="onCancelAdd()" />
   }
 
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Room Number</th>
-        <th>Capacity</th>
-        <th>Floor</th>
-        <th>Location</th>
-        <th>Amenities</th>
-        <th>Description</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (room of rooms(); track room.id) {
-      <tr>
-        <td>{{ room.name }}</td>
-        <td>{{ room.room_number }}</td>
-        <td>{{ room.capacity }}</td>
-        <td>{{ room.floor }}</td>
-        <td>{{ room.location }}</td>
-        <td>
-          @for (amenity of room.amenities; track amenity) {
-          <span class="amenity">{{ amenity }}</span>
-          }
-        </td>
-        <td>{{ room.description }}</td>
-        <td>
-          <span
-            class="status"
-            [class.available]="room.status === 'available'"
-            [class.unavailable]="room.status === 'unavailable'"
-            [class.maintenance]="room.status === 'maintenance'"
-          >
-            {{ room.status }}
-          </span>
-        </td>
-        <td>
-          <i class="fa fa-edit edit" (click)="startEditingRoom(room)"></i>
-          <i
-            class="fa fa-trash delete"
-            (click)="onDeleteRoom(room.id, room.name)"
-          ></i>
-        </td>
-      </tr>
-      }
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Room Number</th>
+          <th>Capacity</th>
+          <th>Floor</th>
+          <th>Location</th>
+          <th>Amenities</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (room of rooms(); track room.id) {
+        <tr>
+          <td class="col-name">{{ room.name }}</td>
+          <td class="col-number">{{ room.room_number }}</td>
+          <td class="col-capacity">{{ room.capacity }}</td>
+          <td class="col-floor">{{ room.floor }}</td>
+          <td class="col-location">
+            <div class="text-truncate" [title]="room.location">{{ room.location }}</div>
+          </td>
+          <td class="col-amenities">
+            <div class="amenities">
+              @for (amenity of room.amenities.slice(0, 3); track amenity) {
+              <span class="amenity">{{ amenity }}</span>
+              }
+              @if (room.amenities.length > 3) {
+              <span class="amenity-more" [title]="room.amenities.slice(3).join(', ')">+{{ room.amenities.length - 3 }} more</span>
+              }
+            </div>
+          </td>
+          <td class="col-description">
+            <div class="text-truncate" [title]="room.description || ''">{{ room.description }}</div>
+          </td>
+          <td class="col-status">
+            <span
+              class="status"
+              [class.available]="room.status === 'available'"
+              [class.unavailable]="room.status === 'unavailable'"
+              [class.maintenance]="room.status === 'maintenance'"
+            >
+              {{ room.status }}
+            </span>
+          </td>
+          <td class="col-actions">
+            <i class="fa fa-edit edit" (click)="startEditingRoom(room)"></i>
+            <i
+              class="fa fa-trash delete"
+              (click)="onDeleteRoom(room.id, room.name)"
+            ></i>
+          </td>
+        </tr>
+        }
     </tbody>
   </table>
 </div>

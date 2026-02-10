@@ -3,6 +3,18 @@
     <div class="image-wrapper">
       <img src="meetingo.jpg" alt="{{ roomData.name }}" />
       <div class="image-overlay"></div>
+      <span class="status-badge status-{{ roomData.status }}">
+        @if (roomData.status === 'available') {
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Available</span>
+        } @else if (roomData.status === 'unavailable') {
+          <i class="fa-solid fa-circle-xmark"></i>
+          <span>Unavailable</span>
+        } @else if (roomData.status === 'maintenance') {
+          <i class="fa-solid fa-wrench"></i>
+          <span>Maintenance</span>
+        }
+      </span>
     </div>
   </div>
 
@@ -40,7 +52,12 @@
   </div>
 
   <div class="card-footer">
-    <button class="btn btn-primary" (click)="startBooking()">
+    <button 
+      class="btn btn-primary" 
+      (click)="startBooking()"
+      [disabled]="roomData.status !== 'available'"
+      [title]="roomData.status !== 'available' ? 'Room is not available for booking' : 'Book this room'"
+    >
       <i class="fa-solid fa-calendar-plus"></i>
       <span>Book Room</span>
     </button>

@@ -46,7 +46,12 @@ export class LoginComponent implements OnInit {
     }),
     password: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.minLength(6), Validators.maxLength(128)],
+      validators: [
+        Validators.required, 
+        Validators.minLength(8), 
+        Validators.maxLength(128),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).*$/)
+      ],
     }),
   });
 

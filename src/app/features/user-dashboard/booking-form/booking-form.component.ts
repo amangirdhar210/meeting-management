@@ -96,9 +96,15 @@ export class BookingFormComponent implements OnInit {
     const endDate =
       endDateTime instanceof Date ? endDateTime : new Date(endDateTime);
     const now = new Date();
+    const maxDate = new Date();
+    maxDate.setDate(now.getDate() + TIME_CONFIG.MAX_BOOKING_DAYS_AHEAD);
 
     if (startDate < now) {
       return { pastBooking: true };
+    }
+
+    if (startDate > maxDate) {
+      return { tooFarAhead: true };
     }
 
     if (endDate <= startDate) {
@@ -122,6 +128,9 @@ export class BookingFormComponent implements OnInit {
     const errors = this.bookingForm.errors;
     if (errors?.['pastBooking']) {
       return VALIDATION_MESSAGES.PAST_BOOKING_ERROR;
+    }
+    if (errors?.['tooFarAhead']) {
+      return 'Cannot book more than 15 days in advance';
     }
     if (errors?.['endBeforeStart']) {
       return VALIDATION_MESSAGES.END_BEFORE_START_ERROR;

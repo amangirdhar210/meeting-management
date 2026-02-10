@@ -40,31 +40,84 @@
   box-shadow: 0 6px 20px rgba(51, 65, 85, 0.4);
 }
 
+.table-wrapper {
+  width: 100%;
+  overflow-x: hidden;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14.5px;
+  table-layout: fixed;
+  background: white;
+}
+
+thead {
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 thead th {
   text-align: left;
-  padding: 0.9rem 0;
-  color: #6b7280;
-  border-bottom: 1px solid #f3f4f6;
-  font-weight: 600;
+  padding: 1rem 0.75rem;
+  color: #475569;
+  border-bottom: 2px solid #e2e8f0;
+  font-weight: 700;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+tbody tr {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #fafbfc;
+}
+
+tbody tr:hover {
+  background-color: #f0f4f8;
+  transform: scale(1.001);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 tbody td {
-  padding: 0.9rem 0;
-  border-bottom: 1px solid #f8fafb;
+  padding: 1rem 0.75rem;
   color: #374151;
   vertical-align: middle;
+  overflow: hidden;
+}
+
+.col-name { width: 12%; }
+.col-number { width: 8%; }
+.col-capacity { width: 8%; }
+.col-floor { width: 6%; }
+.col-location { width: 12%; }
+.col-amenities { width: 20%; }
+.col-description { width: 18%; }
+.col-status { width: 8%; }
+.col-actions { width: 8%; min-width: 60px; }
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: help;
 }
 
 .amenities {
   display: flex;
   gap: 0.35rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .amenity {
@@ -75,6 +128,19 @@ tbody td {
   color: #374151;
   display: inline-block;
   box-shadow: none;
+  white-space: nowrap;
+}
+
+.amenity-more {
+  background: #e0e7ff;
+  color: #4f46e5;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-block;
+  cursor: help;
+  white-space: nowrap;
 }
 
 .more-pill {
@@ -87,12 +153,13 @@ tbody td {
 
 .status {
   display: inline-block;
-  padding: 6px 14px;
+  padding: 5px 10px;
   border-radius: 16px;
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 
 .status.available {

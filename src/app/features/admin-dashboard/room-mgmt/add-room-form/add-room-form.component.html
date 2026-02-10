@@ -137,7 +137,7 @@
       </div>
 
       <div class="add-room-form">
-        <label for="amenities">Amenities</label>
+        <label for="amenities">Amenities (max 10)</label>
         <input
           type="text"
           id="amenities"
@@ -153,6 +153,9 @@
           }
           @if (addRoomForm.get('amenities')?.errors?.['maxlength']) {
           <small>Amenities cannot exceed 500 characters</small>
+          }
+          @if (addRoomForm.get('amenities')?.errors?.['maxAmenities']) {
+          <small>Maximum 10 amenities allowed</small>
           }
         </div>
         }

@@ -8,9 +8,11 @@ import {
   Output,
 } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { RoomService } from '../../../../shared/services/room.service';
@@ -60,6 +62,15 @@ export class AddRoomFormComponent implements OnInit, OnDestroy {
     document.body.style.overflow = '';
   }
 
+  maxAmenitiesValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value as string;
+    if (!value || value.trim() === '') {
+      return null;
+    }
+    const amenities = value.split(',').map(a => a.trim()).filter(a => a.length > 0);
+    return amenities.length > 10 ? { maxAmenities: true } : null;
+  }
+
   addRoomForm = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
@@ -76,7 +87,7 @@ export class AddRoomFormComponent implements OnInit, OnDestroy {
     }),
     amenities: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.maxLength(500)],
+      validators: [Validators.required, Validators.maxLength(500), this.maxAmenitiesValidator.bind(this)],
     }),
     location: new FormControl<string>('', {
       nonNullable: true,

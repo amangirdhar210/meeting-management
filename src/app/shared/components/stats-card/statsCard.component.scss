@@ -8,6 +8,14 @@
   min-width: 220px;
   box-shadow: 0 6px 18px rgba(16,24,40,0.03);
   border: 1px solid #f1f3f5;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(16,24,40,0.1);
+  border-color: #475569;
 }
 
 .card-body{

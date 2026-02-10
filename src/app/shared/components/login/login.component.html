@@ -47,6 +47,8 @@
         <small class="error-message">{{ VALIDATION.PASSWORD_MIN_LENGTH }}</small>
         } @if (password.errors?.['maxlength']) {
         <small class="error-message">{{ VALIDATION.PASSWORD_MAX_LENGTH }}</small>
+        } @if (password.errors?.['pattern']) {
+        <small class="error-message">{{ VALIDATION.PASSWORD_PATTERN }}</small>
         }
       </div>
       }

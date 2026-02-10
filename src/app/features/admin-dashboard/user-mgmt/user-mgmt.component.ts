@@ -41,6 +41,7 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
   isAddingUser = signal<boolean>(false);
   editingUser = signal<User | undefined>(undefined);
   searchQuery = signal<string>('');
+  roleFilter = signal<string>('all');
   currentPage = signal<number>(PAGINATION.DEFAULT_CURRENT_PAGE);
   pageSize = signal<number>(PAGINATION.DEFAULT_PAGE_SIZE);
 
@@ -95,8 +96,18 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
     this.applyFiltersAndPagination();
   }
 
+  onRoleFilterChange(role: string): void {
+    this.roleFilter.set(role);
+    this.currentPage.set(PAGINATION.DEFAULT_CURRENT_PAGE);
+    this.applyFiltersAndPagination();
+  }
+
   applyFiltersAndPagination(): void {
     let filtered = this.users();
+
+    if (this.roleFilter() !== 'all') {
+      filtered = filtered.filter(user => user.role === this.roleFilter());
+    }
 
     const query = this.searchQuery().toLowerCase();
     if (query) {

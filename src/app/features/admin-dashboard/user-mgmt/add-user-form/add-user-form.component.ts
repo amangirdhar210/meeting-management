@@ -52,7 +52,11 @@ export class AddUserFormComponent implements OnInit {
     }),
     password: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.minLength(6), Validators.maxLength(128)],
+      validators: [
+        Validators.minLength(8), 
+        Validators.maxLength(128),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).*$/)
+      ],
     }),
   });
 
@@ -75,7 +79,12 @@ export class AddUserFormComponent implements OnInit {
     } else {
       this.addUserForm
         .get('password')
-        ?.setValidators([Validators.required, Validators.minLength(6), Validators.maxLength(128)]);
+        ?.setValidators([
+          Validators.required, 
+          Validators.minLength(8), 
+          Validators.maxLength(128),
+          Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).*$/)
+        ]);
     }
   }
 

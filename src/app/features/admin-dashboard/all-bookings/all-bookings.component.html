@@ -32,6 +32,33 @@
   />
 </div>
 
+<div class="filter-buttons">
+  <button 
+    class="filter-btn" 
+    [class.active]="statusFilter() === 'all'"
+    (click)="onStatusFilterChange('all')">
+    All
+  </button>
+  <button 
+    class="filter-btn" 
+    [class.active]="statusFilter() === 'upcoming'"
+    (click)="onStatusFilterChange('upcoming')">
+    Upcoming
+  </button>
+  <button 
+    class="filter-btn" 
+    [class.active]="statusFilter() === 'active'"
+    (click)="onStatusFilterChange('active')">
+    Active
+  </button>
+  <button 
+    class="filter-btn" 
+    [class.active]="statusFilter() === 'completed'"
+    (click)="onStatusFilterChange('completed')">
+    Completed
+  </button>
+</div>
+
 <div class="bookings-table-container">
   <table class="bookings-table">
     <thead>
