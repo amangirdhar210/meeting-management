@@ -46,6 +46,8 @@
         appendTo="body"
         [minDate]="minDate"
         [maxDate]="maxDate"
+        [readonlyInput]="true"
+        [keepInvalid]="true"
       />
       @if (bookingForm.controls.startDateTime.invalid &&
       bookingForm.controls.startDateTime.touched) {
@@ -72,6 +74,8 @@
         appendTo="body"
         [minDate]="minDate"
         [maxDate]="maxDate"
+        [readonlyInput]="true"
+        [keepInvalid]="true"
       />
       @if (bookingForm.controls.endDateTime.invalid &&
       bookingForm.controls.endDateTime.touched) {

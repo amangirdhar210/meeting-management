@@ -33,7 +33,7 @@ export class LoginService {
   }
 
   get userRole(): 'admin' | 'user' | 'superadmin' | 'unauthenticated' {
-    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    const token = sessionStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
     if (!token) return USER_ROLES.UNAUTHENTICATED;
     try {
       const decoded = jwtDecode<DecodedToken>(token);
@@ -52,7 +52,7 @@ export class LoginService {
   }
 
   get userId(): string | null {
-    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    const token = sessionStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
     if (!token) return null;
     try {
       const decoded = jwtDecode<DecodedToken>(token);
@@ -65,8 +65,8 @@ export class LoginService {
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(API_ENDPOINTS.LOGIN, credentials).pipe(
       tap((res: LoginResponse) => {
-        localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, res.token);
-        localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(res.user));
+        sessionStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, res.token);
+        sessionStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(res.user));
         this.currentUser.set(res.user);
         this.isLoggedIn.set(true);
         this.messageService.add({
@@ -87,8 +87,8 @@ export class LoginService {
   logout(): void {
     this.isLoggedIn.set(false);
     this.currentUser.set(null);
-    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    sessionStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+    sessionStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
     this.messageService.add({
       severity: TOAST_SEVERITY.INFO,
       summary: TOAST_SUMMARY.INFO,
@@ -98,8 +98,8 @@ export class LoginService {
   }
 
   private restoreSession(): void {
-    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
-    const userStr = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+    const token = sessionStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    const userStr = sessionStorage.getItem(STORAGE_KEYS.CURRENT_USER);
     if (token) {
       try {
         const decoded = jwtDecode<DecodedToken>(token);
@@ -120,7 +120,7 @@ export class LoginService {
   private clearSession(): void {
     this.isLoggedIn.set(false);
     this.currentUser.set(null);
-    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    sessionStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+    sessionStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
   }
 }

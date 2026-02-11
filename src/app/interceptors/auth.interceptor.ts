@@ -19,7 +19,7 @@ const ERROR_CONFIG: Record<
 };
 
 export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('authToken');
+  const token = sessionStorage.getItem('authToken');
   const loginService = inject(LoginService);
   const messageService = inject(MessageService);
   const clonedReq = token

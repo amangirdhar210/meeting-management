@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'https://api.amangirdhar.me';
 
 export const API_CONFIG = {
   BASE_URL: BASE_URL,
