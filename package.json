@@ -10,8 +10,12 @@
     "test:coverage": "ng test --no-watch --code-coverage",
     "test:headless": "ng test --no-watch --browsers=ChromeHeadlessCI",
     "test:ci": "ng test --no-watch --code-coverage --browsers=ChromeHeadlessCI",
-    "test:e2e": "mocha test/**/*.test.js --timeout 30000",
-    "test:e2e:report": "mocha test/**/*.test.js --timeout 30000 --reporter mochawesome"
+    "test:e2e": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha",
+    "test:e2e:login": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha test/login.test.ts",
+    "test:e2e:user": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha test/user-dashboard.test.ts",
+    "test:e2e:booking": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha test/booking.test.ts",
+    "test:e2e:admin": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha test/admin-dashboard.test.ts",
+    "test:e2e:report": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha --reporter mochawesome"
   },
   "private": true,
   "dependencies": {
@@ -24,6 +28,7 @@
     "@angular/router": "^19.2.0",
     "@primeng/themes": "^20.2.0",
     "@tailwindcss/postcss": "^4.1.16",
+    "aws-jwt-verify": "^5.1.1",
     "bootstrap": "^5.3.8",
     "chai": "^6.2.2",
     "fs-extra": "^11.3.3",
@@ -43,14 +48,21 @@
     "@angular-devkit/build-angular": "^19.2.17",
     "@angular/cli": "^19.2.17",
     "@angular/compiler-cli": "^19.2.0",
+    "@types/chai": "^5.2.3",
+    "@types/fs-extra": "^11.0.4",
     "@types/jasmine": "~5.1.0",
+    "@types/mocha": "^10.0.10",
+    "@types/selenium-webdriver": "^4.35.5",
     "baseline-browser-mapping": "^2.9.14",
+    "cross-env": "^10.1.0",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "~5.7.2"
   }
 }

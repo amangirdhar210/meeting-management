@@ -28,10 +28,24 @@ import { DEFAULT_VALUES } from '../../../../shared/constants/app.constants';
 })
 export class AddUserFormComponent implements OnInit {
   @Input() user?: User;
+  @Input() currentUserRole: 'admin' | 'user' | 'superadmin' | 'unauthenticated' = 'admin';
   @Output() cancelAdd = new EventEmitter<void>();
   private userService = inject(UserService);
   isSubmitting = false;
   isEditMode = false;
+
+  // Available roles based on current user
+  get availableRoles(): Array<{ value: 'user' | 'admin' | 'superadmin', label: string }> {
+    if (this.currentUserRole === 'superadmin') {
+      return [
+        { value: 'user', label: 'User' },
+        { value: 'admin', label: 'Admin' },
+        { value: 'superadmin', label: 'Superadmin' }
+      ];
+    }
+    // Admins can only create regular users
+    return [{ value: 'user', label: 'User' }];
+  }
 
   addUserForm = new FormGroup({
     firstName: new FormControl<string>('', {

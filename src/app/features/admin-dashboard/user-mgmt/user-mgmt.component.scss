@@ -111,9 +111,16 @@ tbody td {
   font-size: 1rem;
   transition: 0.2s;
   margin-right: 12px;
+
+  &.disabled {
+    color: #cbd5e0;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
 
-.edit:hover {
+.edit:hover:not(.disabled) {
   color: #0056b3;
 }
 
@@ -122,9 +129,16 @@ tbody td {
   cursor: pointer;
   font-size: 1rem;
   transition: 0.2s;
+
+  &.disabled {
+    color: #cbd5e0;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
 
-.delete:hover {
+.delete:hover:not(.disabled) {
   color: #b02a37;
 }
 

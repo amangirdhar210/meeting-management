@@ -1,0 +1,29 @@
+{
+  "require": ["ts-node/register/transpile-only"],
+  "extensions": ["ts"],
+  "spec": ["test/**/*.test.ts"],
+  "timeout": 30000,
+  "ui": "bdd",
+  "color": true,
+  "node-option": ["require=ts-node/register/transpile-only"],
+  "reporterEnabled": "spec, mochawesome",
+  "mochawesomeReporterOptions": {
+    "reportDir": "test-reports",
+    "reportFilename": "e2e-test-report",
+    "reportTitle": "Meeting Room Management - E2E Tests",
+    "reportPageTitle": "E2E Test Report",
+    "embeddedScreenshots": false,
+    "inlineAssets": true,
+    "saveHtml": true,
+    "saveJson": true,
+    "charts": true,
+    "showPassed": true,
+    "showFailed": true,
+    "showPending": true,
+    "showSkipped": false,
+    "timestamp": "longDate",
+    "overwrite": true,
+    "enableCode": true,
+    "enableCharts": true
+  }
+}

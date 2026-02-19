@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit, signal, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal, inject, computed } from '@angular/core';
 import { User } from '../../../shared/models/user.model';
 import { UserService } from '../../../shared/services/user.service';
+import { LoginService } from '../../../shared/services/login.service';
 import { AddUserFormComponent } from './add-user-form/add-user-form.component';
 import { Subscription } from 'rxjs';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -27,6 +28,7 @@ import {
 })
 export class UserMgmtComponent implements OnInit, OnDestroy {
   private userService = inject(UserService);
+  private loginService = inject(LoginService);
   private confirmationService = inject(ConfirmationService);
   private sub = new Subscription();
 
@@ -36,6 +38,11 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
   readonly PLACEHOLDERS = PLACEHOLDERS;
   readonly INFO = INFO_MESSAGES;
   readonly NO_DATA = NO_DATA_MESSAGES;
+
+  // Role-based access control
+  isSuperAdmin = computed(() => this.loginService.userRole === 'superadmin');
+  isAdmin = computed(() => this.loginService.userRole === 'admin');
+  currentUserRole = computed(() => this.loginService.userRole);
 
   users = signal<User[]>([]);
   isAddingUser = signal<boolean>(false);
@@ -69,8 +76,25 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
   }
 
   startEditingUser(user: User): void {
+    if (!this.canEditUser(user)) return;
     this.editingUser.set(user);
     this.isAddingUser.set(true);
+  }
+
+  canEditUser(user: User): boolean {
+    // Superadmins cannot be modified by anyone
+    if (user.role === 'superadmin') return false;
+    // Admins cannot modify other admin accounts
+    if (this.isAdmin() && user.role === 'admin') return false;
+    return true;
+  }
+
+  canDeleteUser(user: User): boolean {
+    // Superadmins cannot be deleted
+    if (user.role === 'superadmin') return false;
+    // Admins can only delete regular users
+    if (this.isAdmin() && user.role !== 'user') return false;
+    return true;
   }
 
   stopAddingUser(): void {
@@ -78,7 +102,8 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
     this.editingUser.set(undefined);
   }
 
-  onDeleteUser(id: string, name: string): void {
+  onDeleteUser(id: string, name: string, user: User): void {
+    if (!this.canDeleteUser(user)) return;
     this.confirmationService.confirm({
       message: CONFIRMATION_MESSAGES.DELETE_USER(name),
       header: DIALOG_HEADERS.DELETE_CONFIRMATION,

@@ -3,18 +3,12 @@
     <div class="image-wrapper">
       <img src="meetingo.jpg" alt="{{ roomData.name }}" />
       <div class="image-overlay"></div>
+      @if (roomData.status === 'maintenance') {
       <span class="status-badge status-{{ roomData.status }}">
-        @if (roomData.status === 'available') {
-          <i class="fa-solid fa-circle-check"></i>
-          <span>Available</span>
-        } @else if (roomData.status === 'unavailable') {
-          <i class="fa-solid fa-circle-xmark"></i>
-          <span>Unavailable</span>
-        } @else if (roomData.status === 'maintenance') {
-          <i class="fa-solid fa-wrench"></i>
-          <span>Maintenance</span>
-        }
+        <i class="fa-solid fa-wrench"></i>
+        <span>Maintenance</span>
       </span>
+      }
     </div>
   </div>
 
@@ -55,16 +49,16 @@
     <button 
       class="btn btn-primary" 
       (click)="startBooking()"
-      [disabled]="roomData.status !== 'available'"
-      [title]="roomData.status !== 'available' ? 'Room is not available for booking' : 'Book this room'"
+      [disabled]="roomData.status === 'maintenance'"
+      [title]="roomData.status === 'maintenance' ? 'Room is under maintenance' : 'Book this room'"
     >
       <i class="fa-solid fa-calendar-plus"></i>
       <span>Book Room</span>
     </button>
 
     <button class="btn btn-secondary" (click)="viewSchedule()">
-      <i class="fa-solid fa-calendar-days"></i>
-      <span>Schedule</span>
+      <i class="fa-solid fa-clock"></i>
+      <span>View Times</span>
     </button>
   </div>
 </div>

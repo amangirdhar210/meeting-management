@@ -1,6 +1,8 @@
 <div class="login-container">
   <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <h1 class="header">{{ UI.LOGIN_HEADER }}</h1>
+    <div class="brand-header">
+      <img src="meetrix_named.png" alt="Meetrix Logo" class="brand-logo" />
+    </div>
 
     <div class="welcome-message">
       {{ UI.LOGIN_WELCOME }} <strong>{{ APP_INFO.NAME }}</strong>. {{ UI.LOGIN_TAGLINE }}

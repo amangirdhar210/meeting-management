@@ -17,6 +17,7 @@
     />
   </div>
 
+  @if (isSuperAdmin()) {
   <div class="filter-buttons">
     <button 
       class="filter-btn" 
@@ -37,9 +38,13 @@
       Admins
     </button>
   </div>
+  }
 
   @if (isAddingUser()) {
-  <app-add-user-form [user]="editingUser()" (cancelAdd)="stopAddingUser()" />
+  <app-add-user-form 
+    [user]="editingUser()" 
+    [currentUserRole]="currentUserRole()"
+    (cancelAdd)="stopAddingUser()" />
   }
 
   <table>
@@ -71,11 +76,14 @@
           }}</span>
         </td>
         <td>
-          <i class="fa fa-edit edit" (click)="startEditingUser(user)"></i>
-          <i
-            class="fa fa-trash delete"
-            (click)="onDeleteUser(user.id, user.name)"
-          ></i>
+          <i class="fa fa-edit edit" 
+             (click)="startEditingUser(user)"
+             [class.disabled]="!canEditUser(user)"
+             [title]="!canEditUser(user) ? 'Cannot edit this user' : 'Edit user'"></i>
+          <i class="fa fa-trash delete"
+             (click)="onDeleteUser(user.id, user.name, user)"
+             [class.disabled]="!canDeleteUser(user)"
+             [title]="!canDeleteUser(user) ? 'Cannot delete this user' : 'Delete user'"></i>
         </td>
       </tr>
       }

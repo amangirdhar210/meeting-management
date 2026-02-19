@@ -1,5 +1,5 @@
 export const APP_INFO = {
-  NAME: 'RoomBook',
+  NAME: 'Meetrix',
   FULL_NAME: 'Meeting Room Management',
   TAGLINE: 'Meeting Room Management',
 } as const;
